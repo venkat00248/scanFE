@@ -121,10 +121,9 @@ export const Form = () => {
       console.log(`fileSrc :: `, fileSrc);
       // return;
       if (isFormFieldValid) {
-        if(itemDetails.mongoId){
+        if(itemDetails?.mongoId){
           const res = await ScanAppService.updateItem({
-            _ids: [itemDetails.mongoId], 
-            status: false, 
+            _id: itemDetails.mongoId, 
             updated_by: tdata?._id,
             tenant_id: tdata?._id,
             name: itemDetails.itemName,

@@ -1,20 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ScanAppService } from '../../services/ScanAppService';
-import { useConfig } from '../../config/config';
+import { ScanAppService } from "../../services/ScanAppService";
+import { useConfig } from "../../config/config";
+import { Alert } from "react-bootstrap";
+import { useFormData } from "../Items/stateManagement/FormDataContext";
 
-export default function DeleteItem({data}:any) {
+export default function DeleteItem({ data }: any) {
   const config: any = useConfig();
   const tdata = config?.data[0];
   const [open, setOpen] = React.useState(false);
-console.log("data from item", data)
+  const [statusFlag, setStatusFlag] = React.useState("");
+  const { menuItems,setMenuItems} =  useFormData()
+  console.log("data from item", data);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -22,32 +26,73 @@ console.log("data from item", data)
   const handleClose = () => {
     setOpen(false);
   };
-  const fetchData = async () => {
+  const deleteItem = async () => {
     try {
       const res = await ScanAppService.deleteItems({
-         _ids: [data._id ], 
-         status: false, 
-        updated_by: tdata?._id
-      })
+        _ids: [data._id],
+        status: false,
+        updated_by: tdata?._id,
+      });
 
       console.log("res", res);
       // setMenuItems(res.data.data);
       if (res && res.data) {
         // setRows(res.data.data);
+        if (res?.data?.statusCode === 200) {
+          setStatusFlag("success");
+          setTimeout(() => {
+            setStatusFlag("");
+            setOpen(false);
+            const data = res?.data?.data[0];
+
+            // setMenuItems(menuItems.filter((item: any) => {
+            //   if (item._id == data._id) {
+            //       item.status = data.status;
+            //   }
+            // }))
+            setMenuItems((items:any) => {
+              const updatedItems = items.map((item:any) => {
+                if (item._id === data._id) {
+                  // Use a single "=" to update the status property
+                  item.status = data.status;
+                }
+                return item;
+              });
+             
+              return updatedItems;
+            });
+            console.log("menu Items 111", menuItems)
+            // const menuItems = sessionStorage.menuItem
+            //   ? JSON.parse(sessionStorage.menuItem)
+            //   : [];
+            //   console.log(menuItems, menuItems.length);
+            //   console.log("2nd ", data);
+            // if (menuItems.length && data) {
+            //   console.log(" menuitems length");
+              // menuItems.filter((item: any) => {
+              //   console.log(item._id, data._id);
+              //   if (item._id == data._id) {
+              //     console.log(item.status);
+              //       item.status = data.status;
+              //       console.log("item status :: ",item.status);
+              //   }
+              // });
+            //   // sessionStorage.menuItem = JSON.stringify(menuItems);
+            // }
+          }, 3000);
+        }
       }
       // Frame the formData object based on the form field values
     } catch (error) {
       console.error("Error posting or updating data:", error);
       // Handle errors while posting or updating data
-    } 
+    }
   };
-  React.useEffect(() => {
-    fetchData();
-  }, []);
+
   return (
     <React.Fragment>
-      <Button  onClick={handleClickOpen}>
-      <DeleteIcon />
+      <Button onClick={handleClickOpen}>
+        <DeleteIcon />
       </Button>
       <Dialog
         open={open}
@@ -55,17 +100,20 @@ console.log("data from item", data)
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
+        {statusFlag != "" && (
+          <Alert onClose={() => {}}>{`${statusFlag}`}</Alert>
+        )}
         <DialogTitle id="alert-dialog-title">
           {"Are you Sure Want to delete Item?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
+            Let Google help apps determine location. This means sending
+            anonymous location data to Google, even when no apps are running.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Yes</Button>
+          <Button onClick={deleteItem}>Yes</Button>
           <Button onClick={handleClose} autoFocus>
             No
           </Button>

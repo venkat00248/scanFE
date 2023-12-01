@@ -11,6 +11,7 @@ export const useFormData = () => useContext(FormDataContext);
 export const FormDataProvider = ({ children}:any) => {
 const [itemDetails, setItemDetails] = useState({ itemName: "", amount: "" , offerPrice:"", cuponCode:"", description:"", spiceLevel:"", isSpecial:false, is_veg:false, mongoId:""});
 const [open, setOpen] = useState(false);
+const [menuItems, setMenuItems] = useState<any>([]);
 const [expiredOn, setExpiredOn] = React.useState<Dayjs | null>(dayjs(new Date()));
 const [indexedImage, setIndexedImage] = useState(0);
 const [fileSrc, setFileSrc] = useState(
@@ -27,7 +28,8 @@ const [isPopupOpen, setIsPopupOpen] = useState(false);
         indexedImage, setIndexedImage ,
         fileSrc, setFileSrc,
         isPopupOpen, setIsPopupOpen,
-        expiredOn, setExpiredOn
+        expiredOn, setExpiredOn,
+        menuItems, setMenuItems
       }}
     >
       {children}
