@@ -1,17 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from "react";
+import{ useState } from "react";
 import {
-  FormControl,
   FormHelperText,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  TextField,
 } from "@mui/material";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
 import "./TenantLogIn.scss";
 import { ScanAppService } from "../../services/ScanAppService";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,17 +11,17 @@ import { useConfig } from "../../config/config";
 import { RippleLoader } from "../Loader/RippleLoader";
 // import  Footer  from "../layouts/Footer/Footer";
 export const TenantLogIn = () => {
-  const [showPassword, setShowPassword] = React.useState(true);
+  // const [showPassword, setShowPassword] = React.useState(true);
   const navigate = useNavigate();
   const { tenant } = useParams();
-  const [loginResponse, setLoginResponse] = useState<any>(null);
+  // const [loginResponse, setLoginResponse] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
+  // const handleClickShowPassword = () => setShowPassword((show) => !show);
+  // const handleMouseDownPassword = (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ) => {
+  //   event.preventDefault();
+  // };
   const [itemDetails, setItemDetails] = useState<any>({
     email: "",
     password: "",
@@ -60,7 +52,7 @@ export const TenantLogIn = () => {
   // console.log(window.location.pathname.split('/')?.[1]);
   // console.log("pathhhh",window.location);
   console.log("config from tenant", config);
-  const url = config ?config?.data[0]?.url :"./assets/img/cred.jpg";
+  // const url = config ?config?.data[0]?.url :"./assets/img/cred.jpg";
   // const url = "./assets/img/cred.jpg";
   // setUrl(config.data[0].url)
   // console.log("config from tenant url",config.data[0].url)
@@ -88,7 +80,7 @@ export const TenantLogIn = () => {
           password: itemDetails.password,
         });
         console.log("tenant", tenant);
-        setLoginResponse(res);
+        // setLoginResponse(res);
         if(res)
           setIsLoading(true);
         // if (res?.status) {
@@ -114,12 +106,12 @@ export const TenantLogIn = () => {
       // Handle errors while posting or updating data
     }
   };
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Enter") {
-      event.preventDefault(); // Prevent form submission on Enter key
-      handleSubmit(event);
-    }
-  };
+  // const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  //   if (event.key === "Enter") {
+  //     event.preventDefault(); // Prevent form submission on Enter key
+  //     handleSubmit(event);
+  //   }
+  // };
   return (
     // <div
     //   className="register-form p-5 needs-validation tenantLogin"

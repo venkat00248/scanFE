@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpApiService from "./HttpApiService";
 
- const configAPI = "http://localhost:8080"
- const configAPIs = "http://localhost:3000/getTenantByName"
+ const configAPI = "http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com"
+ const configAPIs = "http://happserver.ap-southeast-2.elasticbeanstalk.com/getTenantByName"
 export class Configuration extends HttpApiService {
   constructor() {
     super(`${configAPI}`);

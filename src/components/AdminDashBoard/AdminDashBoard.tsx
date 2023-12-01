@@ -23,70 +23,83 @@ interface Column {
     | "primary_color"
     | "secondary_color"
     | "action"
-    | "Delete";
+    | "Delete"
+    | "generateQR";
   label: string;
   minWidth?: number;
   align?: "right";
   format?: (value: string | number, column:any) => string | JSX.Element | undefined;
 }
 
-const columns: readonly Column[] = [
-  { id: "name", label: "Name", minWidth: 170 },
-  { id: "email", label: "Email", minWidth: 100 },
-  {
-    id: "url",
-    label: "Logo",
-    // minWidth: 170,
-    align: "right",
-    format: (value: string | number) => <img src={String(value)} alt="Logo" />,
-  },
-  {
-    id: "currency_code",
-    label: "Currency code",
-    minWidth: 170,
-    align: "right",
-    // format: (value: number | string) => value.toLocaleString('en-US'),
-  },
-  {
-    id: "primary_color",
-    label: "Primary Color",
-    minWidth: 170,
-    align: "right",
-    // format: (value: number | string) => value.toFixed(2),
-  },
-  {
-    id: "secondary_color",
-    label: "Secondary color",
-    minWidth: 170,
-    align: "right",
-    // format: (value: number) => value.toFixed(2),
-  },
-
-  {
-    id: "action",
-    label: "Action",
-    minWidth: 170,
-    align: "right",
-    format: (item: any, column:any) => <EditTenantPopup item={item} data={column} />,
-  },
-  {
-    id: "Delete",
-    label: "Delete",
-    minWidth: 170,
-    align: "right",
-    format: (item: any, column:any) => <DeleteTenant data={column} />,
-
-  },
-];
 
 export const AdminDashBoard = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    console.log("event", event)
     setPage(newPage);
   };
-
+ const handleGenerateQR = async(item:any) =>{
+  const res = await ScanAppService.genateQR(item)
+  console.log("res",res, item)
+ }
+  const columns: readonly Column[] = [
+    { id: "name", label: "Name", minWidth: 170 },
+    { id: "email", label: "Email", minWidth: 100 },
+    {
+      id: "url",
+      label: "Logo",
+      // minWidth: 170,
+      align: "right",
+      format: (value: string | number) => <img src={String(value)} alt="Logo" />,
+    },
+    {
+      id: "currency_code",
+      label: "Currency code",
+      minWidth: 170,
+      align: "right",
+      // format: (value: number | string) => value.toLocaleString('en-US'),
+    },
+    {
+      id: "primary_color",
+      label: "Primary Color",
+      minWidth: 170,
+      align: "right",
+      // format: (value: number | string) => value.toFixed(2),
+    },
+    {
+      id: "secondary_color",
+      label: "Secondary color",
+      minWidth: 170,
+      align: "right",
+      // format: (value: number) => value.toFixed(2),
+    },
+  
+    {
+      id: "action",
+      label: "Action",
+      minWidth: 170,
+      align: "right",
+      format: (item: any, column:any) => <EditTenantPopup item={item} data={column} />,
+    },
+    {
+      id: "Delete",
+      label: "Delete",
+      minWidth: 170,
+      align: "right",
+      format: ( column:any) => <DeleteTenant data={column} />,
+  
+    },
+    {
+      id: "generateQR",
+      label: "Generate QR",
+      minWidth: 170,
+      align: "right",
+      format: (item: any) => <button onClick={() => handleGenerateQR(item)}>Generate QR</button>,
+    }
+    
+  ];
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
