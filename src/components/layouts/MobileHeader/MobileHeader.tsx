@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { DrawerLayout } from "../Footer/DrawerLayout";
+import  { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+// import { DrawerLayout } from "../Footer/DrawerLayout";
 import LogoutIcon from "@mui/icons-material/Logout";
 import "./MobileHeader.scss";
 import { useConfig } from "../../../config/config";
@@ -16,14 +17,16 @@ export const MobileHeader = () => {
   const currentRoute = window.location.hash.split('/')?.[2];
  
   console.log("config from header", config?.data[0].url);
-  const logout = (e) => {
+  const logout = () => {
     alert("Are you sure you want to log out?");
+    setIsLogin(false)
 
     navigate(`../${tenant}/tenantlogin`, { replace: true });
   };
   const [isLogin, setIsLogin] = useState(
     sessionStorage.isLogin ? sessionStorage.isLogin : false
   );
+  // console.log("ee", setIsLogin(true))
   return (
     <header>
       <div className="headerWrapper">

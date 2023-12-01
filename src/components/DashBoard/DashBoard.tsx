@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 // import { menuItems } from '../../Appconstant';
 import "../layouts/Latest/Latest.scss";
 import "./DashBoard.scss";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ScanAppService } from "../../services/ScanAppService";
 import { Button } from "react-bootstrap";
 import { useConfig } from "../../config/config";

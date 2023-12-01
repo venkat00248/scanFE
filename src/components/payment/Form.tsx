@@ -39,7 +39,7 @@ export const Form = () => {
       postalCode: "",
     },
   });
-  const [isNotOnboarded, setIsNotOnboarded] = useState(false);
+  // const [isNotOnboarded, setIsNotOnboarded] = useState(false);
   // const [isChecked, setIsChecked] = useState(false);
   const [checkboxError, setCheckboxError] = useState("");
 
@@ -182,7 +182,7 @@ export const Form = () => {
     })
     console.log("res", res)
     if(res.data.data.statusCode == 200) {
-      setIsNotOnboarded(false);
+      // setIsNotOnboarded(false);
       setResponse({message:res.data.data.message, statusCode:res.data.data.statusCode})
     }
     

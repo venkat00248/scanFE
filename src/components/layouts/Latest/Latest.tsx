@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { menuItems } from '../../../Appconstant';
 import './Latest.scss';
 
@@ -10,7 +11,7 @@ export const Latest = () => {
         <div className="menu-container container">
           <div className="menu-content">
             <div className="menu-items">
-              {menuItems.map((menuItem, index) => (
+              {menuItems.map((menuItem:any, index:number) => (
                 <div className="menu-item flex" key={index}>
                   <img src={menuItem.url} alt="" className="menu-img" />
                   <div className="menuItem-details">

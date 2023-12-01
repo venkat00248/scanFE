@@ -4,7 +4,7 @@ import HttpApiService from "./HttpApiService";
 const API_BASE = "${config.API.BASEURI}";
 
 
- const scanAPPAPI = "http://localhost:3000"
+ const scanAPPAPI = "http://happserver.ap-southeast-2.elasticbeanstalk.com"
 
 export class ScanApp extends HttpApiService {
   constructor() {
@@ -31,6 +31,9 @@ export class ScanApp extends HttpApiService {
   }
   postItem  = (data:any)=>{
     return this.post(`${scanAPPAPI}/saveitem`, data)
+  }
+  genateQR = (data:any)=>{
+    return this.post(`${scanAPPAPI}/generateqrcode`, data)
   }
   paymentFormSubmit = (data:any)=>{
     return this.post(`${scanAPPAPI}/paymentForm/submit`, data)
