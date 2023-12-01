@@ -40,9 +40,11 @@ export const AdminDashBoard = () => {
     console.log("event", event)
     setPage(newPage);
   };
- const handleGenerateQR = async(item:any) =>{
-  const res = await ScanAppService.genateQR(item)
-  console.log("res",res, item)
+ const handleGenerateQR = async(column:any) =>{
+
+  console.log("iyee", column?.row)
+  const res = await ScanAppService.genateQR({tenantName:column?.row?.name, email:column?.row?.email})
+  console.log("res",res, column)
  }
   const columns: readonly Column[] = [
     { id: "name", label: "Name", minWidth: 170 },
@@ -96,7 +98,7 @@ export const AdminDashBoard = () => {
       label: "Generate QR",
       minWidth: 170,
       align: "right",
-      format: (item: any) => <button onClick={() => handleGenerateQR(item)}>Generate QR</button>,
+      format: (item: any, column: any) => <button  className="btn btn-primary" onClick={()=>{handleGenerateQR(column); console.log("co;um", item)}}>Generate QR</button>,
     }
     
   ];
