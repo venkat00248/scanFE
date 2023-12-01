@@ -138,7 +138,7 @@ export const DashBoard = () => {
                       <tbody>
                         {console.log("length menu item,s", menuItems)}
                         {menuItems.length > 0 &&
-                          menuItems
+                          menuItems.filter((item: any) => item.is_special && item.status == true)
                             .slice(0, 5)
                             .map((menuItem: any, index: any) => (
                               <tr>
@@ -207,7 +207,7 @@ export const DashBoard = () => {
                                 <td className="align-middle text-center">
                                   <button className="btn btn-link text-secondary mb-0">
                                     {/* <i className="fa fa-edit text-xs"></i> */}
-                                    <EditItemPopup data={menuItem} />
+                                    <EditItemPopup data={menuItem} id={index}/>
                                   </button>
                                   <button className="btn btn-link text-secondary mb-0">
                                     {/* <i className="fa fa-trash-can  text-xs"></i> */}

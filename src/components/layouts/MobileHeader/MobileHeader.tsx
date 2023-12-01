@@ -11,7 +11,7 @@ export const MobileHeader = () => {
   const config: any = useConfig();
   // const {tenant} = useParams()
   const navigate = useNavigate();
-  const url = config ? config?.data[0].url : "https://i.imgur.com/QQ8FTjR.png";
+  const url = config ? config?.data[0]?.url : "https://i.imgur.com/QQ8FTjR.png";
   const tenant = config?.data[0].name;
   const currentRoute = window.location.hash.split('/')?.[2];
  

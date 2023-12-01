@@ -23,10 +23,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useConfig } from "../../config/config";
 // import {decode as base64_decode, encode as base64_encode} from 'base-64';
 import { RippleLoader } from "../Loader/RippleLoader";
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export const Form = () => {
   const { tenant } = useParams();
@@ -80,17 +80,17 @@ export const Form = () => {
       }));
     }
   };
-  function dateStringToMilliseconds(dateString:string) {
+  function dateStringToMilliseconds(dateString: string) {
     // Convert to Date object
     const dateObject = new Date(dateString);
-  
+
     // Get the Unix timestamp in seconds
     const unixTimestampInSeconds = dateObject.getTime() / 1000;
-  
+
     // Convert to milliseconds
     const timestampInMilliseconds = unixTimestampInSeconds * 1000;
-  
-    return timestampInMilliseconds+"";
+
+    return timestampInMilliseconds + "";
   }
   const handleSubmit = async (event: any) => {
     let isFormFieldValid = false;
@@ -121,9 +121,9 @@ export const Form = () => {
       console.log(`fileSrc :: `, fileSrc);
       // return;
       if (isFormFieldValid) {
-        if(itemDetails?.mongoId){
+        if (itemDetails?.mongoId) {
           const res = await ScanAppService.updateItem({
-            _id: itemDetails.mongoId, 
+            _id: itemDetails.mongoId,
             updated_by: tdata?._id,
             tenant_id: tdata?._id,
             name: itemDetails.itemName,
@@ -138,12 +138,15 @@ export const Form = () => {
             item_desc: itemDetails.description,
             expired_on: dateStringToMilliseconds(expiredOn.toString()),
             spicy_level: itemDetails.spiceLevel,
-            is_special:itemDetails.isSpecial,
-            is_veg:itemDetails.is_veg
+            is_special: itemDetails.isSpecial,
+            is_veg: itemDetails.is_veg,
           });
           if (res) {
             setIsLoading(true);
-            setResponse({ message: "Item updated successfully", statusCode: res.status });
+            setResponse({
+              message: "Item updated successfully",
+              statusCode: res.status,
+            });
             setItemDetails({
               itemName: "",
               amount: "",
@@ -151,47 +154,49 @@ export const Form = () => {
               description: "",
               spiceLevel: "",
               isSpecial: false,
-              is_veg:false,
-              mongoId:""
+              is_veg: false,
+              mongoId: "",
             });
-        }
-      }
-        else{
-        setIsLoading(false);
-        const res = await ScanAppService.postItem({
-          tenant_id: tdata?._id,
-          name: itemDetails.itemName,
-          url: fileSrc,
-          // "is_special": itemDetails.isSpecial,
-          item_price: itemDetails.amount,
-          promotional_price: itemDetails.offerPrice,
-          is_promotional_applicable: false,
-          is_coupon_applicable: false,
-          coupon_code: "",
-          created_by: tdata?._id,
-          item_desc: itemDetails.description,
-          expired_on: dateStringToMilliseconds(expiredOn.toString()),
-          spicy_level: itemDetails.spiceLevel,
-          is_special:itemDetails.isSpecial,
-          is_veg:itemDetails.is_veg
-        });
-        if (res) {
-          setIsLoading(true);
-          setResponse({ message: " Item Added successfully", statusCode: res.status });
-          setItemDetails({
-            itemName: "",
-            amount: "",
-            offerPrice: "",
-            description: "",
-            spiceLevel: "",
-            isSpecial: true,
+          }
+        } else {
+          setIsLoading(false);
+          const res = await ScanAppService.postItem({
+            tenant_id: tdata?._id,
+            name: itemDetails.itemName,
+            url: fileSrc,
+            // "is_special": itemDetails.isSpecial,
+            item_price: itemDetails.amount,
+            promotional_price: itemDetails.offerPrice,
+            is_promotional_applicable: false,
+            is_coupon_applicable: false,
+            coupon_code: "",
+            created_by: tdata?._id,
+            item_desc: itemDetails.description,
+            expired_on: dateStringToMilliseconds(expiredOn.toString()),
+            spicy_level: itemDetails.spiceLevel,
+            is_special: itemDetails.isSpecial,
+            is_veg: itemDetails.is_veg,
           });
+          if (res) {
+            setIsLoading(true);
+            setResponse({
+              message: " Item Added successfully",
+              statusCode: res.status,
+            });
+            setItemDetails({
+              itemName: "",
+              amount: "",
+              offerPrice: "",
+              description: "",
+              spiceLevel: "",
+              isSpecial: true,
+            });
+          }
           setTimeout(() => {
             navigate(`../${tenant}/dashBoard`, { replace: true });
           }, 3000);
         }
-      
-    }
+        
       }
 
       // Frame the formData object based on the form field values
@@ -200,27 +205,29 @@ export const Form = () => {
       // Handle errors while posting or updating data
     }
   };
-  console.log("expired on",dateStringToMilliseconds(expiredOn.toString()), expiredOn)
+  console.log(
+    "expired on",
+    dateStringToMilliseconds(expiredOn.toString()),
+    expiredOn
+  );
   const [age, setAge] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
   };
-  const handlerForVeg = (event:any) => {
-    setItemDetails({...itemDetails,is_veg:event.target.checked});
+  const handlerForVeg = (event: any) => {
+    setItemDetails({ ...itemDetails, is_veg: event.target.checked });
     // Perform any additional actions based on the status here
   };
-  const handlerForSpecial = (event:any) => {
-    setItemDetails({...itemDetails,isSpecial:event.target.checked});
+  const handlerForSpecial = (event: any) => {
+    setItemDetails({ ...itemDetails, isSpecial: event.target.checked });
 
     // Perform any additional actions based on the status here
   };
   return (
     <div className="register-form p-5 needs-validation" id="register-form">
       {response.statusCode == 200 && (
-        <Alert onClose={() => {}}>
-         {`${response.message}`}
-        </Alert>
+        <Alert onClose={() => {}}>{`${response.message}`}</Alert>
       )}
       <div>
         {isLoading ? (
@@ -412,38 +419,49 @@ export const Form = () => {
                       </Select>
                     </FormControl>
                   </div>
-     
-     
+
                   <div className="col-md-6">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                   <DemoContainer components={['DatePicker']}>
-                              <DatePicker
-                      label="Expired On"
-                      value={expiredOn}
-                      // value={value}
-                      className="datePickerWrapper"
-                      onChange={(newValue) =>  {setExpiredOn(newValue) ;console.log("new", newValue)}}
-                    />
-                    </DemoContainer>
-                 </LocalizationProvider>
-                </div>
-                  <div className="switchWrapper"> 
-                  <div className="col-md-6">
-                  <FormControlLabel
-                    sx={{ m: 1, width: "100%" }}
-                    control={<Switch checked={itemDetails.isSpecial}  onChange={handlerForSpecial}/>}
-                    label="Is Special"
-                  />
-                </div>
-                <div className="col-md-6">
-                  <FormControlLabel
-                    sx={{ m: 1, width: "100%" }}
-                    control={<Switch   checked={itemDetails.is_veg} onChange={handlerForVeg} />}
-                   
-                    label="Is Veg"
-                  />
-                </div>
-                </div>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={["DatePicker"]}>
+                        <DatePicker
+                          label="Expired On"
+                          value={expiredOn}
+                          // value={value}
+                          className="datePickerWrapper"
+                          onChange={(newValue) => {
+                            setExpiredOn(newValue);
+                            console.log("new", newValue);
+                          }}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
+                  <div className="switchWrapper">
+                    <div className="col-md-6">
+                      <FormControlLabel
+                        sx={{ m: 1, width: "100%" }}
+                        control={
+                          <Switch
+                            checked={itemDetails.isSpecial}
+                            onChange={handlerForSpecial}
+                          />
+                        }
+                        label="Is Special"
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <FormControlLabel
+                        sx={{ m: 1, width: "100%" }}
+                        control={
+                          <Switch
+                            checked={itemDetails.is_veg}
+                            onChange={handlerForVeg}
+                          />
+                        }
+                        label="Is Veg"
+                      />
+                    </div>
+                  </div>
                   <div
                     className="col-md-12"
                     style={{ display: "flex", justifyContent: "center" }}

@@ -11,23 +11,22 @@ import { useFormData } from "../Items/stateManagement/FormDataContext";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 
-export const EditItemPopup = ({item, data}:any) => {
-  const {  itemDetails ,setItemDetails ,setFileSrc} = useFormData();
-
-  React.useEffect(() => {
-    if(data){
-      console.log("Setting item details:", data.name);
-      setFileSrc(data.url)
-      setItemDetails({ itemName: data.name, mongoId:data._id, amount: data.item_price , offerPrice:data.promotional_price, description:data.item_desc, spiceLevel:data.spicy_level})
-    }
-  }, []);
-    console.log("itemmm", item ,data, itemDetails)
+export const EditItemPopup = ({data}:any) => {
+  console.log("EditItemPopup :: data: " + JSON.stringify(data));
+  const {  setItemDetails ,setFileSrc} = useFormData();
   const [state, setState] = React.useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
+
+  console.log("EditItemPopup :: setItemDetails: 2222222");
+  React.useLayoutEffect(() => {
+      console.log("Setting item details:", data.name);
+      setFileSrc(data.url)
+      setItemDetails({ itemName: data.name, mongoId:data._id, amount: data.item_price , offerPrice:data.promotional_price, description:data.item_desc, spiceLevel:data.spicy_level})
+  }, [data,state]);
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>

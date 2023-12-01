@@ -17,7 +17,7 @@ export default function DeleteItem({ data }: any) {
   const tdata = config?.data[0];
   const [open, setOpen] = React.useState(false);
   const [statusFlag, setStatusFlag] = React.useState("");
-  const { menuItems,setMenuItems} =  useFormData()
+  const { menuItems, updateMenuItems } = useFormData();
   console.log("data from item", data);
   const handleClickOpen = () => {
     setOpen(true);
@@ -50,18 +50,19 @@ export default function DeleteItem({ data }: any) {
             //       item.status = data.status;
             //   }
             // }))
-            setMenuItems((items:any) => {
-              const updatedItems = items.map((item:any) => {
+
+            updateMenuItems((items: any) => {
+              const updatedItems = items.map((item: any) => {
                 if (item._id === data._id) {
                   // Use a single "=" to update the status property
                   item.status = data.status;
                 }
                 return item;
               });
-             
+
               return updatedItems;
             });
-            console.log("menu Items 111", menuItems)
+            console.log("menu Items 111", menuItems);
             // const menuItems = sessionStorage.menuItem
             //   ? JSON.parse(sessionStorage.menuItem)
             //   : [];
@@ -69,14 +70,14 @@ export default function DeleteItem({ data }: any) {
             //   console.log("2nd ", data);
             // if (menuItems.length && data) {
             //   console.log(" menuitems length");
-              // menuItems.filter((item: any) => {
-              //   console.log(item._id, data._id);
-              //   if (item._id == data._id) {
-              //     console.log(item.status);
-              //       item.status = data.status;
-              //       console.log("item status :: ",item.status);
-              //   }
-              // });
+            // menuItems.filter((item: any) => {
+            //   console.log(item._id, data._id);
+            //   if (item._id == data._id) {
+            //     console.log(item.status);
+            //       item.status = data.status;
+            //       console.log("item status :: ",item.status);
+            //   }
+            // });
             //   // sessionStorage.menuItem = JSON.stringify(menuItems);
             // }
           }, 3000);
