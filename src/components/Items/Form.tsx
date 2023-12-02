@@ -110,7 +110,7 @@ export const Form = () => {
     }
   }, [location.pathname]);
   const handleSubmit = async (event: any) => {
-    let isFormFieldValid = false;
+    const isFormFieldValid = false;
     event.preventDefault();
 
     // Perform onBlur validation for all fields
@@ -128,11 +128,8 @@ export const Form = () => {
       errors.itemDetails.description ||
       errors.itemDetails.spiceLevel
     ) {
-      // return;
-      isFormFieldValid = false;
-    } else {
-      isFormFieldValid = true;
-    }
+      return;
+    } 
     // setReview(false)
     try {
       console.log(`fileSrc :: `, fileSrc);

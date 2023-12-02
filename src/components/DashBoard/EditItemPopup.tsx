@@ -23,9 +23,11 @@ export const EditItemPopup = ({data}:any) => {
 
   console.log("EditItemPopup :: setItemDetails: 2222222");
   React.useLayoutEffect(() => {
-      console.log("Setting item details:", data.name);
+      console.log("Setting item details:", data);
       setFileSrc(data.url)
-      setItemDetails({ itemName: data.name, mongoId:data._id, amount: data.item_price , offerPrice:data.promotional_price, description:data.item_desc, spiceLevel:data.spicy_level})
+      setItemDetails({ itemName: data.name, mongoId:data._id, amount: data.item_price , offerPrice:data.promotional_price, description:data.item_desc, spiceLevel:data.spicy_level,isSpecial:data.is_special
+,is_veg:data.is_veg
+      })
   }, [data,state]);
 
   const toggleDrawer =
