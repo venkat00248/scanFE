@@ -20,7 +20,7 @@ export const TenantFormDataProvider = ({ children}:any) => {
   });
 const [checked, setChecked]= useState(false)
 const [mongoId, setMongoId]= useState("")
-const [fileSrc, setFileSrc] = useState("./assets/img/logo.jpg");
+const [fileSrc, setFileSrc] = useState("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/logo.jpg");
   return (
     <TenantFormDataContext.Provider
       value={{
