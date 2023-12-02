@@ -20,7 +20,7 @@ export const MobileHeader = () => {
   const logout = () => {
     alert("Are you sure you want to log out?");
     setIsLogin(false)
-
+    sessionStorage.clear();
     navigate(`../${tenant}/tenantlogin`, { replace: true });
   };
   const [isLogin, setIsLogin] = useState(

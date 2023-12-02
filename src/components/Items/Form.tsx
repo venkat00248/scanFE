@@ -61,7 +61,8 @@ export const Form = () => {
       isSpecial: true,
     },
   });
-  const onBlurItemDetails = (fieldName: any) => () => {
+  const onBlurItemDetails = (fieldName: any) => () => { 
+      
     if (!itemDetails[fieldName]) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -97,6 +98,7 @@ export const Form = () => {
     // Check if the URL contains "/addItems"
     if (location.hash.includes('/addItems')) {
       // Update itemDetails state with an empty object
+      setFileSrc("../../assets/img/food_img.png");
       setItemDetails({
         itemName: '',
         amount: '',
@@ -105,12 +107,13 @@ export const Form = () => {
         spiceLevel: '',
         isSpecial: false,
         is_veg: false,
-        mongoId: '',
+        mongoId: ''
+        
       });
     }
   }, [location.pathname]);
   const handleSubmit = async (event: any) => {
-    const isFormFieldValid = false;
+    let isFormFieldValid = false;
     event.preventDefault();
 
     // Perform onBlur validation for all fields
@@ -122,19 +125,26 @@ export const Form = () => {
 
     // If there are any validation errors, prevent form submission
     if (
-      errors.itemDetails.itemName ||
-      errors.itemDetails.amount ||
-      errors.itemDetails.offerPrice ||
-      errors.itemDetails.description ||
-      errors.itemDetails.spiceLevel
+      itemDetails.itemName == "" ||
+      itemDetails.amount == "" ||
+      itemDetails.offerPrice == "" ||
+      itemDetails.description == ""||
+      itemDetails.spiceLevel == ""  
+      
     ) {
-      return;
-    } 
+      // return;
+      isFormFieldValid = false;
+    } else {
+      isFormFieldValid = true;
+    }
     // setReview(false)
     try {
-      console.log(`fileSrc :: `, fileSrc);
+      // console.log(`fileSrc :: `, fileSrc);
+      // console.log(`errors :: `, errors)
       // return;
+      // alert(isFormFieldValid)
       if (isFormFieldValid) {
+        setIsLoading(false);
         if (itemDetails?.mongoId) {
           const res = await ScanAppService.updateItem({
             _id: itemDetails.mongoId,
@@ -493,6 +503,7 @@ export const Form = () => {
                         </div>
                         <div className="item-preview">
                           {/* <div id="imagePreview" style={{background: "url(http://i.pravatar.cc/500?img=7);"}}> */}
+                          {console.log(fileSrc)}
                           {fileSrc && (
                             <img
                               src={fileSrc}

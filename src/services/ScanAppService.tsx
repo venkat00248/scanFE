@@ -4,7 +4,8 @@ import HttpApiService from "./HttpApiService";
 const API_BASE = "${config.API.BASEURI}";
 
 
- const scanAPPAPI = "http://happserver.ap-southeast-2.elasticbeanstalk.com"
+//  const scanAPPAPI = "http://happserver.ap-southeast-2.elasticbeanstalk.com"
+const scanAPPAPI = "http://localhost:3000";
 
 export class ScanApp extends HttpApiService {
   constructor() {

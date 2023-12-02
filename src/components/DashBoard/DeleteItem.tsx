@@ -40,47 +40,47 @@ export default function DeleteItem({ data }: any) {
         // setRows(res.data.data);
         if (res?.data?.statusCode === 200) {
           setStatusFlag("success");
-          setTimeout(() => {
-            setStatusFlag("");
-            setOpen(false);
-            const data = res?.data?.data[0];
+          // setTimeout(() => {
+          setStatusFlag("");
+          setOpen(false);
+          const data = res?.data?.data[0];
 
-            // setMenuItems(menuItems.filter((item: any) => {
-            //   if (item._id == data._id) {
-            //       item.status = data.status;
-            //   }
-            // }))
+          // setMenuItems(menuItems.filter((item: any) => {
+          //   if (item._id == data._id) {
+          //       item.status = data.status;
+          //   }
+          // }))
 
-            updateMenuItems((items: any) => {
-              const updatedItems = items.map((item: any) => {
-                if (item._id === data._id) {
-                  // Use a single "=" to update the status property
-                  item.status = data.status;
-                }
-                return item;
-              });
-
-              return updatedItems;
+          updateMenuItems((items: any) => {
+            const updatedItems = items.map((item: any) => {
+              if (item._id === data._id) {
+                // Use a single "=" to update the status property
+                item.status = data.status;
+              }
+              return item;
             });
-            console.log("menu Items 111", menuItems);
-            // const menuItems = sessionStorage.menuItem
-            //   ? JSON.parse(sessionStorage.menuItem)
-            //   : [];
-            //   console.log(menuItems, menuItems.length);
-            //   console.log("2nd ", data);
-            // if (menuItems.length && data) {
-            //   console.log(" menuitems length");
-            // menuItems.filter((item: any) => {
-            //   console.log(item._id, data._id);
-            //   if (item._id == data._id) {
-            //     console.log(item.status);
-            //       item.status = data.status;
-            //       console.log("item status :: ",item.status);
-            //   }
-            // });
-            //   // sessionStorage.menuItem = JSON.stringify(menuItems);
-            // }
-          }, 3000);
+
+            return updatedItems;
+          });
+          console.log("menu Items 111", menuItems);
+          // const menuItems = sessionStorage.menuItem
+          //   ? JSON.parse(sessionStorage.menuItem)
+          //   : [];
+          //   console.log(menuItems, menuItems.length);
+          //   console.log("2nd ", data);
+          // if (menuItems.length && data) {
+          //   console.log(" menuitems length");
+          // menuItems.filter((item: any) => {
+          //   console.log(item._id, data._id);
+          //   if (item._id == data._id) {
+          //     console.log(item.status);
+          //       item.status = data.status;
+          //       console.log("item status :: ",item.status);
+          //   }
+          // });
+          //   // sessionStorage.menuItem = JSON.stringify(menuItems);
+          // }
+          // }, 3000);
         }
       }
       // Frame the formData object based on the form field values
@@ -101,16 +101,17 @@ export default function DeleteItem({ data }: any) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        {statusFlag != "" && (
-          <Alert onClose={() => {}}>{`${statusFlag}`}</Alert>
-        )}
         <DialogTitle id="alert-dialog-title">
-          {"Are you Sure Want to delete Item?"}
+          {/* {"Confirmation"} */}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            <h4>Are you sure want to Delete an item?</h4>
+            {statusFlag != "" && (
+              <div>
+                <Alert onClose={() => {}}>{`${statusFlag}`}</Alert>
+              </div>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

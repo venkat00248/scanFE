@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useTenantFormData } from "./stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
+import { useNavigate } from "react-router-dom";
 export const Form = () => {
   const {
     tenantDetails,
@@ -23,6 +24,7 @@ export const Form = () => {
     themeDetails, setThemeDetails,
     fileSrc, setFileSrc
   } = useTenantFormData();
+  const navigate = useNavigate();
   const [response , setResponse]= useState({message: "",statusCode: 0})
   const [errors, setErrors] = useState({
     tenantDetails: { tenantName: "", email: "" },
@@ -180,10 +182,11 @@ export const Form = () => {
         primary_color: themeDetails.primaryColor,
         secondary_color:themeDetails.secondaryColor
     })
-    console.log("res", res)
-    if(res.data.data.statusCode == 200) {
+    console.log("res", res?.data?.statusCode)
+    if(res?.data?.statusCode == 200) {
       // setIsNotOnboarded(false);
-      setResponse({message:res.data.data.message, statusCode:res.data.data.statusCode})
+      setResponse({message:res.data.message, statusCode:res?.data?.statusCode});
+      navigate(`../tenant/admindashboard`, { replace: true });
     }
     
     } catch (error) {
