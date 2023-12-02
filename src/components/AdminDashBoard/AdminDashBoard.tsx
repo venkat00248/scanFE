@@ -151,7 +151,7 @@ export const AdminDashBoard = () => {
          QR code is sent to your Registerd Email ID
           </Alert>
         } 
-          <TableContainer sx={{ maxHeight: 440 }}>
+          <TableContainer>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
