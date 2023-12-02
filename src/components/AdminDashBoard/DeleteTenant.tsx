@@ -19,7 +19,7 @@ console.log("data from dete", data)
   const handleClose = () => {
     setOpen(false);
   };
-  const fetchData = async () => {
+  const deleteTenant = async () => {
     try {
       const res = await ScanAppService.getTenants();
 
@@ -34,9 +34,6 @@ console.log("data from dete", data)
       // Handle errors while posting or updating data
     } 
   };
-  React.useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <React.Fragment>
@@ -59,7 +56,7 @@ console.log("data from dete", data)
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Yes</Button>
+          <Button onClick={deleteTenant}>Yes</Button>
           <Button onClick={handleClose} autoFocus>
             No
           </Button>

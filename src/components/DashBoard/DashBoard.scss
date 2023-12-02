@@ -1,13 +1,15 @@
 .buttonWrapperr{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 40px;
+    // display: flex;
+    // justify-content: space-between;
     // padding: 0px 16px ;
-    padding-left: 502px;
+    // padding-left: 502px;
     // float: right;
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
     button{
-
+margin-right: 16px;
 //     background-color: #690091;
 //     color:#fff;
 //     // margin-top:-22px;

@@ -92,6 +92,23 @@ export const Form = () => {
 
     return timestampInMilliseconds + "";
   }
+  React.useEffect(() => {
+    console.log("path333333333", location.hash.includes('/addItems'))
+    // Check if the URL contains "/addItems"
+    if (location.hash.includes('/addItems')) {
+      // Update itemDetails state with an empty object
+      setItemDetails({
+        itemName: '',
+        amount: '',
+        offerPrice: '',
+        description: '',
+        spiceLevel: '',
+        isSpecial: false,
+        is_veg: false,
+        mongoId: '',
+      });
+    }
+  }, [location.pathname]);
   const handleSubmit = async (event: any) => {
     let isFormFieldValid = false;
     event.preventDefault();

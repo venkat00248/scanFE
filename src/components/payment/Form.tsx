@@ -210,7 +210,7 @@ export const Form = () => {
     <div className="register-form p-5 needs-validation" id="register-form">      
       {response.statusCode==200 &&  
           <Alert onClose={() => {}}>
-          On Boarderd {`${response.message}`}fully
+          On Boarderd successfully
         </Alert>
         } 
         

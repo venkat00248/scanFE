@@ -14,6 +14,7 @@ import { ScanAppService } from "../../services/ScanAppService";
 import { RippleLoader } from "../Loader/RippleLoader";
 import { EditTenantPopup } from "./EditTenantPopup";
 import DeleteTenant from "./DeleteTenant";
+import { Alert } from "@mui/material";
 interface Column {
   id:
     | "name"
@@ -44,6 +45,14 @@ export const AdminDashBoard = () => {
 
   console.log("iyee", column?.row)
   const res = await ScanAppService.genateQR({tenantName:column?.row?.name, email:column?.row?.email})
+  if(res?.data?.data) {
+    // setIsNotOnboarded(false);
+    setResponse({message:res.data.data.message, statusCode:res.data.statusCode})
+    setTimeout(()=>{
+    setResponse({message:"", statusCode:0})
+
+    },3000)
+  }
   console.log("res",res, column)
  }
   const columns: readonly Column[] = [
@@ -102,6 +111,7 @@ export const AdminDashBoard = () => {
     }
     
   ];
+  const [response , setResponse]= React.useState({message: "",statusCode: 0})
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -136,6 +146,11 @@ export const AdminDashBoard = () => {
         <RippleLoader />
       ) : (
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
+           {response.statusCode==200 &&  
+          <Alert >
+         QR code is sent to your Registerd Email ID
+          </Alert>
+        } 
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>

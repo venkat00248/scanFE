@@ -90,7 +90,7 @@ export const DashBoard = () => {
             </div>
 </div>
         </div> */}
-        <div className="menu-container container align-right">
+        <div className="">
           <div className="row">
             <div className="col-12">
               <div className="card my-4">
