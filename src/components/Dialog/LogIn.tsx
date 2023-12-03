@@ -6,13 +6,16 @@ import './LogIn.scss'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { ScanAppService } from '../../services/ScanAppService';
+import { useNavigate } from 'react-router-dom';
 export const LogIn = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+  const [response, setResponse]= useState("")
   const [itemDetails, setItemDetails] = useState<any>({
     email: "",
     password: "",
@@ -58,19 +61,31 @@ export const LogIn = () => {
     try {
 
       const res = await ScanAppService.tenantLogin({
-        email:"cap@hotmail.com",
-        password:"9b89ccd941379ce925e4"
+        email:itemDetails.email,
+        password:itemDetails.password
       })
 
       console.log("res", res)
+      if (res?.status == 200) {     
+        sessionStorage.isLogin = true;     
+        sessionStorage.tenantdetails = JSON.stringify(res.data);
+        navigate(`/adminDashBoard`, { replace: true });
+      } else {
+        setResponse("Pls. check your credentials")
+        errors.itemDetails.email = "Pls. check email";
+        errors.itemDetails.password = "Pls. check the password";
+      }
       // Frame the formData object based on the form field values
     } catch (error) {
+      setResponse("Pls. check your credentials")
       console.error("Error posting or updating data:", error);
       // Handle errors while posting or updating data
     }
   };
   return (
-    <div style={{marginTop:"25px"}}>
+    <div style={{margin:"25px"}}>
+        <h3 style={{textAlign:"center", marginBottom:"20px"}}>Admin LogIn</h3>
+        {response && <h6 style={{color: "#d32f2f",textAlign:"center"}}>{response}</h6>}
         <FormControl  fullWidth  style={{marginBottom:"18px"}} variant="outlined" size="small">
           <InputLabel htmlFor="outlined-adornment-password">Email</InputLabel>
           <OutlinedInput
@@ -79,12 +94,11 @@ export const LogIn = () => {
             onBlur={onBlurItemDetails("email")}
             value={itemDetails.email}
             onChange={(e) => {
-              const id = e.target.value
-                .replace(/^\s+/, "")
-                .replace(/\s{2,}/g, " ")
-                .replace(/[^a-zA-Z0-9 ]/g, "");
+              const emailValue = e.target.value
+              .replace(/[^a-zA-Z0-9@.]/g, "")
+              .replace(/\.com.*$/, ".com");
               // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
-              setItemDetails({ ...itemDetails, email: id });
+              setItemDetails({ ...itemDetails, email: emailValue });
             }}
           />
               {errors.itemDetails.email && <FormHelperText error>{errors.itemDetails.password}</FormHelperText>}
@@ -100,8 +114,6 @@ export const LogIn = () => {
             onChange={(e) => {
               const id = e.target.value
                 .replace(/^\s+/, "")
-                .replace(/\s{2,}/g, " ")
-                .replace(/[^a-zA-Z0-9 ]/g, "");
               // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
               setItemDetails({ ...itemDetails, password: id });
             }}

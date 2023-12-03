@@ -2,6 +2,7 @@
 
 import { AdminDashBoard } from "../AdminDashBoard/AdminDashBoard";
 import { DashBoard } from "../DashBoard/DashBoard";
+import { LogIn } from "../Dialog/LogIn";
 import { LoginDialog } from "../Dialog/LoginDialog";
 import { Home } from "../Home/Home";
 import { Items } from "../Items/Items";
@@ -25,7 +26,8 @@ export const Routes:any = [
     {path:"/:tenant/tenantLogin", element: <TenantLogIn/>,showHeader: false  },
     { path: "/:tenant/", element: <TenantLogIn />, index: true,showHeader: false  },
     {path:"/:tenant/dashBoard", element:<DashBoard/>, showHeader:true},
-    {path:"/:tenant/adminDashBoard", element:<AdminDashBoard/>, showHeader:true}
+    {path:"/adminDashBoard", element:<AdminDashBoard/>, showHeader:true},
+    {path:"/adminLogin", element:<LogIn/>, showHeader:true}
    
    
   ];
