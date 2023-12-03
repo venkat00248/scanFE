@@ -98,7 +98,7 @@ export const Form = () => {
     // Check if the URL contains "/addItems"
     if (location.hash.includes('/addItems')) {
       // Update itemDetails state with an empty object
-      setFileSrc("./assets/img/food_img.png");
+      setFileSrc("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/food_img.png");
       setItemDetails({
         itemName: '',
         amount: '',

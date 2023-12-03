@@ -27,7 +27,7 @@ export const FormDataProvider = ({ children }: any) => {
   );
   const [indexedImage, setIndexedImage] = useState(0);
   const [fileSrc, setFileSrc] = useState(
-    "./assets/img/dummy-post-horisontal.jpg"
+    "http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/dummy-post-horisontal.jpg"
   );
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const updateMenuItems = (newMenuItems: any) => {
