@@ -15,7 +15,7 @@ import { RippleLoader } from "../Loader/RippleLoader";
 import { EditTenantPopup } from "./EditTenantPopup";
 import DeleteTenant from "./DeleteTenant";
 import { Alert } from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 interface Column {
   id:
     | "name"
@@ -28,34 +28,46 @@ interface Column {
   label: string;
   minWidth?: number;
   align?: "right";
-  format?: (value: string | number, column:any) => string | JSX.Element | undefined;
+  format?: (
+    value: string | number,
+    column: any
+  ) => string | JSX.Element | undefined;
 }
-
 
 export const AdminDashBoard = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
-  const [isLoading, setIsLoading] = React.useState(false)
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    console.log("event", event)
+  const [isLoading, setIsLoading] = React.useState(false);
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    console.log("event", event);
     setPage(newPage);
   };
- const handleGenerateQR = async(column:any) =>{
-  setIsLoading(true)
-  console.log("iyee", column?.row)
-  const res = await ScanAppService.genateQR({tenantName:column?.row?.name, email:column?.row?.email})
-  if(res?.data?.data) {
-    // setIsNotOnboarded(false);
-    setResponse({message:res.data.data.message, statusCode:res.data.statusCode})
-    setTimeout(()=>{
-    setResponse({message:"", statusCode:0})
-    setIsLoading(false)
-
-    },3000)
-  }
-  console.log("res",res, column)
- }
+  const [indexed, setIndexed] = React.useState(1)
+  const handleGenerateQR = async (column: any, index: number) => {
+    setIndexed(index)
+    setIsLoading(true);
+    console.log("iyee", column, index);
+    const res = await ScanAppService.genateQR({
+      tenantName: column?.name,
+      email: column?.email,
+    });
+    if (res?.data?.data) {
+      // setIsNotOnboarded(false);
+      setResponse({
+        message: res.data.data.message,
+        statusCode: res.data.statusCode,
+      });
+      setTimeout(() => {
+        setResponse({ message: "", statusCode: 0 });
+        setIsLoading(false);
+      }, 3000);
+    }
+    console.log("res", res, column);
+  };
   const columns: readonly Column[] = [
     { id: "name", label: "Name", minWidth: 170 },
     { id: "email", label: "Email", minWidth: 100 },
@@ -64,7 +76,9 @@ export const AdminDashBoard = () => {
       label: "Logo",
       // minWidth: 170,
       align: "right",
-      format: (value: string | number) => <img src={String(value)} alt="Logo" />,
+      format: (value: string | number) => (
+        <img src={String(value)} alt="Logo" />
+      ),
     },
     /*{
       id: "currency_code",
@@ -87,13 +101,18 @@ export const AdminDashBoard = () => {
       align: "right",
       // format: (value: number) => value.toFixed(2),
     },
-  
+
     {
       id: "action",
       label: "Action",
       minWidth: 100,
       align: "right",
-      format: (item: any, column:any) => <div style={{display:"flex"}}><EditTenantPopup item={item} data={column} /><DeleteTenant data={column} /></div>,
+      format: (item: any, column: any) => (
+        <div style={{ display: "flex" }}>
+          <EditTenantPopup item={item} data={column} />
+          <DeleteTenant data={column} />
+        </div>
+      ),
     },
     // {
     //   id: "Delete",
@@ -101,20 +120,19 @@ export const AdminDashBoard = () => {
     //   minWidth: 170,
     //   align: "right",
     //   format: ( column:any) => <DeleteTenant data={column} />,
-  
+
     // },
     {
       id: "generateQR",
       label: "Generate QR",
       minWidth: 170,
       align: "right",
-      format: (item: any, column: any) => 
-      <button  className="btn btn-primary" onClick={()=>{handleGenerateQR(column); console.log("co;um", item)}}><span>  {isLoading? <div style={{width:"50px"}}><CircularProgress color="secondary" size="16px"  /></div>:"Generate QR"}</span></button>  
-      
-    }
-    
+    },
   ];
-  const [response , setResponse]= React.useState({message: "",statusCode: 0})
+  const [response, setResponse] = React.useState({
+    message: "",
+    statusCode: 0,
+  });
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -149,11 +167,9 @@ export const AdminDashBoard = () => {
         <RippleLoader />
       ) : (
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
-           {response.statusCode==200 &&  
-          <Alert >
-         QR code is sent to your Registerd Email ID
-          </Alert>
-        } 
+          {response.statusCode == 200 && (
+            <Alert>QR code is sent to your Registerd Email ID</Alert>
+          )}
           <TableContainer>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
@@ -172,25 +188,38 @@ export const AdminDashBoard = () => {
               <TableBody>
                 {rows
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableRow hover role="checkbox" tabIndex={-1}>
-                        {columns.map((column:any) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {/* {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : value} */}
-                              {column.format
-                                ? column.format(value as string | number, column={row})
-                                : String(value)}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
+                  .map((row: any, index) => (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      <TableCell align="left">{row.name}</TableCell>
+                      <TableCell align="left">{row.email}</TableCell>
+                      <TableCell align="right">
+                        <img src={row.url} alt="Logo" />
+                      </TableCell>
+                      <TableCell align="right">{row.primary_color}</TableCell>
+                      <TableCell align="right">{row.secondary_color}</TableCell>
+                      <TableCell align="right">
+                        <div style={{ display: "flex" }}>
+                          <EditTenantPopup item={row} data={row} />
+                          <DeleteTenant data={row} />
+                        </div>
+                      </TableCell>
+                      <TableCell align="right">
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleGenerateQR(row, index)}
+                        >
+                          <span>
+                            {(isLoading && indexed===index) ? (
+                            <div style={{width:"50px"}}><CircularProgress color="secondary" size="16px" /></div>
+                            ) : (
+                              "Generate QR"
+                            )}
+                          </span>
+                        </button>
+
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>

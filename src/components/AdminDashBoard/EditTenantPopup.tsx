@@ -29,12 +29,12 @@ export const EditTenantPopup = ({item, data}:any) => {
   React.useEffect(() => {
     console.log("Setting tenant details:", data);
     if(data){
-    setTenantDetails({tenantName:data.row.name,email:data.row.email });
-    setThemeDetails({ primaryColor: data.row. primary_color, secondaryColor: data.row.secondary_color })
-    setFileSrc(data.row.url)
+    setTenantDetails({tenantName:data.name,email:data.email });
+    setThemeDetails({ primaryColor: data. primary_color, secondaryColor: data.secondary_color })
+    setFileSrc(data.url)
     setDisabled(true)
     setText("update")
-    setTenantId(data.row._id)
+    setTenantId(data._id)
     }
   }, [data,state]);
     console.log("itemmm", data)

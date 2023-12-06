@@ -31,7 +31,7 @@ console.log("data from dete", data)
   const deleteTenant = async () => {
     try {
       const res = await ScanAppService.deleteTenants({
-        _ids: [data.row._id],
+        _ids: [data._id],
         status: false,
         updated_by: tdata?._id,
       });
