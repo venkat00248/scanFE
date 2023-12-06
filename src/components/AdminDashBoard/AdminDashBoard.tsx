@@ -15,16 +15,15 @@ import { RippleLoader } from "../Loader/RippleLoader";
 import { EditTenantPopup } from "./EditTenantPopup";
 import DeleteTenant from "./DeleteTenant";
 import { Alert } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 interface Column {
   id:
     | "name"
     | "email"
     | "url"
-    | "currency_code"
     | "primary_color"
     | "secondary_color"
     | "action"
-    | "Delete"
     | "generateQR";
   label: string;
   minWidth?: number;
@@ -37,12 +36,13 @@ export const AdminDashBoard = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false)
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     console.log("event", event)
     setPage(newPage);
   };
  const handleGenerateQR = async(column:any) =>{
-
+  setIsLoading(true)
   console.log("iyee", column?.row)
   const res = await ScanAppService.genateQR({tenantName:column?.row?.name, email:column?.row?.email})
   if(res?.data?.data) {
@@ -50,6 +50,7 @@ export const AdminDashBoard = () => {
     setResponse({message:res.data.data.message, statusCode:res.data.statusCode})
     setTimeout(()=>{
     setResponse({message:"", statusCode:0})
+    setIsLoading(false)
 
     },3000)
   }
@@ -65,13 +66,13 @@ export const AdminDashBoard = () => {
       align: "right",
       format: (value: string | number) => <img src={String(value)} alt="Logo" />,
     },
-    {
+    /*{
       id: "currency_code",
       label: "Currency code",
       minWidth: 170,
       align: "right",
       // format: (value: number | string) => value.toLocaleString('en-US'),
-    },
+    },*/
     {
       id: "primary_color",
       label: "Primary Color",
@@ -90,24 +91,26 @@ export const AdminDashBoard = () => {
     {
       id: "action",
       label: "Action",
-      minWidth: 170,
+      minWidth: 100,
       align: "right",
-      format: (item: any, column:any) => <EditTenantPopup item={item} data={column} />,
+      format: (item: any, column:any) => <div style={{display:"flex"}}><EditTenantPopup item={item} data={column} /><DeleteTenant data={column} /></div>,
     },
-    {
-      id: "Delete",
-      label: "Delete",
-      minWidth: 170,
-      align: "right",
-      format: ( column:any) => <DeleteTenant data={column} />,
+    // {
+    //   id: "Delete",
+    //   label: "Delete",
+    //   minWidth: 170,
+    //   align: "right",
+    //   format: ( column:any) => <DeleteTenant data={column} />,
   
-    },
+    // },
     {
       id: "generateQR",
       label: "Generate QR",
       minWidth: 170,
       align: "right",
-      format: (item: any, column: any) => <button  className="btn btn-primary" onClick={()=>{handleGenerateQR(column); console.log("co;um", item)}}>Generate QR</button>,
+      format: (item: any, column: any) => 
+      <button  className="btn btn-primary" onClick={()=>{handleGenerateQR(column); console.log("co;um", item)}}><span>  {isLoading? <div style={{width:"50px"}}><CircularProgress color="secondary" size="16px"  /></div>:"Generate QR"}</span></button>  
+      
     }
     
   ];
@@ -127,7 +130,7 @@ export const AdminDashBoard = () => {
       console.log("res", res);
       // setMenuItems(res.data.data);
       if (res && res.data) {
-        setRows(res.data.data);
+        setRows(res.data.data.filter((item: any) => item.status == true));
       }
       // Frame the formData object based on the form field values
     } catch (error) {

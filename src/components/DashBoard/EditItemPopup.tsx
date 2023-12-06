@@ -13,7 +13,7 @@ type Anchor = "top" | "left" | "bottom" | "right";
 
 export const EditItemPopup = ({data}:any) => {
   console.log("EditItemPopup :: data: " + JSON.stringify(data));
-  const {  setItemDetails ,setFileSrc} = useFormData();
+  const {  setItemDetails ,setText,setFileSrc} = useFormData();
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -28,6 +28,7 @@ export const EditItemPopup = ({data}:any) => {
       setItemDetails({ itemName: data.name, mongoId:data._id, amount: data.item_price , offerPrice:data.promotional_price, description:data.item_desc, spiceLevel:data.spicy_level,isSpecial:data.is_special
 ,is_veg:data.is_veg
       })
+      setText("Update")
   }, [data,state]);
 
   const toggleDrawer =

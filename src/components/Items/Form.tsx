@@ -35,7 +35,7 @@ export const Form = () => {
   const [isLoading, setIsLoading] = useState(true);
   // let encoded = base64_encode('YOUR_DECODED_STRING');
   // let decoded = base64_decode('YOUR_ENCODED_STRING');
-  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,expiredOn, setExpiredOn} = useFormData();
+  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,expiredOn, setExpiredOn, text} = useFormData();
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const tdata = config?.data[0];
   const handleFileChange = (event: any) => {
@@ -537,7 +537,7 @@ export const Form = () => {
                     color: `${config?.data[0]?.secondary_color}`,
                   }}
                 >
-                  <span>Add</span>
+                  <span>{text}</span>
                 </button>
               </FormControl>
             </div>

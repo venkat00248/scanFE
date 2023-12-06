@@ -36,12 +36,12 @@ export class ScanApp extends HttpApiService {
   genateQR = (data:any)=>{
     return this.post(`${scanAPPAPI}/generateqrcode`, data)
   }
-  paymentFormSubmit = (data:any)=>{
-    return this.post(`${scanAPPAPI}/paymentForm/submit`, data)
+  updateTenant = (data:any)=>{
+  return this.post(`${scanAPPAPI}/updateTenant`, data)
   }
-  paymentFormUpdate = (data:any)=>{
-    return this.post(`${scanAPPAPI}/paymentForm/update`, data)
-  }
+  deleteTenants = (data:any)=>{
+    return this.post(`${scanAPPAPI}/deleteTenants`, data)
+    }
 }
 
 export const ScanAppService = new ScanApp();

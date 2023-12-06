@@ -193,7 +193,7 @@ export const DashBoard = () => {
                           </div>
                         </div> */}
                                   <div className="spice">
-                                    {[...Array(menuItem.spiceLevel)].map(
+                                    {[...Array(menuItem.spicy_level)].map(
                                       (_, index) => (
                                         <img
                                           key={index}

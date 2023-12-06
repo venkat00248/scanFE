@@ -2,7 +2,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import './Styles.scss'
 import { EditTenant } from "./EditTenant";
@@ -17,24 +17,28 @@ export const EditTenantPopup = ({item, data}:any) => {
   const {
     setTenantDetails,
     setThemeDetails,
-    setFileSrc
+    setFileSrc,setDisabled ,setText ,setTenantId
     
   } = useTenantFormData();
-  React.useEffect(() => {
-    console.log("Setting tenant details:", data);
-    if(data){
-    setTenantDetails({tenantName:data.row.name,email:data.row.email });
-    setThemeDetails({ primaryColor: data.row. primary_color, secondaryColor: data.row.secondary_color })
-    setFileSrc(data.row.url)
-    }
-  }, []);
-    console.log("itemmm", data)
   const [state, setState] = React.useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
+  React.useEffect(() => {
+    console.log("Setting tenant details:", data);
+    if(data){
+    setTenantDetails({tenantName:data.row.name,email:data.row.email });
+    setThemeDetails({ primaryColor: data.row. primary_color, secondaryColor: data.row.secondary_color })
+    setFileSrc(data.row.url)
+    setDisabled(true)
+    setText("update")
+    setTenantId(data.row._id)
+    }
+  }, [data,state]);
+    console.log("itemmm", data)
+  
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
@@ -73,7 +77,7 @@ export const EditTenantPopup = ({item, data}:any) => {
   return (
     <div>
       <React.Fragment key={"bottom"}>
-        <Button onClick={toggleDrawer("bottom", true)}><EditIcon sx={{ fontSize: 20 }}/></Button>
+        <IconButton color="primary" onClick={toggleDrawer("bottom", true)}><EditIcon sx={{ fontSize: 20 }}/></IconButton>
         <Drawer
           anchor={"bottom"}
           open={state["bottom"]}

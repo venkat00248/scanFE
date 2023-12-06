@@ -21,7 +21,10 @@ export const TenantFormDataProvider = ({ children}:any) => {
 const [checked, setChecked]= useState(false)
 const [mongoId, setMongoId]= useState("")
 const [fileSrc, setFileSrc] = useState("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/logo.jpg");
-  return (
+const [disabled, setDisabled]= useState(false)
+  const [text, setText]= useState("Proceed")
+  const [tenantId , setTenantId] = useState("")
+    return (
     <TenantFormDataContext.Provider
       value={{
         tenantDetails,
@@ -35,7 +38,10 @@ const [fileSrc, setFileSrc] = useState("http://h-app-scanner.s3-website-ap-south
         checked,
         setChecked,
         themeDetails, setThemeDetails,
-        fileSrc, setFileSrc
+        fileSrc, setFileSrc,
+        disabled, setDisabled,
+        text, setText,
+        tenantId , setTenantId
       }}
     >
       {children}

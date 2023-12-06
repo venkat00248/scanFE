@@ -33,6 +33,7 @@ export const FormDataProvider = ({ children }: any) => {
   const updateMenuItems = (newMenuItems: any) => {
     setMenuItems(newMenuItems);
   };
+  const [text, setText]= useState("Add")
   return (
     <FormDataContext.Provider
       value={{
@@ -50,7 +51,8 @@ export const FormDataProvider = ({ children }: any) => {
         setExpiredOn,
         menuItems,
         setMenuItems,
-        updateMenuItems
+        updateMenuItems,
+        text, setText
       }}
     >
       {children}

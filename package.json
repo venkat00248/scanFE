@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "vite  --host http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com --port 8080 --open",
+    "start": "vite   --port 8080 --open",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

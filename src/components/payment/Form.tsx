@@ -11,6 +11,7 @@ import {
 import { useTenantFormData } from "./stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
 import { useNavigate } from "react-router-dom";
+import { useConfig } from "../../config/config";
 export const Form = () => {
   const {
     tenantDetails,
@@ -22,7 +23,9 @@ export const Form = () => {
     checked,
     setChecked,
     themeDetails, setThemeDetails,
-    fileSrc, setFileSrc
+    fileSrc, setFileSrc,
+    disabled ,
+    text , tenantId
   } = useTenantFormData();
   const navigate = useNavigate();
   const [response , setResponse]= useState({message: "",statusCode: 0})
@@ -44,7 +47,8 @@ export const Form = () => {
   // const [isNotOnboarded, setIsNotOnboarded] = useState(false);
   // const [isChecked, setIsChecked] = useState(false);
   const [checkboxError, setCheckboxError] = useState("");
-
+  const config: any = useConfig();
+  const tdata = config?.data[0];
   // Other code (onBlur functions, handleSubmit, etc.)
 
   const handleCheckboxChange = (event: any) => {
@@ -129,7 +133,7 @@ export const Form = () => {
   };
 
   const handleSubmit = async (event: any) => {
-    // let isFormFieldValid = false;
+    let isFormFieldValid = false;
     event.preventDefault();
 
     // Perform onBlur validation for all fields
@@ -144,57 +148,67 @@ export const Form = () => {
     onBlurLocation("state")();
     onBlurLocation("postalCode")();
 
-    // If there are any validation errors, prevent form submission
-    // if (
-    //   errors.tenantDetails.tenantName ||
-    //   errors.tenantDetails.email ||
-    //   errors.userDetails.name ||
-    //   errors.userDetails.email ||
-    //   errors.userDetails.contact ||
-    //   errors.location.address ||
-    //   errors.location.country ||
-    //   errors.location.city ||
-    //   errors.location.state ||
-    //   errors.location.postalCode
-    // ) {
-    //   // return;
-    //   isFormFieldValid = false;
-    // } else {
-    //   isFormFieldValid = true;
-    // }
-    // if (!checked) {
-    //   setCheckboxError("You must agree to the terms and conditions.");
-    //   // return; // Prevent form submission if checkbox is not checked
-    // } else {
-    //   setCheckboxError(""); // Clear the checkbox error if it's checked
-    // }
-    // if (!isFormFieldValid || !checked) return;
-    // setReview(false)
-    try {
-      // Frame the formData object based on the form field values
-      console.log(`fileSrc :: onboard ::`, fileSrc);
+    if (
+      errors.tenantDetails.tenantName ||
+      errors.tenantDetails.email ||
+      errors.userDetails.name ||
+      errors.userDetails.email ||
+      errors.userDetails.contact ||
+      errors.location.address ||
+      errors.location.country ||
+      errors.location.city ||
+      errors.location.state ||
+      errors.location.postalCode
+    ) {
       // return;
-      const res = await ScanAppService.onBoarding({
-        name: tenantDetails.tenantName,
-        email: tenantDetails.email,
-        "url":fileSrc,
-        // "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFAKyG_UrnbS-IDsnFOV92Kp7LRQCVxyC4BaPY-TwXChIuRvy31ByTmTcUySLf7Z2ZkHk&usqp=CAU",
-        primary_color: themeDetails.primaryColor,
-        secondary_color:themeDetails.secondaryColor
-    })
-    console.log("res", res?.data?.statusCode)
-    if(res?.data?.statusCode == 200) {
-      // setIsNotOnboarded(false);
-      setResponse({message:res.data.message, statusCode:res?.data?.statusCode});
-      navigate(`../tenant/admindashboard`, { replace: true });
+      isFormFieldValid = false;
+    } else {
+      isFormFieldValid = true;
     }
     
+   
+    try {
+      if (isFormFieldValid) {
+        if (tenantId) {
+          const res = await ScanAppService.updateTenant({
+              _id:tenantId,
+              name: tenantDetails.tenantName,
+              "url":fileSrc,
+                primary_color: themeDetails.primaryColor,
+                secondary_color:themeDetails.secondaryColor,
+                updated_by:tdata?._id,
+          });
+          if (res) {
+            setResponse({
+              message: "Tenant updated successfully",
+              statusCode: res.status,
+            });
+           
+          }
+        } else {
+         
+
+              const res = await ScanAppService.onBoarding({
+                name: tenantDetails.tenantName,
+                email: tenantDetails.email,
+                "url":fileSrc,
+                primary_color: themeDetails.primaryColor,
+                secondary_color:themeDetails.secondaryColor
+              })
+            console.log("res", res?.data?.statusCode)
+            if(res?.data?.statusCode == 200) {
+              // setIsNotOnboarded(false);
+              setResponse({message:"On Boarderd successfully", statusCode:res?.data?.statusCode});
+              navigate(`../tenant/admindashboard`, { replace: true });
+            }
+          }
+        }
     } catch (error) {
       console.error("Error posting or updating data:", error);
       // Handle errors while posting or updating data
     }
   };
- 
+
 
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
@@ -213,7 +227,7 @@ export const Form = () => {
     <div className="register-form p-5 needs-validation" id="register-form">      
       {response.statusCode==200 &&  
           <Alert onClose={() => {}}>
-          On Boarderd successfully
+         {response.message}
         </Alert>
         } 
         
@@ -232,9 +246,9 @@ export const Form = () => {
                   value={tenantDetails.tenantName}
                   onChange={(e) => {
                     const id = e.target.value
-                      .replace(/^\s+/, "")
-                      .replace(/\s{2,}/g, " ")
-                      .replace(/[^a-zA-Z0-9 ]/g, "");
+                    .replace(/^\s+/, "")
+                    .replace(/\s+/g, "") // Remove all spaces
+                    .replace(/[^a-zA-Z]/g, ""); // Remove non-alphabetic characters
                     // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
                     setTenantDetails({ ...tenantDetails, tenantName: id });
                   }}
@@ -255,6 +269,7 @@ export const Form = () => {
                   multiline
                   variant="outlined"
                   value={tenantDetails.email}
+                  disabled={disabled}
                   onChange={(e) => {
                     const emailValue = e.target.value
                       .replace(/[^a-zA-Z0-9@.]/g, "")
@@ -571,7 +586,7 @@ export const Form = () => {
             className="btn btn-primary"
             onClick={handleSubmit}
           >
-            <span>Proceed</span>
+            <span>{text}</span>
           </button>
         </FormControl>
       </div>
