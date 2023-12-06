@@ -16,6 +16,7 @@ import { EditTenantPopup } from "./EditTenantPopup";
 import DeleteTenant from "./DeleteTenant";
 import { Alert } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useTenantFormData } from "../payment/stateManagement/FormDataContext";
 interface Column {
   id:
     | "name"
@@ -35,6 +36,7 @@ interface Column {
 }
 
 export const AdminDashBoard = () => {
+  const {rows, setRows}= useTenantFormData()
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
@@ -68,6 +70,7 @@ export const AdminDashBoard = () => {
     }
     console.log("res", res, column);
   };
+  React.useEffect(()=>{},[rows])
   const columns: readonly Column[] = [
     { id: "name", label: "Name", minWidth: 170 },
     { id: "email", label: "Email", minWidth: 100 },
@@ -139,7 +142,7 @@ export const AdminDashBoard = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const [rows, setRows] = React.useState([]);
+  // const [rows, setRows] = React.useState([]);
   const fetchData = async () => {
     try {
       setLoading(false);
@@ -187,8 +190,8 @@ export const AdminDashBoard = () => {
               </TableHead>
               <TableBody>
                 {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row: any, index) => (
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).filter((item: any) => item.status == true)
+                  .map((row: any, index:number) => (
                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="left">{row.email}</TableCell>

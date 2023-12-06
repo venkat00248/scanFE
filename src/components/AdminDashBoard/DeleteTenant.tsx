@@ -46,26 +46,28 @@ console.log("data from dete", data)
           setStatusFlag("");
           setOpen(false);
           },6000)
-          // const data = res?.data?.data[0];
-
+          const data = res?.data?.data[0];
+         console.log("data 111", data)
           // setMenuItems(menuItems.filter((item: any) => {
           //   if (item._id == data._id) {
           //       item.status = data.status;
           //   }
           // }))
 
-          // setRows((items: any) => {
-          //   const updatedItems = items.map((item: any) => {
-          //     if (item._id === data._id) {
-          //       // Use a single "=" to update the status property
-          //       item.status = data.status;
-          //     }
-          //     return item;
-          //   });
+          setRows((rows: any) => {
+            const updatedItems = rows.map((item: any) => {
+              if (item._id === data._id) {
+                // Use a single "=" to update the status property
+                item.status = data.status;
+              }
+              return item;
+            });
+            console.log("menu Items 111", updatedItems);
 
-          //   return updatedItems;
-          // });
-          console.log("menu Items 111", rows);
+            return updatedItems;
+          });
+          console.log("menu Items 111", rows.filter((item: any) => item.status == true));
+
         }
       }
       // Frame the formData object based on the form field values

@@ -24,6 +24,7 @@ const [fileSrc, setFileSrc] = useState("http://h-app-scanner.s3-website-ap-south
 const [disabled, setDisabled]= useState(false)
   const [text, setText]= useState("Proceed")
   const [tenantId , setTenantId] = useState("")
+  const [rows, setRows]= useState([])
     return (
     <TenantFormDataContext.Provider
       value={{
@@ -41,7 +42,8 @@ const [disabled, setDisabled]= useState(false)
         fileSrc, setFileSrc,
         disabled, setDisabled,
         text, setText,
-        tenantId , setTenantId
+        tenantId , setTenantId,
+        rows, setRows
       }}
     >
       {children}
