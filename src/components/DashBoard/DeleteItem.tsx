@@ -16,6 +16,7 @@ export default function DeleteItem({ data }: any) {
   const config: any = useConfig();
   const tdata = config?.data[0];
   const [open, setOpen] = React.useState(false);
+  const [disabled, setDisabled]= React.useState(false)
   const [statusFlag, setStatusFlag] = React.useState("");
   const { menuItems, updateMenuItems } = useFormData();
   console.log("data from item", data);
@@ -28,6 +29,7 @@ export default function DeleteItem({ data }: any) {
   };
   const deleteItem = async () => {
     try {
+      setDisabled(true)
       const res = await ScanAppService.deleteItems({
         _ids: [data._id],
         status: false,
@@ -40,11 +42,10 @@ export default function DeleteItem({ data }: any) {
         // setRows(res.data.data);
         if (res?.data?.statusCode === 200) {
           setStatusFlag("success");
-          // setTimeout(() => {
+          setTimeout(() => {
           setStatusFlag("");
           setOpen(false);
           const data = res?.data?.data[0];
-
           // setMenuItems(menuItems.filter((item: any) => {
           //   if (item._id == data._id) {
           //       item.status = data.status;
@@ -80,7 +81,7 @@ export default function DeleteItem({ data }: any) {
           // });
           //   // sessionStorage.menuItem = JSON.stringify(menuItems);
           // }
-          // }, 3000);
+          }, 4000);
         }
       }
       // Frame the formData object based on the form field values
@@ -115,7 +116,7 @@ export default function DeleteItem({ data }: any) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={deleteItem}>Yes</Button>
+          <Button onClick={deleteItem} disabled={disabled}>Yes</Button>
           <Button onClick={handleClose} autoFocus>
             No
           </Button>

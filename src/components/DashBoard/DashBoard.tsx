@@ -4,21 +4,24 @@ import { Link, useParams } from "react-router-dom";
 // import { menuItems } from '../../Appconstant';
 import "../layouts/Latest/Latest.scss";
 import "./DashBoard.scss";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ScanAppService } from "../../services/ScanAppService";
 import { Button } from "react-bootstrap";
 import { useConfig } from "../../config/config";
 import { EditItemPopup } from "./EditItemPopup";
 import DeleteItem from "./DeleteItem";
 import { useFormData } from "../Items/stateManagement/FormDataContext";
+import { RippleLoader } from "../Loader/RippleLoader";
 // import { menuItems } from '../../../Appconstant';
 export const DashBoard = () => {
   const { tenant } = useParams();
    const {menuItems, setMenuItems} =  useFormData()
+const [loading, setLoading]= useState(false)
   const config: any = useConfig();
   const tdata = config?.data[0];
   const fetchData = async () => {
     try {
+      setLoading(true)
       const res = await ScanAppService.getItems(tdata?._id);
 
       console.log("res fro", res);
@@ -30,6 +33,7 @@ export const DashBoard = () => {
         setMenuItems(
           data.filter((item: any) => item.is_special && item.status == true)
         );
+        setLoading(false)
         // setMenuItems(data);
       }
 
@@ -47,7 +51,7 @@ export const DashBoard = () => {
   },[menuItems])
   return (
     <div className="Latest minHeight">
-      <section className="section menu" id="menu">
+      {loading ? <RippleLoader/>: <section className="section menu" id="menu">
         <div className="buttonWrapperr">
           {menuItems.length < 5 && (
             <Link to={`/${tenant}/addItems`}>
@@ -235,7 +239,7 @@ export const DashBoard = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section>}
     </div>
   );
 };

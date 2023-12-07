@@ -35,7 +35,7 @@ export const Form = () => {
   const [isLoading, setIsLoading] = useState(true);
   // let encoded = base64_encode('YOUR_DECODED_STRING');
   // let decoded = base64_decode('YOUR_ENCODED_STRING');
-  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,expiredOn, setExpiredOn, text} = useFormData();
+  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,expiredOn, setExpiredOn, text,setText} = useFormData();
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const tdata = config?.data[0];
   const handleFileChange = (event: any) => {
@@ -98,6 +98,7 @@ export const Form = () => {
     // Check if the URL contains "/addItems"
     if (location.hash.includes('/addItems')) {
       // Update itemDetails state with an empty object
+      setText("Save")
       setFileSrc("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/food_img.png");
       setItemDetails({
         itemName: '',
@@ -373,9 +374,9 @@ export const Form = () => {
                         value={itemDetails.description}
                         onChange={(e) => {
                           const description = e.target.value
-                            .replace(/^\s+/, "")
-                            .replace(/\s{2,}/g, " ")
-                            .replace(/[^a-zA-Z0-9 ]/g, "");
+                            // .replace(/^\s+/, "")
+                            // .replace(/\s{2,}/g, " ")
+                            // .replace(/[^a-zA-Z0-9 ]/g, "");
                           setItemDetails({
                             ...itemDetails,
                             description: description,

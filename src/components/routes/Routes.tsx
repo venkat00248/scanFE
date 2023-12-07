@@ -10,6 +10,7 @@ import { PacManLoader } from "../Loader/PacManLoader";
 import { RippleLoader } from "../Loader/RippleLoader";
 import { TenantLogIn } from "../Tenant/TenantLogIn";
 import { Latest } from "../layouts/Latest/Latest";
+import { MultiFileUpload } from "../multiFileUpload/multiFileUpload";
 import { Onboarding } from "../payment/Onboarding";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,7 +28,8 @@ export const Routes:any = [
     { path: "/:tenant/", element: <TenantLogIn />, index: true,showHeader: false  },
     {path:"/:tenant/dashBoard", element:<DashBoard/>, showHeader:true},
     {path:"/adminDashBoard", element:<AdminDashBoard/>, showHeader:true},
-    {path:"/adminLogin", element:<LogIn/>, showHeader:true}
+    {path:"/adminLogin", element:<LogIn/>, showHeader:true},
+    {path:"/multifile", element:<MultiFileUpload/>, showHeader:true}
    
    
   ];
