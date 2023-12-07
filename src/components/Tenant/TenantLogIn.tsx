@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import{ useState } from "react";
 import {
-  FormHelperText,
+  FormHelperText, Switch,
 } from "@mui/material";
 import "./TenantLogIn.scss";
 import { ScanAppService } from "../../services/ScanAppService";
@@ -295,8 +295,8 @@ export const TenantLogIn = () => {
                     </FormHelperText>
                   )}
                   </div>
-                  <div className="form-check form-switch d-flex align-items-center mb-3">
-                    <input className="form-check-input" type="checkbox" id="rememberMe" checked/>
+                  <div className="form-switch d-flex align-items-center mb-3" style={{padding:"0px"}}>
+                  <Switch defaultChecked size="small"/>
                     <label className="form-check-label mb-0 ms-3" >Remember me</label>
                   </div>
                   <div className="text-center">

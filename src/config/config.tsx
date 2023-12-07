@@ -33,13 +33,13 @@ const ConfigProvider = ({ children }:any) => {
   };
   useEffect(() => {
   
-    const storedConfig = sessionStorage.getItem('appConfig');
+    // const storedConfig = sessionStorage.getItem('appConfig');
 
-    if (storedConfig) {
-      setConfig(JSON.parse(storedConfig));
-    } else {
+    // if (storedConfig) {
+    //   setConfig(JSON.parse(storedConfig));
+    // } else {
     fetchConfig();
-    }
+    // }
   }, [navigate , data]);
 
   return (

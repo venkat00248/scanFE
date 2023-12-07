@@ -87,7 +87,7 @@ export const AdminDashBoard = () => {
       id: "url",
       label: "Logo",
       // minWidth: 170,
-      align: "right",
+      // align: "right",
       format: (value: string | number) => (
         <img src={String(value)} alt="Logo" />
       ),
