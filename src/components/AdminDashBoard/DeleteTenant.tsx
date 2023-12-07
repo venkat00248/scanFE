@@ -16,6 +16,7 @@ import { Alert } from '@mui/material';
 
 export default function DeleteTenant({data}:any) {
   const [open, setOpen] = React.useState(false);
+  const [disabled, setDisabled]= React.useState(false)
   const config: any = useConfig();
   const tdata = config?.data[0];
   const [statusFlag, setStatusFlag] = React.useState("");
@@ -30,6 +31,7 @@ console.log("data from dete", data)
   };
   const deleteTenant = async () => {
     try {
+      setDisabled(true)
       const res = await ScanAppService.deleteTenants({
         _ids: [data._id],
         status: false,
@@ -102,7 +104,7 @@ console.log("data from dete", data)
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={deleteTenant}>Yes</Button>
+          <Button onClick={deleteTenant} disabled={disabled}>Yes</Button>
           <Button onClick={handleClose} autoFocus>
             No
           </Button>
