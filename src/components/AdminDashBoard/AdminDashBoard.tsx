@@ -5,7 +5,7 @@ import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
@@ -14,7 +14,7 @@ import { ScanAppService } from "../../services/ScanAppService";
 import { RippleLoader } from "../Loader/RippleLoader";
 import { EditTenantPopup } from "./EditTenantPopup";
 import DeleteTenant from "./DeleteTenant";
-import { Alert } from "@mui/material";
+import { Alert, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTenantFormData } from "../payment/stateManagement/FormDataContext";
 interface Column {
@@ -70,6 +70,15 @@ export const AdminDashBoard = () => {
     }
     console.log("res", res, column);
   };
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: "#6c7ae0",
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
   React.useEffect(()=>{},[rows])
   const columns: readonly Column[] = [
     { id: "name", label: "Name", minWidth: 170 },
@@ -173,18 +182,19 @@ export const AdminDashBoard = () => {
           {response.statusCode == 200 && (
             <Alert>QR code is sent to your Registerd Email ID</Alert>
           )}
-          <TableContainer>
+          {/* sx={{ maxHeight: 440 }} */}
+          <TableContainer  >
             <Table stickyHeader aria-label="sticky table">
-              <TableHead>
+              <TableHead style={{background:"red"}}>
                 <TableRow>
                   {columns.map((column) => (
-                    <TableCell
+                    <StyledTableCell
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
                     >
                       {column.label}
-                    </TableCell>
+                    </StyledTableCell>
                   ))}
                 </TableRow>
               </TableHead>
