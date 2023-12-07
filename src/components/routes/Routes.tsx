@@ -18,7 +18,7 @@ export const Routes:any = [
     //routes
     // { path: "custom", element: <Header /> },
     { path: "/:tenant/home", element: <Home />,showHeader:true  },
-    {path:"/:tenant/latest", element: <Latest/>},
+    {path:"/:tenant/latest", element: <Latest/>,showHeader:true },
     {path:"/:tenant/login", element: <LoginDialog/>},
     {path:"/onboarding", element: <Onboarding/>,showHeader: false},
     {path:"/:tenant/addItems", element: <Items/>},

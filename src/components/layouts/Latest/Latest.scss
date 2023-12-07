@@ -194,6 +194,7 @@ a{
 .menu-items{
   display: grid;
   row-gap: 1.5rem;
+  width: 100%;
 }
 
 .menu-item{
@@ -206,6 +207,7 @@ a{
 }
 .menuItem-details{
   margin-right: 1.5rem;
+  flex-grow: 1;
 }
 .menuItem-topic{
   font-weight: var(--font-semi-bold);
