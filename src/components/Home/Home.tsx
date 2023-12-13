@@ -109,6 +109,6 @@ const { setOpen,
         </Link>
       </div>
       <DetailedView/>
-    </div>
+          </div>
   );
 };
