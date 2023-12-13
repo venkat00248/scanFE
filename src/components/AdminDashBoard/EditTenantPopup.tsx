@@ -17,7 +17,7 @@ export const EditTenantPopup = ({item, data}:any) => {
   const {
     setTenantDetails,
     setThemeDetails,
-    setFileSrc,setDisabled ,setText ,setTenantId
+    setFileSrc,setDisabled ,setText ,setTenantId,setLocation
     
   } = useTenantFormData();
   const [state, setState] = React.useState({
@@ -30,7 +30,8 @@ export const EditTenantPopup = ({item, data}:any) => {
     console.log("Setting tenant details:", data);
     if(data){
     setTenantDetails({tenantName:data.name,email:data.email });
-    setThemeDetails({ primaryColor: data. primary_color, secondaryColor: data.secondary_color })
+    setThemeDetails({ primaryColor: data.primary_color, secondaryColor: data.secondary_color })
+    setLocation({address: data.address,country: data.country,city: data.city,state:data.state,postalCode: data.postalCode})
     setFileSrc(data.url)
     setDisabled(true)
     setText("update")

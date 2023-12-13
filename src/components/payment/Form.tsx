@@ -171,12 +171,17 @@ export const Form = () => {
       if (isFormFieldValid) {
         if (tenantId) {
           const res = await ScanAppService.updateTenant({
-              _id:tenantId,
-              name: tenantDetails.tenantName,
-              "url":fileSrc,
+                _id:tenantId,
+                name: tenantDetails.tenantName,
+                "url":fileSrc,
                 primary_color: themeDetails.primaryColor,
                 secondary_color:themeDetails.secondaryColor,
                 updated_by:tdata?._id,
+                address: location.address,
+                country: location.country,
+                city: location.city,
+                state:location.state,
+                postalCode: location.postalCode,
           });
           if (res) {
             setResponse({
@@ -193,7 +198,12 @@ export const Form = () => {
                 email: tenantDetails.email,
                 "url":fileSrc,
                 primary_color: themeDetails.primaryColor,
-                secondary_color:themeDetails.secondaryColor
+                secondary_color:themeDetails.secondaryColor,
+                address: location.address,
+                country: location.country,
+                city: location.city,
+                state:location.state,
+                postalCode: location.postalCode,
               })
             console.log("res", res?.data?.statusCode)
             if(res?.data?.statusCode == 200) {
