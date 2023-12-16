@@ -13,6 +13,7 @@ import { useConfig } from "../../config/config";
 import DetailedView from "./DetailedView";
 import { useFormData } from "../Items/stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
+import Review from "./Review";
 
 export const Home = () => {
 const { setOpen,
@@ -109,6 +110,7 @@ const { setOpen,
         </Link>
       </div>
       <DetailedView/>
+      <Review/>
           </div>
   );
 };

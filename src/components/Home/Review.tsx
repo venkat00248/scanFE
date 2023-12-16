@@ -11,7 +11,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from "@mui/icons-material/Delete";
 export default function Review() {
   const [open, setOpen] = React.useState(true);
-  const [disabled, setDisabled]= React.useState(false)
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -20,10 +19,15 @@ export default function Review() {
     setOpen(false);
   };
   
-
+const handleClick = ()=>{
+ 
+  const otherApplicationURL =  'https://g.page/r/CZm8bL5bE_yTEB0/review'
+  window.open(otherApplicationURL, '_blank');
+  setOpen(false);
+}
   return (
     <React.Fragment>
-      <IconButton color="primary"  onClick={handleClickOpen}>
+      <IconButton color="primary" style={{display:"none"}} onClick={handleClickOpen}>
       <DeleteIcon />
       </IconButton>
       <Dialog
@@ -33,15 +37,16 @@ export default function Review() {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Are you Sure Want to delete Tenant?"}
+          {"Customer Review ?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            welcome
+          Your Valuable Review Help us to grow Higher
+         
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button  disabled={disabled}>Yes</Button>
+          <Button onClick={handleClick}>Yes</Button>
           <Button onClick={handleClose} autoFocus>
             No
           </Button>
