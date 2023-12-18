@@ -42,6 +42,7 @@ export const Form = () => {
       city: "",
       state: "",
       postalCode: "",
+      
     },
   });
   // const [isNotOnboarded, setIsNotOnboarded] = useState(false);
@@ -557,6 +558,27 @@ export const Form = () => {
                   error={!!errors.location.postalCode}
                   helperText={errors.location.postalCode}
                   inputProps={{ maxLength: 6 }}
+                />
+              </FormControl>
+            </div>
+            <div className="col-md-6">
+              <FormControl sx={{ m: 1, width: "100%" }}>
+                <TextField
+                  id="outlined-basic"
+                  fullWidth
+                  label="googleBusinessUrl"
+                  multiline
+                  variant="outlined"
+                  value={location.googleBusinessUrl}
+                  onChange={(e) => {
+                    const cityValue = e.target.value.replace(/[^a-zA-Z ]/g, "");
+                    setLocation({ ...location, googleBusinessUrl: cityValue });
+                  }}
+                  size="small"
+                  // onBlur={onBlurLocation("city")}
+                  // error={!!errors.location.city}
+                  // helperText={errors.location.city}
+                  inputProps={{ maxLength: 50 }}
                 />
               </FormControl>
             </div>

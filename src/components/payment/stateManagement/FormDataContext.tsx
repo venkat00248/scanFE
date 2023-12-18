@@ -17,6 +17,7 @@ export const TenantFormDataProvider = ({ children}:any) => {
     city: "",
     state: "",
     postalCode: "",
+    googleBusinessUrl:""
   });
 const [checked, setChecked]= useState(false)
 const [mongoId, setMongoId]= useState("")
