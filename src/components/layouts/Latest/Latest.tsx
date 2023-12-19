@@ -11,10 +11,10 @@ export const Latest = () => {
         <div className="menu-container container">
           <div className="menu-content">
             <div className="menu-items">
-              {menuItems.map((menuItem:any, index:number) => (
+              {menuItems.length ? menuItems.map((menuItem:any, index:number) => (
                 <div className="menu-item flex" key={index}>
                   <img src={menuItem.url} alt="" className="menu-img" />
-                  <div className="menuItem-details">
+                  <div className="menuItem-details"> alsjdflajsd;lfja;sdjf;sdjf ;la;jsdl
                     <h6 className="menuItem-topic">{menuItem.name}</h6>
                     <p className="menuItem-des">{menuItem.item_desc}</p>
                     <div className='spice'>
@@ -34,7 +34,7 @@ export const Latest = () => {
                                     : "₹"}{menuItem.item_price}</span>
                   </div>
                 </div>
-              ))}
+              )): <div className="container"> <img src='https://www.shutterstock.com/image-photo/restaurant-blackboard-announcing-reopening-after-600nw-1735273409.jpg' className='img'/></div>}
             </div>
           </div>
         </div>

@@ -17,6 +17,8 @@ import DeleteTenant from "./DeleteTenant";
 import { Alert, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTenantFormData } from "../payment/stateManagement/FormDataContext";
+import Button from '@mui/material/Button';
+import { useNavigate } from "react-router-dom";
 interface Column {
   id:
     | "name"
@@ -41,6 +43,7 @@ export const AdminDashBoard = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
+  const navigate = useNavigate();
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -170,11 +173,15 @@ export const AdminDashBoard = () => {
       setLoading(false); // Set loading to false whether the API call succeeds or fails
     }
   };
+  const routeToTenant = () => {
+    navigate(`../onboarding`, { replace: true });
+  }
   React.useEffect(() => {
     fetchData();
   }, []);
   return (
     <div className="adminDashBoard">
+      <Button variant="outlined" style={{float: "right", marginBottom: "10px"}} onClick={routeToTenant}>Create a Tenant</Button>
       {loading ? ( // Show loading message or spinner when loading is true
         <RippleLoader />
       ) : (

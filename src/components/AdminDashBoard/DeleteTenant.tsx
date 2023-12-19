@@ -35,7 +35,7 @@ console.log("data from dete", data)
       const res = await ScanAppService.deleteTenants({
         _ids: [data._id],
         status: false,
-        updated_by: tdata?._id,
+        updated_by: tdata?._id ? tdata._id : "superAdmin",
       });
 
       console.log("res", res);

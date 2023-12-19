@@ -210,7 +210,7 @@ export const Form = () => {
             if(res?.data?.statusCode == 200) {
               // setIsNotOnboarded(false);
               setResponse({message:"On Boarderd successfully", statusCode:res?.data?.statusCode});
-              navigate(`../tenant/admindashboard`, { replace: true });
+              navigate(`../adminDashboard`, { replace: true });
             }
           }
         }
@@ -410,7 +410,7 @@ export const Form = () => {
                   value={userDetails.contact}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">+91</InputAdornment>
+                      <InputAdornment position="start">+61</InputAdornment>
                     ),
                   }}
                   // onChange={(e) => setUserDetails({ ...userDetails, contact: e.target.value })}
@@ -566,12 +566,12 @@ export const Form = () => {
                 <TextField
                   id="outlined-basic"
                   fullWidth
-                  label="googleBusinessUrl"
+                  label="Google Business Url"
                   multiline
                   variant="outlined"
                   value={location.googleBusinessUrl}
                   onChange={(e) => {
-                    const cityValue = e.target.value.replace(/[^a-zA-Z ]/g, "");
+                    const cityValue = e.target.value;
                     setLocation({ ...location, googleBusinessUrl: cityValue });
                   }}
                   size="small"

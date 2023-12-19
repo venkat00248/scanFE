@@ -96,7 +96,7 @@ export const LogIn = () => {
             onChange={(e) => {
               const emailValue = e.target.value
               .replace(/[^a-zA-Z0-9@.]/g, "")
-              .replace(/\.com.*$/, ".com");
+              // .replace(/\.com.*$/, ".com");
               // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
               setItemDetails({ ...itemDetails, email: emailValue });
             }}
