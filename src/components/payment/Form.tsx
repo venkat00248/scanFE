@@ -29,6 +29,7 @@ export const Form = () => {
     fileSrc,
     setFileSrc,
     disabled,
+    setDisabled,
     text,
     tenantId,
   } = useTenantFormData();
@@ -143,6 +144,7 @@ export const Form = () => {
     // Check if the URL contains "/addItems"
     if (window.location.hash.includes('/onboarding')) {
       // Update itemDetails state with an empty object
+      setDisabled(false)
       setTenantDetails({ tenantName: "", email: "" });
       setUserDetails({
         name: "",
