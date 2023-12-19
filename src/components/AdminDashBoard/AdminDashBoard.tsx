@@ -38,12 +38,13 @@ interface Column {
 }
 
 export const AdminDashBoard = () => {
-  const {rows, setRows}= useTenantFormData()
+  const {rows, setRows, setTenantId}= useTenantFormData()
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
+  
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -83,6 +84,7 @@ export const AdminDashBoard = () => {
     },
   }));
   React.useEffect(()=>{},[rows])
+  
   const columns: readonly Column[] = [
     { id: "name", label: "Name", minWidth: 170 },
     { id: "email", label: "Email", minWidth: 100 },
@@ -174,6 +176,7 @@ export const AdminDashBoard = () => {
     }
   };
   const routeToTenant = () => {
+    setTenantId("");
     navigate(`../onboarding`, { replace: true });
   }
   React.useEffect(() => {

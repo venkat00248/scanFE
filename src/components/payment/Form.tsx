@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
+import * as React from "react";
 import {
   Alert,
+  Button,
   FormControl,
   FormControlLabel,
   InputAdornment,
@@ -22,13 +24,17 @@ export const Form = () => {
     setLocation,
     checked,
     setChecked,
-    themeDetails, setThemeDetails,
-    fileSrc, setFileSrc,
-    disabled ,
-    text , tenantId
+    themeDetails,
+    setThemeDetails,
+    fileSrc,
+    setFileSrc,
+    disabled,
+    text,
+    tenantId,
   } = useTenantFormData();
+  
   const navigate = useNavigate();
-  const [response , setResponse]= useState({message: "",statusCode: 0})
+  const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const [errors, setErrors] = useState({
     tenantDetails: { tenantName: "", email: "" },
     userDetails: {
@@ -42,7 +48,6 @@ export const Form = () => {
       city: "",
       state: "",
       postalCode: "",
-      
     },
   });
   // const [isNotOnboarded, setIsNotOnboarded] = useState(false);
@@ -51,7 +56,9 @@ export const Form = () => {
   const config: any = useConfig();
   const tdata = config?.data[0];
   // Other code (onBlur functions, handleSubmit, etc.)
-
+  const navigateToAdminDash = () => {
+    navigate(`../adminDashboard`, { replace: true });
+  };
   const handleCheckboxChange = (event: any) => {
     setChecked(event.target.checked);
     setCheckboxError("");
@@ -132,7 +139,27 @@ export const Form = () => {
       }));
     }
   };
-
+  React.useEffect(() => {
+    // Check if the URL contains "/addItems"
+    if (window.location.hash.includes('/onboarding')) {
+      // Update itemDetails state with an empty object
+      setTenantDetails({ tenantName: "", email: "" });
+      setUserDetails({
+        name: "",
+        email: "",
+        contact: "",
+      });
+      setLocation({
+        address: "",
+        country: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        googleBusinessUrl: ""
+      })   
+      setFileSrc("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/logo.jpg")   
+    }
+  }, [window.location.pathname]);
   const handleSubmit = async (event: any) => {
     let isFormFieldValid = false;
     event.preventDefault();
@@ -166,60 +193,61 @@ export const Form = () => {
     } else {
       isFormFieldValid = true;
     }
-    
-   
+
     try {
       if (isFormFieldValid) {
         if (tenantId) {
           const res = await ScanAppService.updateTenant({
-                _id:tenantId,
-                name: tenantDetails.tenantName,
-                "url":fileSrc,
-                primary_color: themeDetails.primaryColor,
-                secondary_color:themeDetails.secondaryColor,
-                updated_by:tdata?._id,
-                address: location.address,
-                country: location.country,
-                city: location.city,
-                state:location.state,
-                postalCode: location.postalCode,
+            _id: tenantId,
+            name: tenantDetails.tenantName,
+            url: fileSrc,
+            primary_color: themeDetails.primaryColor,
+            secondary_color: themeDetails.secondaryColor,
+            updated_by: tdata?._id,
+            address: location.address,
+            country: location.country,
+            city: location.city,
+            state: location.state,
+            postalCode: location.postalCode,
+            business_url: location.googleBusinessUrl,
           });
           if (res) {
             setResponse({
               message: "Tenant updated successfully",
               statusCode: res.status,
             });
-           
           }
         } else {
-         
+          const res = await ScanAppService.onBoarding({
+            name: tenantDetails.tenantName,
+            email: tenantDetails.email,
+            url: fileSrc,
+            primary_color: themeDetails.primaryColor,
+            secondary_color: themeDetails.secondaryColor,
+            address: location.address,
+            country: location.country,
+            city: location.city,
+            state: location.state,
+            postalCode: location.postalCode,
+            business_url: location.googleBusinessUrl,
+          });
 
-              const res = await ScanAppService.onBoarding({
-                name: tenantDetails.tenantName,
-                email: tenantDetails.email,
-                "url":fileSrc,
-                primary_color: themeDetails.primaryColor,
-                secondary_color:themeDetails.secondaryColor,
-                address: location.address,
-                country: location.country,
-                city: location.city,
-                state:location.state,
-                postalCode: location.postalCode,
-              })
-            console.log("res", res?.data?.statusCode)
-            if(res?.data?.statusCode == 200) {
-              // setIsNotOnboarded(false);
-              setResponse({message:"On Boarderd successfully", statusCode:res?.data?.statusCode});
-              navigate(`../adminDashboard`, { replace: true });
-            }
+          console.log("res", res?.data?.statusCode);
+          if (res?.data?.statusCode == 200) {
+            // setIsNotOnboarded(false);
+            setResponse({
+              message: "On Boarderd successfully",
+              statusCode: res?.data?.statusCode,
+            });
+            navigate(`../adminDashboard`, { replace: true });
           }
         }
+      }
     } catch (error) {
       console.error("Error posting or updating data:", error);
       // Handle errors while posting or updating data
     }
   };
-
 
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
@@ -235,13 +263,11 @@ export const Form = () => {
     }
   };
   return (
-    <div className="register-form p-5 needs-validation" id="register-form">      
-      {response.statusCode==200 &&  
-          <Alert onClose={() => {}}>
-         {response.message}
-        </Alert>
-        } 
-        
+    <div className="register-form p-5 needs-validation" id="register-form">
+      {response.statusCode == 200 && (
+        <Alert onClose={() => {}}>{response.message}</Alert>
+      )}
+
       <fieldset className="scheduler-border">
         <legend className="scheduler-border">Tenant Details</legend>
         <div className="control-group">
@@ -257,9 +283,9 @@ export const Form = () => {
                   value={tenantDetails.tenantName}
                   onChange={(e) => {
                     const id = e.target.value
-                    .replace(/^\s+/, "")
-                    .replace(/\s+/g, "") // Remove all spaces
-                    .replace(/[^a-zA-Z]/g, ""); // Remove non-alphabetic characters
+                      .replace(/^\s+/, "")
+                      .replace(/\s+/g, "") // Remove all spaces
+                      .replace(/[^a-zA-Z]/g, ""); // Remove non-alphabetic characters
                     // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
                     setTenantDetails({ ...tenantDetails, tenantName: id });
                   }}
@@ -285,7 +311,7 @@ export const Form = () => {
                     const emailValue = e.target.value
                       .replace(/[^a-zA-Z0-9@.]/g, "")
                       .replace(/\.com.*$/, ".com");
-                      setTenantDetails({ ...tenantDetails, email: emailValue });
+                    setTenantDetails({ ...tenantDetails, email: emailValue });
                   }}
                   // onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
                   size="small"
@@ -296,7 +322,10 @@ export const Form = () => {
                 />
               </FormControl>
             </div>
-            <div className="col-md-6" style={{display:"flex", justifyContent:"center"}}>
+            <div
+              className="col-md-6"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
               {/* <FormControl sx={{ m: 1 }}>
               <input
                 type="file"
@@ -352,18 +381,35 @@ export const Form = () => {
           <div className="row g-3">
             <div className="col-md-6">
               <div className="d-flex" style={{ marginLeft: "10px" }}>
-                <input type="color" id="head" name="head" value={themeDetails.primaryColor} onChange={(e)=>{
-                  setThemeDetails({ ...themeDetails, primaryColor: e.target.value });
-                } }/>
+                <input
+                  type="color"
+                  id="head"
+                  name="head"
+                  value={themeDetails.primaryColor}
+                  onChange={(e) => {
+                    setThemeDetails({
+                      ...themeDetails,
+                      primaryColor: e.target.value,
+                    });
+                  }}
+                />
                 <p className="primarycolor">Primary Color</p>
               </div>
             </div>
             <div className="col-md-6">
               <div className="d-flex" style={{ marginLeft: "10px" }}>
-                <input type="color" id="head" name="head" value={themeDetails.secondaryColor}  onChange = {(e)=>{ 
-                  setThemeDetails({ ...themeDetails, secondaryColor: e.target.value });
-
-                }}/>
+                <input
+                  type="color"
+                  id="head"
+                  name="head"
+                  value={themeDetails.secondaryColor}
+                  onChange={(e) => {
+                    setThemeDetails({
+                      ...themeDetails,
+                      secondaryColor: e.target.value,
+                    });
+                  }}
+                />
                 <p className="secondarycolor">Secondary Color</p>
               </div>
             </div>
@@ -374,7 +420,6 @@ export const Form = () => {
         <legend className="scheduler-border">Communication Details</legend>
         <div className="control-group">
           <div className="row g-3">
-            
             {/* <div className="col-md-4">
               <FormControl sx={{ m: 1, width: "100%" }}>
                 <TextField
@@ -612,7 +657,7 @@ export const Form = () => {
         </div>
       </div>
       <div className="col-12">
-      <FormControl sx={{ m: 1 ,float:"right" }}>
+        <FormControl sx={{ m: 1, float: "right" }}>
           <button
             type="button"
             className="btn btn-primary"
@@ -621,6 +666,13 @@ export const Form = () => {
             <span>{text}</span>
           </button>
         </FormControl>
+        
+        {!tenantId && <FormControl sx={{ m: 1, float: "right" }}>
+          <Button variant="outlined" onClick={navigateToAdminDash}>
+            Cancel
+          </Button>
+        </FormControl>
+      }
       </div>
     </div>
   );
