@@ -31,7 +31,7 @@ export const EditTenantPopup = ({item, data}:any) => {
     if(data){
     setTenantDetails({tenantName:data.name,email:data.email });
     setThemeDetails({ primaryColor: data.primary_color, secondaryColor: data.secondary_color })
-    setLocation({address: data.address,country: data.country,city: data.city,state:data.state,postalCode: data.postalCode})
+    setLocation({address: data.address,country: data.country,city: data.city,state:data.state,postalCode: data.postalCode,googleBusinessUrl:data.business_url})
     setFileSrc(data.url)
     setDisabled(true)
     setText("update")
