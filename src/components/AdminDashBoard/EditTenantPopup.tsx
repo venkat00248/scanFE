@@ -32,7 +32,7 @@ export const EditTenantPopup = ({item, data}:any) => {
     console.log("Setting tenant details:", data);
     if(data){
     setTenantDetails({tenantName:data.name,email:data.email });
-    setUserDetails({contact:data.contact});
+   
     setThemeDetails({ primaryColor: data.primary_color, secondaryColor: data.secondary_color })
     // setLocation({address: data.address,country: data.country,city: data.city,state:data.state,postalCode: data.postalCode,googleBusinessUrl:data.business_url})
     setFileSrc(data.url)
@@ -67,6 +67,7 @@ export const EditTenantPopup = ({item, data}:any) => {
   
         // Update state or perform other actions based on the API response
         if (response.data) {
+          setUserDetails({contact:response.data.data.contact.replace(/\+61-/g, '')});
           setLocation({
             address: response.data.data.address,
             country: response.data.data.country,
