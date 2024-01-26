@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // import { SocialLoginList } from "../Social/SocialLoginList";
 
-import { Navigate, Route } from "react-router";
+import { Navigate } from "react-router";
 import { AdminDashBoard } from "../AdminDashBoard/AdminDashBoard";
 import { DashBoard } from "../DashBoard/DashBoard";
 import { LogIn } from "../Dialog/LogIn";
@@ -22,7 +22,7 @@ const isAuthenticated = () => {
   return sessionStorage.getItem("isAdmin") === "true" ? true:false;
 };
 
-const ProtectedRoute = ({ element, showHeader, ...props }:any) => {
+const ProtectedRoute = ({ element }:any) => {
   // Check authentication before rendering the route
   return isAuthenticated() ? element : (
     <Navigate to="/adminLogin" />
