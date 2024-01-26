@@ -21,24 +21,36 @@ const [loading, setLoading]= useState(false)
   const tdata = config?.data[0];
   const fetchData = async () => {
     try {
-      setLoading(true)
-      const res = await ScanAppService.getItems(tdata?._id);
+      if(sessionStorage.isLogin){
+        setLoading(true);
+        const res = await ScanAppService.getItems(tdata?._id);
 
-      console.log("res fro", res);
-      if (res?.data?.data) {
-        //check if data is defined ...
-        const data = res.data.data;
-        // setMenuItems(res.data.data);
-        // sessionStorage.menuItem = JSON.stringify(data);
-        setMenuItems(
-          data.filter((item: any) => item.is_special && item.status == true)
-        );
-        setLoading(false)
-        // setMenuItems(data);
+        console.log("res fro", res);
+        if (res?.data?.data) {
+          //check if data is defined ...
+          const data = res.data.data;
+          // setMenuItems(res.data.data);
+          // sessionStorage.menuItem = JSON.stringify(data);
+          setMenuItems(
+            data.filter((item: any) => item.is_special && item.status == true)
+          );
+          setLoading(false)
+          // setMenuItems(data);
+        }
+      } else {
+        alert("You are not authorized to access!!" + location.hash);
+        // let host = location.href;
+        // host
+        if(location.href.includes("dashBoard")){
+          window.location.href = location.href.replace("dashBoard","tenantLogin");
+        } 
+
       }
+      
 
       // Frame the formData object based on the form field values
     } catch (error) {
+      setLoading(false)
       console.error("Error posting or updating data:", error);
       // Handle errors while posting or updating data
     }
