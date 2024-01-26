@@ -2,7 +2,7 @@ import './Footer.scss'
 export const Footer = () => {
 
   return (
-    <div className='Footer' style={{borderTop: `1px solid #d9cece;`}}>
+    <div className='Footer' style={{borderTop: `1px solid #d9cece`}}>
       
       <footer className="footer py-4  ">
         <div className="container-fluid">

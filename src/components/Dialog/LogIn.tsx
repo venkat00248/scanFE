@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 export const LogIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -67,10 +66,13 @@ export const LogIn = () => {
 
       console.log("res", res)
       if (res?.status == 200) {     
-        sessionStorage.isLogin = true;     
+        sessionStorage.isLogin = true;  
+        sessionStorage.isAdmin = "true";  
         sessionStorage.tenantdetails = JSON.stringify(res.data);
         navigate(`/adminDashBoard`, { replace: true });
       } else {
+          
+
         setResponse("Pls. check your credentials")
         errors.itemDetails.email = "Pls. check email";
         errors.itemDetails.password = "Pls. check the password";

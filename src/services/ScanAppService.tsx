@@ -21,6 +21,9 @@ export class ScanApp extends HttpApiService {
   getItems = (tenant_id:any,is_special:boolean = true, is_all:boolean = false)=>{
     return this.get(`${scanAPPAPI}/getitems?tenant_id=${tenant_id}&is_special=${is_special}&is_all=${is_all}`)
   }
+  getTenantAddressByTenantId = (tenant_id:any)=>{
+    return this.get(`${scanAPPAPI}/getTenantAddressByTenantId?tenant_id=${tenant_id}`)
+  }
   getTenants = ()=>{
     return this.get(`${scanAPPAPI}/gettenants`)
   }

@@ -19,6 +19,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useTenantFormData } from "../payment/stateManagement/FormDataContext";
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
+
 interface Column {
   id:
     | "name"
@@ -182,9 +184,21 @@ export const AdminDashBoard = () => {
   React.useEffect(() => {
     fetchData();
   }, []);
+  
+  const   logout = () => {
+    alert("Are you sure you want to log out?");
+    sessionStorage.clear();
+    navigate(`../adminLogin`, { replace: true });
+  };
   return (
     <div className="adminDashBoard">
+      <div className="floatRight">
+      
       <Button variant="outlined" style={{float: "right", marginBottom: "10px"}} onClick={routeToTenant}>Create a Tenant</Button>
+      <button type="button" onClick={logout}>
+              <LogoutIcon style={{fontSize:"30px", marginBottom: "10px"}} />
+            </button>
+      </div>
       {loading ? ( // Show loading message or spinner when loading is true
         <RippleLoader />
       ) : (

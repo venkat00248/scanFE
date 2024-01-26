@@ -202,6 +202,7 @@ export const Form = () => {
           const res = await ScanAppService.updateTenant({
             _id: tenantId,
             name: tenantDetails.tenantName,
+            contact:userDetails.contact ,
             url: fileSrc,
             primary_color: themeDetails.primaryColor,
             secondary_color: themeDetails.secondaryColor,
@@ -223,6 +224,7 @@ export const Form = () => {
           const res = await ScanAppService.onBoarding({
             name: tenantDetails.tenantName,
             email: tenantDetails.email,
+            contact:userDetails.contact,
             url: fileSrc,
             primary_color: themeDetails.primaryColor,
             secondary_color: themeDetails.secondaryColor,
