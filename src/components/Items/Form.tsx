@@ -96,7 +96,7 @@ export const Form = () => {
   React.useEffect(() => {
     console.log("path333333333", location.hash.includes('/addItems'))
     // Check if the URL contains "/addItems"
-    if (location.hash.includes('/addItems')) {
+    if (sessionStorage.isLogin && location.hash.includes('/addItems')) {
       // Update itemDetails state with an empty object
       setText("Save")
       setFileSrc("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/food_img.png");
@@ -111,6 +111,11 @@ export const Form = () => {
         mongoId: ''
         
       });
+    } else {
+      alert("You are not authorized to access!!");
+      if (location.href.includes("addItems")){
+        window.location.href = location.href.replace("addItems","tenantLogin");
+      }
     }
   }, [location.pathname]);
   const handleSubmit = async (event: any) => {
