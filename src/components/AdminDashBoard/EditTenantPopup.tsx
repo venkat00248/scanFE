@@ -106,7 +106,7 @@ export const EditTenantPopup = ({item, data}:any) => {
   return (
     <div>
       <React.Fragment key={"bottom"}>
-        <IconButton color="primary" onClick={handleIconClick}><EditIcon sx={{ fontSize: 20 }}/></IconButton>
+        <IconButton color="primary" onClick={toggleDrawer("bottom", true)}><EditIcon sx={{ fontSize: 20 }}/></IconButton>
         <Drawer
           anchor={"bottom"}
           open={state["bottom"]}
