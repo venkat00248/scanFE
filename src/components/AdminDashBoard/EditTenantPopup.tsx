@@ -18,6 +18,7 @@ export const EditTenantPopup = ({item, data}:any) => {
   const {
     setTenantDetails,
     setThemeDetails,
+    setUserDetails,
     setFileSrc,setDisabled ,setText ,setTenantId,setLocation
     
   } = useTenantFormData();
@@ -31,6 +32,7 @@ export const EditTenantPopup = ({item, data}:any) => {
     console.log("Setting tenant details:", data);
     if(data){
     setTenantDetails({tenantName:data.name,email:data.email });
+    setUserDetails({contact:data.contact});
     setThemeDetails({ primaryColor: data.primary_color, secondaryColor: data.secondary_color })
     // setLocation({address: data.address,country: data.country,city: data.city,state:data.state,postalCode: data.postalCode,googleBusinessUrl:data.business_url})
     setFileSrc(data.url)
