@@ -17,6 +17,7 @@ export const TenantLogIn = () => {
   const [response, setResponse]= useState("")
   // const [loginResponse, setLoginResponse] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  console.log("s", setIsLoading)
   // const handleClickShowPassword = () => setShowPassword((show) => !show);
   // const handleMouseDownPassword = (
   //   event: React.MouseEvent<HTMLButtonElement>
