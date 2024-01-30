@@ -5,9 +5,7 @@ import {
   Alert,
   Button,
   FormControl,
-  FormControlLabel,
   InputAdornment,
-  Switch,
   TextField,
 } from "@mui/material";
 import { useTenantFormData } from "./stateManagement/FormDataContext";
@@ -236,7 +234,7 @@ export const Form = () => {
             business_url: location.googleBusinessUrl,
           });
 
-          console.log("res", res?.data?.statusCode);
+          console.log("res from teanant creation ", res);
           if (res?.data?.statusCode == 200) {
             // setIsNotOnboarded(false);
             setResponse({
@@ -481,13 +479,13 @@ export const Form = () => {
                 />
               </FormControl>
             </div>
-            <div className="col-md-4">
+            {/* <div className="col-md-4">
               <FormControlLabel
                 sx={{ m: 1, width: "100%" }}
                 control={<Switch defaultChecked />}
                 label="Is WhatsApp Enabled"
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </fieldset>

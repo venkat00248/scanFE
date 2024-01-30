@@ -96,7 +96,8 @@ export const Form = () => {
   React.useEffect(() => {
     console.log("path333333333", location.hash.includes('/addItems'))
     // Check if the URL contains "/addItems"
-    if (sessionStorage.isLogin && location.hash.includes('/addItems')) {
+    if (sessionStorage.isLogin) {
+      if(location.hash.includes('/addItems')){
       // Update itemDetails state with an empty object
       setText("Save")
       setFileSrc("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/food_img.png");
@@ -111,6 +112,7 @@ export const Form = () => {
         mongoId: ''
         
       });
+    }
     } else {
       alert("You are not authorized to access!!");
       if (location.href.includes("addItems")){
@@ -177,16 +179,16 @@ export const Form = () => {
               message: "Item updated successfully",
               statusCode: res.status,
             });
-            setItemDetails({
-              itemName: "",
-              amount: "",
-              offerPrice: "",
-              description: "",
-              spiceLevel: "",
-              isSpecial: false,
-              is_veg: false,
-              mongoId: "",
-            });
+            // setItemDetails({
+            //   itemName: "",
+            //   amount: "",
+            //   offerPrice: "",
+            //   description: "",
+            //   spiceLevel: "",
+            //   isSpecial: false,
+            //   is_veg: false,
+            //   mongoId: "",
+            // });
           }
         } else {
           setIsLoading(false);
@@ -488,7 +490,7 @@ export const Form = () => {
                             onChange={handlerForVeg}
                           />
                         }
-                        label="Is Veg"
+                        label={itemDetails.is_veg ?"Is Veg":"Non Veg"}
                       />
                     </div>
                   </div>

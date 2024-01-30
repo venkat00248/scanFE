@@ -9,7 +9,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useConfig } from '../../config/config';
 export default function Review() {
+  const config: any = useConfig();
+  // console.log(window.location.pathname.split('/')?.[1]);
+  // console.log("pathhhh",window.location);
+  console.log("config from tenant", config?.data[0].business_url);
   const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
     setOpen(true);
@@ -21,7 +26,7 @@ export default function Review() {
   
 const handleClick = ()=>{
  
-  const otherApplicationURL =  'https://g.page/r/CZm8bL5bE_yTEB0/review'
+  const otherApplicationURL =  config? config?.data[0].business_url :'https://g.page/r/CZm8bL5bE_yTEB0/review'
   window.open(otherApplicationURL, '_blank');
   setOpen(false);
 }

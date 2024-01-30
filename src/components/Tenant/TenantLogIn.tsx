@@ -14,6 +14,7 @@ export const TenantLogIn = () => {
   // const [showPassword, setShowPassword] = React.useState(true);
   const navigate = useNavigate();
   const { tenant } = useParams();
+  const [response, setResponse]= useState("")
   // const [loginResponse, setLoginResponse] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   // const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -74,27 +75,28 @@ export const TenantLogIn = () => {
     try {
       console.log(`itemDetails ::`, itemDetails);
       if (isFormFieldValid) {
-        setIsLoading(false)
+        // setIsLoading(false)
         const res = await ScanAppService.tenantLogin({
           email: itemDetails.email,
           password: itemDetails.password,
         });
         console.log("tenant", tenant);
         // setLoginResponse(res);
-        if(res)
-          setIsLoading(true);
-        // if (res?.status) {
-        //   // Redirect to another route on successful login
-        //   // navigate(`${tenant}/dashBoard`);
-        //   navigate(`../${tenant}/dashBoard`, { replace: true });
+        // if(res)
+        //   setIsLoading(true);
+        // // if (res?.status) {
+        // //   // Redirect to another route on successful login
+        // //   // navigate(`${tenant}/dashBoard`);
+        // //   navigate(`../${tenant}/dashBoard`, { replace: true });
 
-        // }
+        // // }
         console.log(res?.status,"res", res);
         if (res?.status == 200) {     
           sessionStorage.isLogin = true;     
           sessionStorage.tenantdetails = JSON.stringify(res.data);
           navigate(`../${tenant}/dashBoard`, { replace: true });
         } else {
+          setResponse("Pls. check your credentials")
           errors.itemDetails.email = "Pls. check email";
           errors.itemDetails.password = "Pls. check the password";
         }
@@ -102,6 +104,7 @@ export const TenantLogIn = () => {
 
       // Frame the formData object based on the form field values
     } catch (error) {
+      setResponse("Pls. check your credentials")
       console.error("Error posting or updating data:", error);
       // Handle errors while posting or updating data
     }
@@ -253,6 +256,8 @@ export const TenantLogIn = () => {
                 </div>
               </div>
               <div className="card-body">
+              {response && <h6 style={{color: "#d32f2f",textAlign:"center"}}>{response}</h6>}
+
                 <form role="form" className="text-start">
                   <div className="input-group input-group-outline my-3">
                     {/* <label className="form-label">Email</label> */}

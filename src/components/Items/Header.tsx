@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useConfig } from "../../config/config";
+import { useFormData } from "./stateManagement/FormDataContext";
 
 export const Header = () => {
   const config: any = useConfig();
-
+  const { header} = useFormData();
   return (
     <header className="d-flex justify-content-between">
       {/* <h4>Add Item</h4> */}
@@ -13,7 +14,7 @@ export const Header = () => {
             <div className="card my-4">
               <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div className="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3" style={{background: `${config?.data[0]?.primary_color}`, color: `${config?.data[0]?.secondary_color}`}}>
-                  <h4 className="text-white text-capitalize ps-3" style={{color: `${config?.data[0]?.secondary_color}`}}>Add Item</h4>
+                  <h4 className="text-white text-capitalize ps-3" style={{color: `${config?.data[0]?.secondary_color}`}}>{header}</h4>
                 </div>
               </div>
               </div>

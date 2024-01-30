@@ -13,7 +13,7 @@ type Anchor = "top" | "left" | "bottom" | "right";
 
 export const EditItemPopup = ({data}:any) => {
   console.log("EditItemPopup :: data: " + JSON.stringify(data));
-  const {  setItemDetails ,setText,setFileSrc} = useFormData();
+  const {  setItemDetails ,setText,setFileSrc , setHeader} = useFormData();
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -23,7 +23,7 @@ export const EditItemPopup = ({data}:any) => {
 
   console.log("EditItemPopup :: setItemDetails: 2222222");
   React.useLayoutEffect(() => {
-      console.log("Setting item details:", data);
+      console.log("Edit item details:", data);
       setFileSrc(data.url)
       setItemDetails({ itemName: data.name, mongoId:data._id, amount: data.item_price , offerPrice:data.promotional_price, description:data.item_desc, spiceLevel:data.spicy_level,isSpecial:data.is_special
 ,is_veg:data.is_veg
@@ -44,6 +44,10 @@ export const EditItemPopup = ({data}:any) => {
       if (!open) {
         // Reset itemDetails when the drawer is closed
         setItemDetails({ itemName: "", amount: "" , offerPrice:"", cuponCode:"", description:"", spiceLevel:""});
+        setHeader("Add Item")
+      }
+      else{
+        setHeader("Update Item")
       }
       setState({ ...state, [anchor]: open });
     };
