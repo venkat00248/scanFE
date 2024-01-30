@@ -74,7 +74,7 @@ export const TenantLogIn = () => {
     try {
       console.log(`itemDetails ::`, itemDetails);
       if (isFormFieldValid) {
-        setIsLoading(false)
+        // setIsLoading(false)
         const res = await ScanAppService.tenantLogin({
           email: itemDetails.email,
           password: itemDetails.password,
@@ -82,7 +82,7 @@ export const TenantLogIn = () => {
         console.log("tenant", tenant);
         // setLoginResponse(res);
         if(res)
-          setIsLoading(true);
+          // setIsLoading(true);
         // if (res?.status) {
         //   // Redirect to another route on successful login
         //   // navigate(`${tenant}/dashBoard`);

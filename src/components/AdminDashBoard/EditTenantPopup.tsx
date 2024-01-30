@@ -37,7 +37,7 @@ export const EditTenantPopup = ({item, data}:any) => {
     // setLocation({address: data.address,country: data.country,city: data.city,state:data.state,postalCode: data.postalCode,googleBusinessUrl:data.business_url})
     setFileSrc(data.url)
     setDisabled(true)
-    setText("update")
+    // setText("update")
     setTenantId(data._id)
     }
   }, [data,state]);
@@ -56,7 +56,13 @@ export const EditTenantPopup = ({item, data}:any) => {
       }
 
       setState({ ...state, [anchor]: open });
+      if(open){
+      setText("update")
       handleIconClick()
+      }
+      else{
+      setText("Proceed")
+      }
     };
     const handleIconClick = async () => {
       try {
@@ -67,7 +73,7 @@ export const EditTenantPopup = ({item, data}:any) => {
   
         // Update state or perform other actions based on the API response
         if (response.data) {
-          setUserDetails({contact:response.data.data.contact.replace(/\+61-/g, '')});
+          setUserDetails({contact:response.data.data.contact});
           setLocation({
             address: response.data.data.address,
             country: response.data.data.country,
