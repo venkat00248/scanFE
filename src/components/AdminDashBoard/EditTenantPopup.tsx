@@ -19,7 +19,7 @@ export const EditTenantPopup = ({item, data}:any) => {
     setTenantDetails,
     setThemeDetails,
     setUserDetails,
-    setFileSrc,setDisabled ,setText ,setTenantId,setLocation
+    setFileSrc,setDisabled ,setText ,setTenantId,setLocation , setChecked
     
   } = useTenantFormData();
   const [state, setState] = React.useState({
@@ -36,6 +36,9 @@ export const EditTenantPopup = ({item, data}:any) => {
       
     setThemeDetails({ primaryColor: data.primary_color, secondaryColor: data.secondary_color })
     // setLocation({address: data.address,country: data.country,city: data.city,state:data.state,postalCode: data.postalCode,googleBusinessUrl:data.business_url})
+    setLocation({
+      googleBusinessUrl: data.business_url,
+    });
     setFileSrc(data.url)
     setDisabled(true)
     // setText("update")
@@ -59,6 +62,7 @@ export const EditTenantPopup = ({item, data}:any) => {
       setState({ ...state, [anchor]: open });
       if(open){
       setText("update")
+      setChecked(true)
       handleIconClick()
       }
       else{
@@ -81,7 +85,6 @@ export const EditTenantPopup = ({item, data}:any) => {
             city: response.data.data.city,
             state: response.data.data.state,
             postalCode: response.data.data.postalCode,
-            googleBusinessUrl: response.data.data.business_url,
           });
          
         }

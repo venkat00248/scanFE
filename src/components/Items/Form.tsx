@@ -533,11 +533,11 @@ export const Form = () => {
             </fieldset>
             <div className="col-12">
               <FormControl sx={{ m: 1 }}>
-                <Link to={`/${tenant}/dashBoard`}>
+                {/* <Link to={`/${tenant}/dashBoard`}>
                   <div className="backArrow">
                     <ArrowBackIcon />
                   </div>
-                </Link>
+                </Link> */}
               </FormControl>
               <FormControl sx={{ m: 1, float: "right" }}>
                 <button
