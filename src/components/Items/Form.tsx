@@ -18,8 +18,8 @@ import {
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormData } from "./stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useParams, useNavigate } from "react-router-dom";
+// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useConfig } from "../../config/config";
 // import {decode as base64_decode, encode as base64_encode} from 'base-64';
 import { RippleLoader } from "../Loader/RippleLoader";
