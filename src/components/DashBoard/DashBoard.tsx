@@ -38,7 +38,7 @@ const [loading, setLoading]= useState(false)
           // setMenuItems(data);
         }
       } else {
-        alert("You are not authorized to access!!" + location.hash);
+        alert("You are not authorized to access!!");
         // let host = location.href;
         // host
         if(location.href.includes("dashBoard")){

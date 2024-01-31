@@ -61,7 +61,8 @@ export const LogIn = () => {
 
       const res = await ScanAppService.tenantLogin({
         email:itemDetails.email,
-        password:itemDetails.password
+        password:itemDetails.password,
+        tenant_id: ""
       })
 
       console.log("res", res)

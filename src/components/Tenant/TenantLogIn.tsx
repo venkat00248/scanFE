@@ -80,6 +80,7 @@ export const TenantLogIn = () => {
         const res = await ScanAppService.tenantLogin({
           email: itemDetails.email,
           password: itemDetails.password,
+          tenant_id:  config?.data[0]?._id
         });
         console.log("tenant", tenant);
         // setLoginResponse(res);

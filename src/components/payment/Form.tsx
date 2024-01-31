@@ -7,11 +7,14 @@ import {
   FormControl,
   InputAdornment,
   TextField,
+  AlertTitle,
 } from "@mui/material";
 import { useTenantFormData } from "./stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
 import { useNavigate } from "react-router-dom";
 import { useConfig } from "../../config/config";
+import { RippleLoader } from "../Loader/RippleLoader";
+
 export const Form = () => {
   const {
     tenantDetails,
@@ -31,7 +34,7 @@ export const Form = () => {
     text,
     tenantId,
   } = useTenantFormData();
-  
+
   const navigate = useNavigate();
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const [errors, setErrors] = useState({
@@ -52,6 +55,8 @@ export const Form = () => {
   // const [isNotOnboarded, setIsNotOnboarded] = useState(false);
   // const [isChecked, setIsChecked] = useState(false);
   const [checkboxError, setCheckboxError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const config: any = useConfig();
   const tdata = config?.data[0];
   // Other code (onBlur functions, handleSubmit, etc.)
@@ -140,9 +145,9 @@ export const Form = () => {
   };
   React.useEffect(() => {
     // Check if the URL contains "/addItems"
-    if (window.location.hash.includes('/onboarding')) {
+    if (window.location.hash.includes("/onboarding")) {
       // Update itemDetails state with an empty object
-      setDisabled(false)
+      setDisabled(false);
       setTenantDetails({ tenantName: "", email: "" });
       setUserDetails({
         name: "",
@@ -155,9 +160,11 @@ export const Form = () => {
         city: "",
         state: "",
         postalCode: "",
-        googleBusinessUrl: ""
-      })   
-      setFileSrc("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/logo.jpg")   
+        googleBusinessUrl: "",
+      });
+      setFileSrc(
+        "http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/logo.jpg"
+      );
     }
   }, [window.location.pathname]);
   const handleSubmit = async (event: any) => {
@@ -193,14 +200,14 @@ export const Form = () => {
     } else {
       isFormFieldValid = true;
     }
-
     try {
       if (isFormFieldValid) {
+        setIsLoading(true);
         if (tenantId) {
           const res = await ScanAppService.updateTenant({
             _id: tenantId,
             name: tenantDetails.tenantName,
-            contact:userDetails.contact ,
+            contact: userDetails.contact,
             url: fileSrc,
             primary_color: themeDetails.primaryColor,
             secondary_color: themeDetails.secondaryColor,
@@ -222,7 +229,7 @@ export const Form = () => {
           const res = await ScanAppService.onBoarding({
             name: tenantDetails.tenantName,
             email: tenantDetails.email,
-            contact:userDetails.contact,
+            contact: userDetails.contact,
             url: fileSrc,
             primary_color: themeDetails.primaryColor,
             secondary_color: themeDetails.secondaryColor,
@@ -245,9 +252,18 @@ export const Form = () => {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error posting or updating data:", error);
+      console.log(error?.response?.data);
+      if (error?.response?.data?.statusCode === 501) {
+        setResponse({
+          message: error?.response?.data?.message,
+          statusCode: error?.response?.data?.statusCode,
+        });
+      }
       // Handle errors while posting or updating data
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -269,66 +285,80 @@ export const Form = () => {
       {response.statusCode == 200 && (
         <Alert onClose={() => {}}>{response.message}</Alert>
       )}
-
-      <fieldset className="scheduler-border">
-        <legend className="scheduler-border">Tenant Details</legend>
-        <div className="control-group">
-          <div className="row g-3">
-            <div className="col-md-6">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="Tenant Name"
-                  multiline
-                  variant="outlined"
-                  value={tenantDetails.tenantName}
-                  onChange={(e) => {
-                    const id = e.target.value
-                      .replace(/^\s+/, "")
-                      .replace(/\s+/g, "") // Remove all spaces
-                      .replace(/[^a-zA-Z]/g, ""); // Remove non-alphabetic characters
-                    // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
-                    setTenantDetails({ ...tenantDetails, tenantName: id });
-                  }}
-                  size="small"
-                  onBlur={onBlurtenantDetails("tenantName")}
-                  error={!!errors.tenantDetails.tenantName}
-                  helperText={errors.tenantDetails.tenantName}
-                  inputProps={{ maxLength: 50 }}
-                />
-              </FormControl>
-            </div>
-            <div className="col-md-6">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="Email"
-                  multiline
-                  variant="outlined"
-                  value={tenantDetails.email}
-                  disabled={disabled}
-                  onChange={(e) => {
-                    const emailValue = e.target.value
-                      .replace(/[^a-zA-Z0-9@.]/g, "")
-                      .replace(/\.com.*$/, ".com");
-                    setTenantDetails({ ...tenantDetails, email: emailValue });
-                  }}
-                  // onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
-                  size="small"
-                  onBlur={onBlurtenantDetails("email")}
-                  error={!!errors.tenantDetails.email}
-                  helperText={errors.tenantDetails.email}
-                  inputProps={{ maxLength: 50 }}
-                />
-              </FormControl>
-            </div>
-            <div
-              className="col-md-6"
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              {/* <FormControl sx={{ m: 1 }}>
+      {response.statusCode >= 400 && (
+        <div style={{ paddingBottom: "10px" }}>
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {response.message}
+          </Alert>
+        </div>
+      )}
+      {isLoading ? (
+        <RippleLoader />
+      ) : (
+        <div>
+          <fieldset className="scheduler-border">
+            <legend className="scheduler-border">Tenant Details</legend>
+            <div className="control-group">
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="Tenant Name"
+                      multiline
+                      variant="outlined"
+                      value={tenantDetails.tenantName}
+                      onChange={(e) => {
+                        const id = e.target.value
+                          .replace(/^\s+/, "")
+                          .replace(/\s+/g, "") // Remove all spaces
+                          .replace(/[^a-zA-Z]/g, ""); // Remove non-alphabetic characters
+                        // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
+                        setTenantDetails({ ...tenantDetails, tenantName: id });
+                      }}
+                      size="small"
+                      onBlur={onBlurtenantDetails("tenantName")}
+                      error={!!errors.tenantDetails.tenantName}
+                      helperText={errors.tenantDetails.tenantName}
+                      inputProps={{ maxLength: 50 }}
+                    />
+                  </FormControl>
+                </div>
+                <div className="col-md-6">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="Email"
+                      multiline
+                      variant="outlined"
+                      value={tenantDetails.email}
+                      disabled={disabled}
+                      onChange={(e) => {
+                        const emailValue = e.target.value
+                          .replace(/[^a-zA-Z0-9@.]/g, "")
+                          .replace(/\.com.*$/, ".com");
+                        setTenantDetails({
+                          ...tenantDetails,
+                          email: emailValue,
+                        });
+                      }}
+                      // onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
+                      size="small"
+                      onBlur={onBlurtenantDetails("email")}
+                      error={!!errors.tenantDetails.email}
+                      helperText={errors.tenantDetails.email}
+                      inputProps={{ maxLength: 50 }}
+                    />
+                  </FormControl>
+                </div>
+                <div
+                  className="col-md-6"
+                  style={{ display: "flex", justifyContent: "center" }}
+                >
+                  {/* <FormControl sx={{ m: 1 }}>
               <input
                 type="file"
                 id="avatar"
@@ -349,80 +379,80 @@ export const Form = () => {
                 />
               )}
               </FormControl> */}
-              <FormControl sx={{ m: 1 }}>
-                <div className="avatar-upload">
-                  <div className="avatar-edit">
+                  <FormControl sx={{ m: 1 }}>
+                    <div className="avatar-upload">
+                      <div className="avatar-edit">
+                        <input
+                          type="file"
+                          id="imageUpload"
+                          accept=".png, .jpg, .jpeg"
+                          onChange={handleFileChange}
+                        />
+                        <label htmlFor="imageUpload"></label>
+                      </div>
+                      <div className="avatar-preview">
+                        {/* <div id="imagePreview" style={{background: "url(http://i.pravatar.cc/500?img=7);"}}> */}
+                        {fileSrc && (
+                          <img
+                            src={fileSrc}
+                            id="imagePreview"
+                            alt="Selected file"
+                          />
+                        )}
+                        {/* </div> */}
+                      </div>
+                    </div>
+                  </FormControl>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset className="scheduler-border">
+            <legend className="scheduler-border">Theme Details</legend>
+            <div className="control-group">
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <div className="d-flex" style={{ marginLeft: "10px" }}>
                     <input
-                      type="file"
-                      id="imageUpload"
-                      accept=".png, .jpg, .jpeg"
-                      onChange={handleFileChange}
+                      type="color"
+                      id="head"
+                      name="head"
+                      value={themeDetails.primaryColor}
+                      onChange={(e) => {
+                        setThemeDetails({
+                          ...themeDetails,
+                          primaryColor: e.target.value,
+                        });
+                      }}
                     />
-                    <label htmlFor="imageUpload"></label>
-                  </div>
-                  <div className="avatar-preview">
-                    {/* <div id="imagePreview" style={{background: "url(http://i.pravatar.cc/500?img=7);"}}> */}
-                    {fileSrc && (
-                      <img
-                        src={fileSrc}
-                        id="imagePreview"
-                        alt="Selected file"
-                      />
-                    )}
-                    {/* </div> */}
+                    <p className="primarycolor">Primary Color</p>
                   </div>
                 </div>
-              </FormControl>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-      <fieldset className="scheduler-border">
-        <legend className="scheduler-border">Theme Details</legend>
-        <div className="control-group">
-          <div className="row g-3">
-            <div className="col-md-6">
-              <div className="d-flex" style={{ marginLeft: "10px" }}>
-                <input
-                  type="color"
-                  id="head"
-                  name="head"
-                  value={themeDetails.primaryColor}
-                  onChange={(e) => {
-                    setThemeDetails({
-                      ...themeDetails,
-                      primaryColor: e.target.value,
-                    });
-                  }}
-                />
-                <p className="primarycolor">Primary Color</p>
+                <div className="col-md-6">
+                  <div className="d-flex" style={{ marginLeft: "10px" }}>
+                    <input
+                      type="color"
+                      id="head"
+                      name="head"
+                      value={themeDetails.secondaryColor}
+                      onChange={(e) => {
+                        setThemeDetails({
+                          ...themeDetails,
+                          secondaryColor: e.target.value,
+                        });
+                      }}
+                    />
+                    <p className="secondarycolor">Secondary Color</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="col-md-6">
-              <div className="d-flex" style={{ marginLeft: "10px" }}>
-                <input
-                  type="color"
-                  id="head"
-                  name="head"
-                  value={themeDetails.secondaryColor}
-                  onChange={(e) => {
-                    setThemeDetails({
-                      ...themeDetails,
-                      secondaryColor: e.target.value,
-                    });
-                  }}
-                />
-                <p className="secondarycolor">Secondary Color</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-      <fieldset className="scheduler-border">
-        <legend className="scheduler-border">Communication Details</legend>
-        <div className="control-group">
-          <div className="row g-3">
-            {/* <div className="col-md-4">
+          </fieldset>
+          <fieldset className="scheduler-border">
+            <legend className="scheduler-border">Communication Details</legend>
+            <div className="control-group">
+              <div className="row g-3">
+                {/* <div className="col-md-4">
               <FormControl sx={{ m: 1, width: "100%" }}>
                 <TextField
                   id="outlined-basic"
@@ -446,236 +476,253 @@ export const Form = () => {
                 />
               </FormControl>
             </div> */}
-            <div className="col-md-4">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="Contact"
-                  multiline
-                  variant="outlined"
-                  value={userDetails.contact}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">+61</InputAdornment>
-                    ),
-                  }}
-                  // onChange={(e) => setUserDetails({ ...userDetails, contact: e.target.value })}
-                  onChange={(e) => {
-                    const contactValue = e.target.value.replace(
-                      /^0+|[^0-9]/g,
-                      ""
-                    );
+                <div className="col-md-4">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="Contact"
+                      multiline
+                      variant="outlined"
+                      value={userDetails.contact}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">+61</InputAdornment>
+                        ),
+                      }}
+                      // onChange={(e) => setUserDetails({ ...userDetails, contact: e.target.value })}
+                      onChange={(e) => {
+                        const contactValue = e.target.value.replace(
+                          /^0+|[^0-9]/g,
+                          ""
+                        );
 
-                    // const contactValue = e.target.value.replace(/^[0]+([0-9]*)$/, "$1");
-                    // const contactValue = e.target.value.replace(/[^0-9]/g, "");
-                    setUserDetails({ ...userDetails, contact: contactValue });
-                  }}
-                  size="small"
-                  onBlur={onBlurUserDetails("contact")}
-                  error={!!errors.userDetails.contact}
-                  helperText={errors.userDetails.contact}
-                  inputProps={{ maxLength: 10 }}
-                />
-              </FormControl>
-            </div>
-            {/* <div className="col-md-4">
+                        // const contactValue = e.target.value.replace(/^[0]+([0-9]*)$/, "$1");
+                        // const contactValue = e.target.value.replace(/[^0-9]/g, "");
+                        setUserDetails({
+                          ...userDetails,
+                          contact: contactValue,
+                        });
+                      }}
+                      size="small"
+                      onBlur={onBlurUserDetails("contact")}
+                      error={!!errors.userDetails.contact}
+                      helperText={errors.userDetails.contact}
+                      inputProps={{ maxLength: 10 }}
+                    />
+                  </FormControl>
+                </div>
+                {/* <div className="col-md-4">
               <FormControlLabel
                 sx={{ m: 1, width: "100%" }}
                 control={<Switch defaultChecked />}
                 label="Is WhatsApp Enabled"
               />
             </div> */}
+              </div>
+            </div>
+          </fieldset>
+          <fieldset className="scheduler-border">
+            <legend className="scheduler-border">Location</legend>
+            <div className="control-group">
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="Address"
+                      multiline
+                      variant="outlined"
+                      value={location.address}
+                      // onChange={(e) => setLocation({ ...location, address: e.target.value })}
+                      onChange={(e) => {
+                        const addressValue = e.target.value
+                          .replace(/^\s+/, "")
+                          .replace(/\s{2,}/g, " ")
+                          .replace(/[^a-zA-Z0-9 /,-]/g, "");
+                        setLocation({ ...location, address: addressValue });
+                      }}
+                      size="small"
+                      onBlur={onBlurLocation("address")}
+                      error={!!errors.location.address}
+                      helperText={errors.location.address}
+                      inputProps={{ maxLength: 100 }}
+                    />
+                  </FormControl>
+                </div>
+                <div className="col-md-6">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="City"
+                      multiline
+                      variant="outlined"
+                      value={location.city}
+                      onChange={(e) => {
+                        const cityValue = e.target.value.replace(
+                          /[^a-zA-Z ]/g,
+                          ""
+                        );
+                        setLocation({ ...location, city: cityValue });
+                      }}
+                      size="small"
+                      onBlur={onBlurLocation("city")}
+                      error={!!errors.location.city}
+                      helperText={errors.location.city}
+                      inputProps={{ maxLength: 50 }}
+                    />
+                  </FormControl>
+                </div>
+                <div className="col-md-4">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="State"
+                      multiline
+                      variant="outlined"
+                      value={location.state}
+                      onChange={(e) => {
+                        const stateValue = e.target.value
+                          .replace(/^\s+/, "")
+                          .replace(/\s{2,}/g, " ")
+                          .replace(/[^a-zA-Z ]/g, "");
+                        setLocation({ ...location, state: stateValue });
+                      }}
+                      size="small"
+                      onBlur={onBlurLocation("state")}
+                      error={!!errors.location.state}
+                      helperText={errors.location.state}
+                      inputProps={{ maxLength: 50 }}
+                    />
+                  </FormControl>
+                </div>
+                <div className="col-md-4">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="Country"
+                      multiline
+                      variant="outlined"
+                      value={location.country}
+                      onChange={(e) => {
+                        const countryValue = e.target.value
+                          .replace(/^\s+/, "")
+                          .replace(/\s{2,}/g, " ")
+                          .replace(/[^a-zA-Z ]/g, "");
+                        setLocation({ ...location, country: countryValue });
+                      }}
+                      size="small"
+                      onBlur={onBlurLocation("country")}
+                      error={!!errors.location.country}
+                      helperText={errors.location.country}
+                      inputProps={{ maxLength: 50 }}
+                    />
+                  </FormControl>
+                </div>
+                <div className="col-md-4">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="Postal Code"
+                      multiline
+                      variant="outlined"
+                      value={location.postalCode}
+                      onChange={(e) => {
+                        const postalValue = e.target.value.replace(
+                          /[^0-9]/g,
+                          ""
+                        );
+                        setLocation({ ...location, postalCode: postalValue });
+                      }}
+                      size="small"
+                      onBlur={onBlurLocation("postalCode")}
+                      error={!!errors.location.postalCode}
+                      helperText={errors.location.postalCode}
+                      inputProps={{ maxLength: 6 }}
+                    />
+                  </FormControl>
+                </div>
+                <div className="col-md-6">
+                  <FormControl sx={{ m: 1, width: "100%" }}>
+                    <TextField
+                      id="outlined-basic"
+                      fullWidth
+                      label="Google Business Url"
+                      multiline
+                      variant="outlined"
+                      value={location.googleBusinessUrl}
+                      onChange={(e) => {
+                        const cityValue = e.target.value;
+                        setLocation({
+                          ...location,
+                          googleBusinessUrl: cityValue,
+                        });
+                      }}
+                      size="small"
+                      // onBlur={onBlurLocation("city")}
+                      // error={!!errors.location.city}
+                      // helperText={errors.location.city}
+                      inputProps={{ maxLength: 50 }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="checkboxInput">
+                <input
+                  type="checkbox"
+                  name="tos"
+                  id="tos"
+                  value="terms"
+                  checked={checked}
+                  onChange={handleCheckboxChange}
+                />
+                <p>
+                  I agree to the{" "}
+                  <a href="https://www.cloud4c.com/terms">
+                    terms and conditions
+                  </a>{" "}
+                  mentioned in the <a href="https://www.cloud4c.com/aup">AUP</a>
+                  , <a href="https://www.cloud4c.com/msa">MSA</a>,{" "}
+                  <a href="https://www.cloud4c.com/sla">SLA</a>.
+                </p>
+              </div>
+              {checkboxError && (
+                <span style={{ color: "#d32f2f", marginLeft: "25px" }}>
+                  {checkboxError}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="col-12">
+            <FormControl sx={{ m: 1, float: "right" }}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleSubmit}
+              >
+                <span>{text}</span>
+              </button>
+            </FormControl>
+
+            {!tenantId && (
+              <FormControl sx={{ m: 1, float: "right" }}>
+                <Button variant="outlined" onClick={navigateToAdminDash}>
+                  Cancel
+                </Button>
+              </FormControl>
+            )}
           </div>
         </div>
-      </fieldset>
-      <fieldset className="scheduler-border">
-        <legend className="scheduler-border">Location</legend>
-        <div className="control-group">
-          <div className="row g-3">
-            <div className="col-md-6">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="Address"
-                  multiline
-                  variant="outlined"
-                  value={location.address}
-                  // onChange={(e) => setLocation({ ...location, address: e.target.value })}
-                  onChange={(e) => {
-                    const addressValue = e.target.value
-                      .replace(/^\s+/, "")
-                      .replace(/\s{2,}/g, " ")
-                      .replace(/[^a-zA-Z0-9 /,-]/g, "");
-                    setLocation({ ...location, address: addressValue });
-                  }}
-                  size="small"
-                  onBlur={onBlurLocation("address")}
-                  error={!!errors.location.address}
-                  helperText={errors.location.address}
-                  inputProps={{ maxLength: 100 }}
-                />
-              </FormControl>
-            </div>
-            <div className="col-md-6">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="City"
-                  multiline
-                  variant="outlined"
-                  value={location.city}
-                  onChange={(e) => {
-                    const cityValue = e.target.value.replace(/[^a-zA-Z ]/g, "");
-                    setLocation({ ...location, city: cityValue });
-                  }}
-                  size="small"
-                  onBlur={onBlurLocation("city")}
-                  error={!!errors.location.city}
-                  helperText={errors.location.city}
-                  inputProps={{ maxLength: 50 }}
-                />
-              </FormControl>
-            </div>
-            <div className="col-md-4">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="State"
-                  multiline
-                  variant="outlined"
-                  value={location.state}
-                  onChange={(e) => {
-                    const stateValue = e.target.value
-                      .replace(/^\s+/, "")
-                      .replace(/\s{2,}/g, " ")
-                      .replace(/[^a-zA-Z ]/g, "");
-                    setLocation({ ...location, state: stateValue });
-                  }}
-                  size="small"
-                  onBlur={onBlurLocation("state")}
-                  error={!!errors.location.state}
-                  helperText={errors.location.state}
-                  inputProps={{ maxLength: 50 }}
-                />
-              </FormControl>
-            </div>
-            <div className="col-md-4">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="Country"
-                  multiline
-                  variant="outlined"
-                  value={location.country}
-                  onChange={(e) => {
-                    const countryValue = e.target.value
-                      .replace(/^\s+/, "")
-                      .replace(/\s{2,}/g, " ")
-                      .replace(/[^a-zA-Z ]/g, "");
-                    setLocation({ ...location, country: countryValue });
-                  }}
-                  size="small"
-                  onBlur={onBlurLocation("country")}
-                  error={!!errors.location.country}
-                  helperText={errors.location.country}
-                  inputProps={{ maxLength: 50 }}
-                />
-              </FormControl>
-            </div>
-            <div className="col-md-4">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="Postal Code"
-                  multiline
-                  variant="outlined"
-                  value={location.postalCode}
-                  onChange={(e) => {
-                    const postalValue = e.target.value.replace(/[^0-9]/g, "");
-                    setLocation({ ...location, postalCode: postalValue });
-                  }}
-                  size="small"
-                  onBlur={onBlurLocation("postalCode")}
-                  error={!!errors.location.postalCode}
-                  helperText={errors.location.postalCode}
-                  inputProps={{ maxLength: 6 }}
-                />
-              </FormControl>
-            </div>
-            <div className="col-md-6">
-              <FormControl sx={{ m: 1, width: "100%" }}>
-                <TextField
-                  id="outlined-basic"
-                  fullWidth
-                  label="Google Business Url"
-                  multiline
-                  variant="outlined"
-                  value={location.googleBusinessUrl}
-                  onChange={(e) => {
-                    const cityValue = e.target.value;
-                    setLocation({ ...location, googleBusinessUrl: cityValue });
-                  }}
-                  size="small"
-                  // onBlur={onBlurLocation("city")}
-                  // error={!!errors.location.city}
-                  // helperText={errors.location.city}
-                  inputProps={{ maxLength: 50 }}
-                />
-              </FormControl>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-      <div className="row">
-        <div className="col-md-12">
-          <div className="checkboxInput">
-            <input
-              type="checkbox"
-              name="tos"
-              id="tos"
-              value="terms"
-              checked={checked}
-              onChange={handleCheckboxChange}
-            />
-            <p>
-              I agree to the{" "}
-              <a href="https://www.cloud4c.com/terms">terms and conditions</a>{" "}
-              mentioned in the <a href="https://www.cloud4c.com/aup">AUP</a>,{" "}
-              <a href="https://www.cloud4c.com/msa">MSA</a>,{" "}
-              <a href="https://www.cloud4c.com/sla">SLA</a>.
-            </p>
-          </div>
-          {checkboxError && (
-            <span style={{ color: "#d32f2f", marginLeft: "25px" }}>
-              {checkboxError}
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="col-12">
-        <FormControl sx={{ m: 1, float: "right" }}>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            <span>{text}</span>
-          </button>
-        </FormControl>
-        
-        {!tenantId && <FormControl sx={{ m: 1, float: "right" }}>
-          <Button variant="outlined" onClick={navigateToAdminDash}>
-            Cancel
-          </Button>
-        </FormControl>
-      }
-      </div>
+      )}
     </div>
   );
 };

@@ -17,9 +17,15 @@ import DeleteTenant from "./DeleteTenant";
 import { Alert, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTenantFormData } from "../payment/stateManagement/FormDataContext";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
+// Dialog ...
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 interface Column {
   id:
@@ -40,13 +46,14 @@ interface Column {
 }
 
 export const AdminDashBoard = () => {
-  const {rows, setRows, setTenantId}= useTenantFormData()
+  const { rows, setRows, setTenantId } = useTenantFormData();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
-  
+  const [open, setOpen] = React.useState(false);
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -54,9 +61,18 @@ export const AdminDashBoard = () => {
     console.log("event", event);
     setPage(newPage);
   };
-  const [indexed, setIndexed] = React.useState(1)
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  
+
+  const [indexed, setIndexed] = React.useState(1);
   const handleGenerateQR = async (column: any, index: number) => {
-    setIndexed(index)
+    setIndexed(index);
     setIsLoading(true);
     console.log("iyee", column, index);
     const res = await ScanAppService.genateQR({
@@ -85,8 +101,8 @@ export const AdminDashBoard = () => {
       fontSize: 14,
     },
   }));
-  React.useEffect(()=>{},[rows])
-  
+  React.useEffect(() => {}, [rows]);
+
   const columns: readonly Column[] = [
     { id: "name", label: "Name", minWidth: 170 },
     { id: "email", label: "Email", minWidth: 100 },
@@ -161,12 +177,12 @@ export const AdminDashBoard = () => {
   // const [rows, setRows] = React.useState([]);
   const fetchData = async () => {
     try {
-      setLoading(false);
+      setLoading(true);
       const res = await ScanAppService.getTenants();
 
       console.log("res", res);
       // setMenuItems(res.data.data);
-      if (res && res.data) {
+      if (res && res?.data && res?.data?.data) {
         setRows(res.data.data.filter((item: any) => item.status == true));
       }
       // Frame the formData object based on the form field values
@@ -184,20 +200,53 @@ export const AdminDashBoard = () => {
   React.useEffect(() => {
     fetchData();
   }, []);
-  
-  const   logout = () => {
-    alert("Are you sure you want to log out?");
+
+  const logout = () => {
+    // alert("Are you sure you want to log out?");
     sessionStorage.clear();
-    navigate(`../adminLogin`, { replace: true });
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate(`../adminLogin`, { replace: true });
+    }, 1000);
   };
   return (
     <div className="adminDashBoard">
       <div className="floatRight">
-      
-      <Button variant="outlined" style={{float: "right", marginBottom: "10px"}} onClick={routeToTenant}>Create a Tenant</Button>
-      <button type="button" onClick={logout}>
-              <LogoutIcon style={{fontSize:"30px", marginBottom: "10px"}} />
-            </button>
+        {/* Confirmation Dialog */}
+
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Confirmation!!"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <b>Are you sure you want to log out?</b>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>No</Button>
+            <Button onClick={logout} autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/* Confirmation Dialog */}
+
+        <Button
+          variant="outlined"
+          style={{ float: "right", marginBottom: "10px" }}
+          onClick={routeToTenant}
+        >
+          Create a Tenant
+        </Button>
+        <button type="button" onClick={handleClickOpen}>
+          <LogoutIcon style={{ fontSize: "30px", marginBottom: "10px" }} />
+        </button>
       </div>
       {loading ? ( // Show loading message or spinner when loading is true
         <RippleLoader />
@@ -207,9 +256,9 @@ export const AdminDashBoard = () => {
             <Alert>QR code is sent to your Registerd Email ID</Alert>
           )}
           {/* sx={{ maxHeight: 440 }} */}
-          <TableContainer  >
+          <TableContainer>
             <Table stickyHeader aria-label="sticky table">
-              <TableHead style={{background:"red"}}>
+              <TableHead style={{ background: "red" }}>
                 <TableRow>
                   {columns.map((column) => (
                     <StyledTableCell
@@ -224,8 +273,9 @@ export const AdminDashBoard = () => {
               </TableHead>
               <TableBody>
                 {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).filter((item: any) => item.status == true)
-                  .map((row: any, index:number) => (
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .filter((item: any) => item.status == true)
+                  .map((row: any, index: number) => (
                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="left">{row.email}</TableCell>
@@ -246,14 +296,18 @@ export const AdminDashBoard = () => {
                           onClick={() => handleGenerateQR(row, index)}
                         >
                           <span>
-                            {(isLoading && indexed===index) ? (
-                            <div style={{width:"50px"}}><CircularProgress color="secondary" size="16px" /></div>
+                            {isLoading && indexed === index ? (
+                              <div style={{ width: "50px" }}>
+                                <CircularProgress
+                                  color="secondary"
+                                  size="16px"
+                                />
+                              </div>
                             ) : (
                               "Generate QR"
                             )}
                           </span>
                         </button>
-
                       </TableCell>
                     </TableRow>
                   ))}

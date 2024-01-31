@@ -27,7 +27,6 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
 export const Form = () => {
   const { tenant } = useParams();
   const config: any = useConfig();
@@ -94,7 +93,7 @@ export const Form = () => {
     return timestampInMilliseconds + "";
   }
   React.useEffect(() => {
-    console.log("path333333333", location.hash.includes('/addItems'))
+    // console.log("path333333333", location.hash.includes('/addItems'))
     // Check if the URL contains "/addItems"
     if (sessionStorage.isLogin) {
       if(location.hash.includes('/addItems')){
@@ -174,11 +173,13 @@ export const Form = () => {
             is_veg: itemDetails.is_veg,
           });
           if (res) {
-            setIsLoading(true);
             setResponse({
               message: "Item updated successfully",
               statusCode: res.status,
             });
+            setTimeout(() => {
+              navigate(`../${tenant}/dashBoard`, { replace: true });
+            }, 3000);
             // setItemDetails({
             //   itemName: "",
             //   amount: "",
@@ -191,7 +192,6 @@ export const Form = () => {
             // });
           }
         } else {
-          setIsLoading(false);
           const res = await ScanAppService.postItem({
             tenant_id: tdata?._id,
             name: itemDetails.itemName,
@@ -210,7 +210,7 @@ export const Form = () => {
             is_veg: itemDetails.is_veg,
           });
           if (res) {
-            setIsLoading(true);
+            
             setResponse({
               message: " Item Added successfully",
               statusCode: res.status,
@@ -232,9 +232,13 @@ export const Form = () => {
       }
 
       // Frame the formData object based on the form field values
-    } catch (error) {
-      console.error("Error posting or updating data:", error);
+    } catch (error :any) {
+      
+      console.log("Error posting or updating data:", error);
+      console.log(error?.response?.data)
       // Handle errors while posting or updating data
+    } finally {
+      setIsLoading(true);
     }
   };
   console.log(

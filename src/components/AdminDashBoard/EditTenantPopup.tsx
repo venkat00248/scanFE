@@ -14,7 +14,7 @@ type Anchor = "top" | "left" | "bottom" | "right";
 
 export const EditTenantPopup = ({item, data}:any) => {
 
-
+ console.log("EditTenant::: ", item)
   const {
     setTenantDetails,
     setThemeDetails,
@@ -31,8 +31,9 @@ export const EditTenantPopup = ({item, data}:any) => {
   React.useEffect(() => {
     console.log("Setting tenant details:", data);
     if(data){
+      
     setTenantDetails({tenantName:data.name,email:data.email });
-   
+      
     setThemeDetails({ primaryColor: data.primary_color, secondaryColor: data.secondary_color })
     // setLocation({address: data.address,country: data.country,city: data.city,state:data.state,postalCode: data.postalCode,googleBusinessUrl:data.business_url})
     setFileSrc(data.url)
