@@ -13,7 +13,7 @@ type Anchor = "top" | "left" | "bottom" | "right";
 
 export const EditItemPopup = ({data}:any) => {
   console.log("EditItemPopup :: data: " + JSON.stringify(data));
-  const {  setItemDetails ,setText,setFileSrc , setHeader} = useFormData();
+  const {  setItemDetails ,setText,setFileSrc , setHeader , setShow} = useFormData();
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -45,8 +45,11 @@ export const EditItemPopup = ({data}:any) => {
         // Reset itemDetails when the drawer is closed
         setItemDetails({ itemName: "", amount: "" , offerPrice:"", cuponCode:"", description:"", spiceLevel:""});
         setHeader("Add Item")
+        setShow(false)
       }
       else{
+        setShow(true)
+
         setHeader("Update Item")
       }
       setState({ ...state, [anchor]: open });

@@ -18,8 +18,8 @@ import {
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormData } from "./stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
-import { useParams, useNavigate } from "react-router-dom";
-// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useParams,Link ,  useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useConfig } from "../../config/config";
 // import {decode as base64_decode, encode as base64_encode} from 'base-64';
 import { RippleLoader } from "../Loader/RippleLoader";
@@ -34,7 +34,7 @@ export const Form = () => {
   const [isLoading, setIsLoading] = useState(true);
   // let encoded = base64_encode('YOUR_DECODED_STRING');
   // let decoded = base64_decode('YOUR_ENCODED_STRING');
-  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,expiredOn, setExpiredOn, text,setText} = useFormData();
+  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,  show ,expiredOn, setExpiredOn, text,setText} = useFormData();
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const tdata = config?.data[0];
   const handleFileChange = (event: any) => {
@@ -532,13 +532,14 @@ export const Form = () => {
               </div>
             </fieldset>
             <div className="col-12">
+             {!show &&
               <FormControl sx={{ m: 1 }}>
-                {/* <Link to={`/${tenant}/dashBoard`}>
+                <Link to={`/${tenant}/dashBoard`}>
                   <div className="backArrow">
                     <ArrowBackIcon />
                   </div>
-                </Link> */}
-              </FormControl>
+                </Link>
+              </FormControl>}
               <FormControl sx={{ m: 1, float: "right" }}>
                 <button
                   type="button"
