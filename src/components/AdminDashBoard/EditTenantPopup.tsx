@@ -66,10 +66,20 @@ export const EditTenantPopup = ({item, data}:any) => {
       handleIconClick()
       }
       else{
+      setChecked(false)
+
       setText("Proceed")
       }
     };
     const handleIconClick = async () => {
+      setUserDetails({contact:"response.data.data.contact"});
+      setLocation({
+        address: "response.data.data.address",
+        country:" response.data.data.country",
+        city: "response.data.data.city",
+        state: "response.data.data.state",
+        postalCode: "response.data.data.postalCode",
+      });
       try {
         // Make an API call here using axios or fetch
         const response = await ScanAppService.getTenantAddressByTenantId(data._id);
