@@ -36,13 +36,21 @@ export const Home = () => {
     setCurrentImageIndex(index);
   };
   console.log("tdata", tdata);
+  console.log("profile", profile);
   const fetchData = async () => {
     try {
       const res = await ScanAppService.getItems(tdata?._id);
 
-      console.log("res", res);
-      setProfile(res.data.data);
-      sessionStorage.tenant_items = JSON.stringify(res?.data?.data);
+      const today = new Date();
+    
+      // Filter out items with expiration date greater than today
+      const nonExpiredItems = res?.data?.data.filter((item:any) => {
+        const expirationDate = new Date(item.expired_on);
+        return expirationDate > today;
+      });
+  
+      setProfile(nonExpiredItems);
+      sessionStorage.tenant_items = JSON.stringify(nonExpiredItems);
       // Frame the formData object based on the form field values
     } catch (error) {
       console.error("Error posting or updating data:", error);
@@ -115,8 +123,8 @@ export const Home = () => {
         <div className="description">
           {profile.length ? (
             <>
-              <h3 className="firstH3">Great Taste ,</h3>
-              <h3>great Sensation</h3>
+              <h3 className="firstH3">{currentProfile && currentProfile.name}</h3>
+              {/* <h3>great Sensation</h3> */}
               <p>{currentProfile && currentProfile.item_desc} </p>
             </>
           ) : (

@@ -5,6 +5,8 @@ import './Latest.scss';
 
 export const Latest = () => {
   const menuItems = sessionStorage.tenant_items ? JSON.parse(sessionStorage.tenant_items) : [];
+
+  console.log("menu Items", menuItems)
   return (
     <div className='Latest'>
       <section className="section menu" id="menu">
@@ -14,7 +16,7 @@ export const Latest = () => {
               {menuItems.length ? menuItems.map((menuItem:any, index:number) => (
                 <div className="menu-item flex" key={index}>
                   <img src={menuItem.url} alt="" className="menu-img" />
-                  <div className="menuItem-details"> alsjdflajsd;lfja;sdjf;sdjf ;la;jsdl
+                  <div className="menuItem-details"> 
                     <h6 className="menuItem-topic">{menuItem.name}</h6>
                     <p className="menuItem-des">{menuItem.item_desc}</p>
                     <div className='spice'>
