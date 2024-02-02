@@ -8,12 +8,12 @@ import './Styles.scss'
 import EditIcon from '@mui/icons-material/Edit';
 import { EditItem } from "./EditItem";
 import { useFormData } from "../Items/stateManagement/FormDataContext";
-
+import dayjs from "dayjs";
 type Anchor = "top" | "left" | "bottom" | "right";
 
 export const EditItemPopup = ({data}:any) => {
   console.log("EditItemPopup :: data: " + JSON.stringify(data));
-  const {  setItemDetails ,setText,setFileSrc , setHeader , setShow} = useFormData();
+  const {  setItemDetails ,setText,setFileSrc , setExpiredOn , setHeader , setShow} = useFormData();
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -24,6 +24,8 @@ export const EditItemPopup = ({data}:any) => {
   console.log("EditItemPopup :: setItemDetails: 2222222");
   React.useLayoutEffect(() => {
       console.log("Edit item details:", data);
+      
+      setExpiredOn(dayjs(data.expired_on))
       setFileSrc(data.url)
       setItemDetails({ itemName: data.name, mongoId:data._id, amount: data.item_price , offerPrice:data.promotional_price, description:data.item_desc, spiceLevel:data.spicy_level,isSpecial:data.is_special
 ,is_veg:data.is_veg
