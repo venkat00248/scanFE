@@ -34,7 +34,7 @@ export const Form = () => {
   const [isLoading, setIsLoading] = useState(true);
   // let encoded = base64_encode('YOUR_DECODED_STRING');
   // let decoded = base64_decode('YOUR_ENCODED_STRING');
-  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,  show ,expiredOn, setExpiredOn, text,setText} = useFormData();
+  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,  expiredOn, setExpiredOn, text,setText} = useFormData();
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const tdata = config?.data[0];
   const handleFileChange = (event: any) => {
@@ -532,7 +532,7 @@ export const Form = () => {
               </div>
             </fieldset>
             <div className="col-12">
-             {!show &&
+             {!itemDetails?.mongoId &&
               <FormControl sx={{ m: 1 }}>
                 <Link to={`/${tenant}/dashBoard`}>
                   <div className="backArrow">

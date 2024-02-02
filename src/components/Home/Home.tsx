@@ -52,7 +52,7 @@ export const Home = () => {
       // Filter out items with expiration date greater than today
       const nonExpiredItems = res?.data?.data.filter((item:any) => {
         const expirationDate = prepareCustomDate(item.expired_on);
-        return expirationDate >= today;
+        return item.is_special && expirationDate >= today;
       });
       setProfile(nonExpiredItems);
       sessionStorage.tenant_items = JSON.stringify(nonExpiredItems);
