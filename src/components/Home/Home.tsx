@@ -37,18 +37,23 @@ export const Home = () => {
   };
   console.log("tdata", tdata);
   console.log("profile", profile);
+  //prepare a customized date...
+  const prepareCustomDate = (nDate: any) => {
+    if(!nDate) return new Date();
+    let custDate = new Date(nDate);
+    return `${custDate.getFullYear()}-${custDate.getMonth()}-${custDate.getDate()}`;
+  }
   const fetchData = async () => {
     try {
       const res = await ScanAppService.getItems(tdata?._id);
 
-      const today = new Date();
+      const today = prepareCustomDate(new Date());
     
       // Filter out items with expiration date greater than today
       const nonExpiredItems = res?.data?.data.filter((item:any) => {
-        const expirationDate = new Date(item.expired_on);
-        return expirationDate > today;
+        const expirationDate = prepareCustomDate(item.expired_on);
+        return expirationDate >= today;
       });
-  
       setProfile(nonExpiredItems);
       sessionStorage.tenant_items = JSON.stringify(nonExpiredItems);
       // Frame the formData object based on the form field values

@@ -59,6 +59,11 @@ export const AdminDashBoard = () => {
     newPage: number
   ) => {
     console.log("event", event);
+    // page scroll is going to set to top 
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 200)
+    
     setPage(newPage);
   };
   const handleClickOpen = () => {
@@ -199,6 +204,7 @@ export const AdminDashBoard = () => {
   }
   React.useEffect(() => {
     fetchData();
+    window.scrollTo(0, 0);
   }, []);
 
   const logout = () => {
