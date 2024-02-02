@@ -8,13 +8,14 @@ import {
   InputAdornment,
   TextField,
   AlertTitle,
+  Box,
+  Snackbar,
 } from "@mui/material";
 import { useTenantFormData } from "./stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
 import { useNavigate } from "react-router-dom";
 import { useConfig } from "../../config/config";
 import { RippleLoader } from "../Loader/RippleLoader";
-
 export const Form = () => {
   const {
     tenantDetails,
@@ -34,7 +35,7 @@ export const Form = () => {
     text,
     tenantId,
   } = useTenantFormData();
-
+ 
   const navigate = useNavigate();
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const [errors, setErrors] = useState({
@@ -62,6 +63,16 @@ export const Form = () => {
   // Other code (onBlur functions, handleSubmit, etc.)
   const navigateToAdminDash = () => {
     navigate(`../adminDashboard`, { replace: true });
+  };
+  const [state, setState] = React.useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
+  const { vertical, horizontal, open } = state;  
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
   };
   const handleCheckboxChange = (event: any) => {
     setChecked(event.target.checked);
@@ -202,7 +213,7 @@ export const Form = () => {
     }
     try {
       if (isFormFieldValid) {
-        setIsLoading(true);
+        setIsLoading(true);        
         if (tenantId) {
           const res = await ScanAppService.updateTenant({
             _id: tenantId,
@@ -244,11 +255,16 @@ export const Form = () => {
           console.log("res from teanant creation ", res);
           if (res?.data?.statusCode == 200) {
             // setIsNotOnboarded(false);
+            setState({ ...state, open: true });
             setResponse({
               message: "On Boarderd successfully",
               statusCode: res?.data?.statusCode,
             });
-            navigate(`../adminDashboard`, { replace: true });
+            alert("On Boarded Successfully!!")
+            setTimeout(() => {
+              navigate(`../adminDashboard`, { replace: true });
+            }, 300)
+           
           }
         }
       }
@@ -280,6 +296,7 @@ export const Form = () => {
       fileReader.readAsDataURL(file);
     }
   };
+  
   return (
     <div className="register-form p-5 needs-validation" id="register-form">
       {response.statusCode == 200 && (
@@ -293,8 +310,20 @@ export const Form = () => {
           </Alert>
         </div>
       )}
-      {isLoading ? (
-        <RippleLoader />
+      {isLoading && response.statusCode == 200 ? (
+        
+        <div>
+          <RippleLoader />
+          <Box sx={{ width: 500 }}>
+          <Snackbar
+            // anchorOrigin={{ vertical, horizontal }}
+            open={open}
+            onClose={handleClose}
+            message={response.message}
+            key={vertical + horizontal}
+          />
+        </Box>
+      </div>
       ) : (
         <div>
           <fieldset className="scheduler-border">
