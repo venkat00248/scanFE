@@ -17,7 +17,7 @@ export const TenantLogIn = () => {
   const [response, setResponse]= useState("")
   // const [loginResponse, setLoginResponse] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  console.log("s", setIsLoading)
+  console.log("s", setIsLoading);
   // const handleClickShowPassword = () => setShowPassword((show) => !show);
   // const handleMouseDownPassword = (
   //   event: React.MouseEvent<HTMLButtonElement>
@@ -30,7 +30,7 @@ export const TenantLogIn = () => {
   });
   const [errors, setErrors] = useState({
     itemDetails: { email: "", password: "" },
-  });
+  });    
   const onBlurItemDetails = (fieldName: any) => () => {
     if (!itemDetails[fieldName]) {
       setErrors((prevErrors) => ({
@@ -51,6 +51,7 @@ export const TenantLogIn = () => {
     }
   };
   const config: any = useConfig();
+  sessionStorage.appname = "Steal Deals Application";
   // console.log(window.location.pathname.split('/')?.[1]);
   // console.log("pathhhh",window.location);
   console.log("config from tenant", config);
@@ -237,6 +238,7 @@ export const TenantLogIn = () => {
                 {/* backgroundImage: `linearGradient(195deg, ${config?.data[0]?.primary_color} 0%, ${config?.data[0]?.primary_color} 100%`); */}
                 {/* style={{backgroundImage: `linearGradient(195deg, ${config?.data[0]?.primary_color} 0%, ${config?.data[0]?.primary_color} 100%) !important`}} */}
                 <div className="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1" style={{background: `${config?.data[0]?.primary_color}`, color: `${config?.data[0]?.secondary_color}`}}>
+                <h3 className=" font-weight-bolder text-center mt-2 mb-0" >{sessionStorage.appname}</h3>
                   <h4 className=" font-weight-bolder text-center mt-2 mb-0" style={{color: `${config?.data[0]?.secondary_color}`}}>Welcome to Tenant Login</h4>
                   <div className="row mt-3">
                     <div className="col-2 text-center ms-auto">

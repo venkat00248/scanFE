@@ -11,7 +11,7 @@ export const Footer = () => {
               <div className="copyright text-center text-sm text-muted text-lg-start">
                 © {new Date().getFullYear()} ,
                 <i className="fa fa-heart"></i> &nbsp; 
-                <a href="#" className="font-weight-bold" target="_blank">Hotel APP</a>                
+                <a href="#" className="font-weight-bold" target="_blank">Steal Deals</a>                
               </div>
             </div>
             {/* <div className="col-lg-6">

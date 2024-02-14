@@ -3,6 +3,8 @@ import App from "./App.tsx";
 import "./index.scss";
 import "./root.scss";
 // import { ConfigProvider } from "./config/config.tsx";
+//disable logs globally...
+// console.log = () => {};
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
     <>

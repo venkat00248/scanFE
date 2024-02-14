@@ -18,7 +18,7 @@ import {
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormData } from "./stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
-import { useParams,Link ,  useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useConfig } from "../../config/config";
 // import {decode as base64_decode, encode as base64_encode} from 'base-64';
@@ -34,7 +34,16 @@ export const Form = () => {
   const [isLoading, setIsLoading] = useState(true);
   // let encoded = base64_encode('YOUR_DECODED_STRING');
   // let decoded = base64_decode('YOUR_ENCODED_STRING');
-  const { itemDetails, setItemDetails ,fileSrc, setFileSrc ,  expiredOn, setExpiredOn, text,setText} = useFormData();
+  const {
+    itemDetails,
+    setItemDetails,
+    fileSrc,
+    setFileSrc,
+    expiredOn,
+    setExpiredOn,
+    text,
+    setText,
+  } = useFormData();
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const tdata = config?.data[0];
   const handleFileChange = (event: any) => {
@@ -60,8 +69,7 @@ export const Form = () => {
       isSpecial: true,
     },
   });
-  const onBlurItemDetails = (fieldName: any) => () => { 
-      
+  const onBlurItemDetails = (fieldName: any) => () => {
     if (!itemDetails[fieldName]) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -70,6 +78,24 @@ export const Form = () => {
           [fieldName]: "This field is required.",
         },
       }));
+    } else if (fieldName === "offerPrice") {      
+      if (Number(itemDetails.amount) <= Number(itemDetails.offerPrice)) {        
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          itemDetails: {
+            ...prevErrors.itemDetails,
+            [fieldName]: "Offer Price should be less than Item Price",
+          },
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          itemDetails: {
+            ...prevErrors.itemDetails,
+            [fieldName]: "",
+          },
+        }));
+      } 
     } else {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -96,26 +122,27 @@ export const Form = () => {
     // console.log("path333333333", location.hash.includes('/addItems'))
     // Check if the URL contains "/addItems"
     if (sessionStorage.isLogin) {
-      if(location.hash.includes('/addItems')){
-      // Update itemDetails state with an empty object
-      setText("Save")
-      setFileSrc("http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/food_img.png");
-      setItemDetails({
-        itemName: '',
-        amount: '',
-        offerPrice: '',
-        description: '',
-        spiceLevel: '',
-        isSpecial: false,
-        is_veg: false,
-        mongoId: ''
-        
-      });
-    }
+      if (location.hash.includes("/addItems")) {
+        // Update itemDetails state with an empty object
+        setText("Save");
+        setFileSrc(
+          "http://h-app-scanner.s3-website-ap-southeast-2.amazonaws.com/food_img.png"
+        );
+        setItemDetails({
+          itemName: "",
+          amount: "",
+          offerPrice: "",
+          description: "",
+          spiceLevel: "",
+          isSpecial: false,
+          is_veg: false,
+          mongoId: "",
+        });
+      }
     } else {
       alert("You are not authorized to access!!");
-      if (location.href.includes("addItems")){
-        window.location.href = location.href.replace("addItems","tenantLogin");
+      if (location.href.includes("addItems")) {
+        window.location.href = location.href.replace("addItems", "tenantLogin");
       }
     }
   }, [location.pathname]);
@@ -135,9 +162,8 @@ export const Form = () => {
       itemDetails.itemName == "" ||
       itemDetails.amount == "" ||
       itemDetails.offerPrice == "" ||
-      itemDetails.description == ""||
-      itemDetails.spiceLevel == ""  
-      
+      itemDetails.description == "" ||
+      itemDetails.spiceLevel == ""
     ) {
       // return;
       isFormFieldValid = false;
@@ -210,7 +236,6 @@ export const Form = () => {
             is_veg: itemDetails.is_veg,
           });
           if (res) {
-            
             setResponse({
               message: " Item Added successfully",
               statusCode: res.status,
@@ -228,14 +253,12 @@ export const Form = () => {
             navigate(`../${tenant}/dashBoard`, { replace: true });
           }, 3000);
         }
-        
       }
 
       // Frame the formData object based on the form field values
-    } catch (error :any) {
-      
+    } catch (error: any) {
       console.log("Error posting or updating data:", error);
-      console.log(error?.response?.data)
+      console.log(error?.response?.data);
       // Handle errors while posting or updating data
     } finally {
       setIsLoading(true);
@@ -275,6 +298,7 @@ export const Form = () => {
                   <div className="col-md-6">
                     <FormControl sx={{ m: 1, width: "100%" }}>
                       <TextField
+                      required
                         id="outlined-basic"
                         fullWidth
                         label="Item Name"
@@ -300,6 +324,7 @@ export const Form = () => {
                   <div className="col-md-6">
                     <FormControl sx={{ m: 1, width: "100%" }}>
                       <TextField
+                      required
                         id="outlined-basic"
                         fullWidth
                         label="Item Price"
@@ -336,6 +361,7 @@ export const Form = () => {
                   <div className="col-md-6">
                     <FormControl sx={{ m: 1, width: "100%" }}>
                       <TextField
+                      required
                         id="outlined-basic"
                         fullWidth
                         label="Offer Price"
@@ -344,13 +370,15 @@ export const Form = () => {
                         value={itemDetails.offerPrice}
                         onChange={(e) => {
                           const offerPrice = e.target.value.replace(
-                            /^0+|[^0-9]/g,
+                            /^[^0-9]/g,
                             ""
                           );
+                          // if(itemDetails.offerPrice < itemDetails.amount) {
                           setItemDetails({
                             ...itemDetails,
                             offerPrice: offerPrice,
                           });
+                          // }
                         }}
                         // onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
                         size="small"
@@ -374,20 +402,20 @@ export const Form = () => {
                   <div className="col-md-6">
                     <FormControl sx={{ m: 1, width: "100%" }}>
                       <TextareaAutosize
+                      required
                         id="outlined-basic"
-                        minRows={3} // Adjust the number of rows as needed
+                        minRows={4} // Adjust the number of rows as needed
                         placeholder="Description"
                         style={{
                           width: "100%",
                           padding: "8px",
-                          border: "1px solid #ccc",
-                        }}
+                          border: itemDetails.description == "" ? "1px solid red" : "1px solid #ccc",
+                          borderRadius:  "5px",
+                          borderColor: itemDetails.description == "" ? 'red' : '#ccc'
+                        }}                        
                         value={itemDetails.description}
                         onChange={(e) => {
-                          const description = e.target.value
-                            // .replace(/^\s+/, "")
-                            // .replace(/\s{2,}/g, " ")
-                            // .replace(/[^a-zA-Z0-9 ]/g, "");
+                          const description = e.target.value;
                           setItemDetails({
                             ...itemDetails,
                             description: description,
@@ -396,7 +424,7 @@ export const Form = () => {
                         onBlur={onBlurItemDetails("description")}
                         // error={!!errors.itemDetails.description}
                         // helperText={errors.itemDetails.description}
-                        maxLength={50} // You can set the maxLength directly on TextareaAutosize
+                        maxLength={250} // You can set the maxLength directly on TextareaAutosize
                       />
                       {errors.itemDetails.description && (
                         <FormHelperText error>
@@ -427,9 +455,9 @@ export const Form = () => {
                           });
                         }}
                         size="small"
-                        onBlur={onBlurItemDetails("spiceLevel")}
-                        error={!!errors.itemDetails.spiceLevel}
-                        helperText={errors.itemDetails.spiceLevel}
+                        // onBlur={onBlurItemDetails("spiceLevel")}
+                        // error={!!errors.itemDetails.spiceLevel}
+                        // helperText={errors.itemDetails.spiceLevel}
                         inputProps={{ maxLength: 1 }}
                       />
                     </FormControl>
@@ -494,7 +522,7 @@ export const Form = () => {
                             onChange={handlerForVeg}
                           />
                         }
-                        label={itemDetails.is_veg ?"Is Veg":"Non Veg"}
+                        label={itemDetails.is_veg ? "Is Veg" : "Non Veg"}
                       />
                     </div>
                   </div>
@@ -532,14 +560,15 @@ export const Form = () => {
               </div>
             </fieldset>
             <div className="col-12">
-             {!itemDetails?.mongoId &&
-              <FormControl sx={{ m: 1 }}>
-                <Link to={`/${tenant}/dashBoard`}>
-                  <div className="backArrow">
-                    <ArrowBackIcon />
-                  </div>
-                </Link>
-              </FormControl>}
+              {!itemDetails?.mongoId && (
+                <FormControl sx={{ m: 1 }}>
+                  <Link to={`/${tenant}/dashBoard`}>
+                    <div className="backArrow">
+                      <ArrowBackIcon />
+                    </div>
+                  </Link>
+                </FormControl>
+              )}
               <FormControl sx={{ m: 1, float: "right" }}>
                 <button
                   type="button"

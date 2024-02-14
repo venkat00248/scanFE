@@ -42,7 +42,7 @@ export const MobileHeader = () => {
           {/* <i className="fa fa-right-from-bracke"></i> */}
           {isLogin ? (
             <button type="button" onClick={logout}>
-              <LogoutIcon />
+              <LogoutIcon  style={{ fontSize: "20px" }} />
             </button>
           ) : (
             currentRoute == "latest" ?(

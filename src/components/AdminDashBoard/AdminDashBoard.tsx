@@ -14,7 +14,7 @@ import { ScanAppService } from "../../services/ScanAppService";
 import { RippleLoader } from "../Loader/RippleLoader";
 import { EditTenantPopup } from "./EditTenantPopup";
 import DeleteTenant from "./DeleteTenant";
-import { Alert, styled } from "@mui/material";
+import { Alert, TextField, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTenantFormData } from "../payment/stateManagement/FormDataContext";
 import Button from "@mui/material/Button";
@@ -53,29 +53,47 @@ export const AdminDashBoard = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-
-  const handleChangePage = (
+  // const [searchText, setSearchText] = React.useState('');
+  const [orgData, setOrgData] = React.useState([]);
+  // const [offset, setOffset] = React.useState(0);
+  const handleChangePage = async (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
     console.log("event", event);
     // page scroll is going to set to top 
-    setTimeout(() => {
+    setTimeout(() => { 
       window.scrollTo(0, 0);
     }, 200)
     
+    // setOffset(offset + rows.length);
+    // alert(`offset :: ${offset} newPage :: ${newPage}  rowsPerPage :: ${rowsPerPage}`);
+    // await fetchTenantDetailsByPagination(0)
     setPage(newPage);
   };
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = () => { 
     setOpen(false);
   };
   
 
   const [indexed, setIndexed] = React.useState(1);
+  const fetchTenantDetailsByPagination = async (offset: any) => {
+    const res = await ScanAppService.getTenants(offset + rowsPerPage, rowsPerPage);
+
+      console.log("res", res);
+      // setMenuItems(res.data.data);
+      if (res && res?.data && res?.data?.data) {
+        const fdata = res.data.data;
+        const filteredData = fdata.filter((item: any) => item.status == true);
+        setRows(filteredData); 
+        setOrgData(filteredData);
+        // setOffset(offset + filteredData.length);       
+      }
+  }
   const handleGenerateQR = async (column: any, index: number) => {
     setIndexed(index);
     setIsLoading(true);
@@ -183,13 +201,8 @@ export const AdminDashBoard = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await ScanAppService.getTenants();
-
-      console.log("res", res);
-      // setMenuItems(res.data.data);
-      if (res && res?.data && res?.data?.data) {
-        setRows(res.data.data.filter((item: any) => item.status == true));
-      }
+      fetchTenantDetailsByPagination(0);
+      
       // Frame the formData object based on the form field values
     } catch (error) {
       console.error("Error posting or updating data:", error);
@@ -251,7 +264,7 @@ export const AdminDashBoard = () => {
           Create a Tenant
         </Button>
         <button type="button" onClick={handleClickOpen}>
-          <LogoutIcon style={{ fontSize: "30px", marginBottom: "10px" }} />
+          <LogoutIcon style={{ fontSize: "20px", marginBottom: "10px" }} />
         </button>
       </div>
       {loading ? ( // Show loading message or spinner when loading is true
@@ -263,6 +276,24 @@ export const AdminDashBoard = () => {
           )}
           {/* sx={{ maxHeight: 440 }} */}
           <TableContainer>
+            <div style={{paddingBottom: "10px"}}>
+              <TextField id="search"
+                        fullWidth
+                        label="Search  Tenant/Email"                        
+                        variant="outlined"
+                        autoComplete="off"
+                        onChange={(e: any) => {
+                          if(e.target.value.length >= 3){                            
+                          const searchTerm = e.target.value;
+                          const jRows = rows.filter((row: any) => (row.email.toString().includes(searchTerm) || row.name.toString().includes(searchTerm)))
+                          setRows(jRows);
+                          console.log("rows...", jRows);              
+                          } else {
+                            setRows(orgData); 
+                          }
+                        }}
+                        />
+            </div>
             <Table stickyHeader aria-label="sticky table">
               <TableHead style={{ background: "red" }}>
                 <TableRow>
@@ -327,7 +358,9 @@ export const AdminDashBoard = () => {
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}            
+            // showFirstButton={true}
+            // showLastButton={true}
           />
         </Paper>
       )}

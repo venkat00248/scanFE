@@ -153,7 +153,7 @@ const [loading, setLoading]= useState(false)
                       </thead>
                       <tbody>
                         {console.log("length menu item,s", menuItems)}
-                        {menuItems.length > 0 &&
+                        {menuItems.length  &&
                           menuItems.filter((item: any) => item.is_special && item.status == true)
                             .slice(0, 5)
                             .map((menuItem: any, index: any) => (

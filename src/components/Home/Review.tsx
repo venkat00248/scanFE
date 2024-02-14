@@ -15,19 +15,25 @@ export default function Review() {
   // console.log(window.location.pathname.split('/')?.[1]);
   // console.log("pathhhh",window.location);
   console.log("config from tenant", config?.data[0].business_url);
-  const [open, setOpen] = React.useState(true);
+  if(!sessionStorage.isUserVisited){
+    sessionStorage.isUserVisited = true;
+  }
+  const [open, setOpen] = React.useState(sessionStorage.isUserVisited);
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = () => {    
+    sessionStorage.isUserVisited = false;
     setOpen(false);
   };
   
 const handleClick = ()=>{
- 
+  sessionStorage.isUserVisited = false;
   const otherApplicationURL =  config? config?.data[0].business_url :'https://g.page/r/CZm8bL5bE_yTEB0/review'
   window.open(otherApplicationURL, '_blank');
+  
   setOpen(false);
 }
   return (

@@ -134,7 +134,7 @@ export const Home = () => {
             </>
           ) : (
             <>
-              <h2 className="" style={{fontSize: "30px", marginTop:"50px"}}>
+              <h2 className="" style={{fontSize: "20px"}}>
                 <i> coming soon ...</i>
               </h2>
             </>

@@ -4,8 +4,9 @@ import HttpApiService from "./HttpApiService";
 const API_BASE = "${config.API.BASEURI}";
 
 
- const scanAPPAPI = "http://happserver.ap-southeast-2.elasticbeanstalk.com"
+//  const scanAPPAPI = "http://happserver.ap-southeast-2.elasticbeanstalk.com"
 // const scanAPPAPI = "http://localhost:3000";
+const scanAPPAPI = "http://happserver-env-1.eba-xn6wqr76.ap-southeast-2.elasticbeanstalk.com";
 
 export class ScanApp extends HttpApiService {
   constructor() {
@@ -24,8 +25,8 @@ export class ScanApp extends HttpApiService {
   getTenantAddressByTenantId = (tenant_id:any)=>{
     return this.get(`${scanAPPAPI}/getTenantAddressByTenantId?tenant_id=${tenant_id}`)
   }
-  getTenants = ()=>{
-    return this.get(`${scanAPPAPI}/gettenants`)
+  getTenants = (offset = 0, limit = 10)=>{
+    return this.get(`${scanAPPAPI}/gettenants?offset=${offset}&limit=${limit}`)
   }
   deleteItems = (data:any)=>{
     return this.post(`${scanAPPAPI}/deleteItems`, data)

@@ -35,7 +35,7 @@ export const Form = () => {
     text,
     tenantId,
   } = useTenantFormData();
- 
+
   const navigate = useNavigate();
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const [errors, setErrors] = useState({
@@ -57,7 +57,13 @@ export const Form = () => {
   // const [isChecked, setIsChecked] = useState(false);
   const [checkboxError, setCheckboxError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const countryCodes = {
+    Australia: {
+      country: "AU",
+      acceptMobileLength: 9,
+      code: "+61",
+    },
+  };
   const config: any = useConfig();
   const tdata = config?.data[0];
   // Other code (onBlur functions, handleSubmit, etc.)
@@ -66,10 +72,10 @@ export const Form = () => {
   };
   const [state, setState] = React.useState({
     open: false,
-    vertical: 'top',
-    horizontal: 'center',
+    vertical: "top",
+    horizontal: "center",
   });
-  const { vertical, horizontal, open } = state;  
+  const { vertical, horizontal, open } = state;
 
   const handleClose = () => {
     setState({ ...state, open: false });
@@ -98,6 +104,20 @@ export const Form = () => {
     }
   };
 
+  const isEmptyFormValues = (formDetails: any, type = "tenant") => {
+    if (type === "tenant")
+      return formDetails?.name === "" || formDetails?.email === "";
+    else if (type === "user")
+      return formDetails?.contact === "";
+    else if (type === "tAddress")
+      return (
+        formDetails?.address === "" ||
+        formDetails?.country === "" ||
+        formDetails?.city === "" ||
+        formDetails?.state === "" ||
+        formDetails?.postalCode === ""
+      );
+  };
   const onBlurUserDetails = (fieldName: any) => () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!userDetails[fieldName]) {
@@ -185,102 +205,106 @@ export const Form = () => {
     // Perform onBlur validation for all fields
     onBlurtenantDetails("tenantName")();
     onBlurtenantDetails("email")();
-    onBlurUserDetails("name")();
-    onBlurUserDetails("email")();
     onBlurUserDetails("contact")();
     onBlurLocation("address")();
     onBlurLocation("country")();
     onBlurLocation("city")();
     onBlurLocation("state")();
     onBlurLocation("postalCode")();
-
-    if (
-      errors.tenantDetails.tenantName ||
-      errors.tenantDetails.email ||
-      errors.userDetails.name ||
-      errors.userDetails.email ||
-      errors.userDetails.contact ||
-      errors.location.address ||
-      errors.location.country ||
-      errors.location.city ||
-      errors.location.state ||
-      errors.location.postalCode
-    ) {
-      // return;
-      isFormFieldValid = false;
-    } else {
-      isFormFieldValid = true;
-    }
-    try {
-      if (isFormFieldValid) {
-        setIsLoading(true);        
-        if (tenantId) {
-          const res = await ScanAppService.updateTenant({
-            _id: tenantId,
-            name: tenantDetails.tenantName,
-            contact: userDetails.contact,
-            url: fileSrc,
-            primary_color: themeDetails.primaryColor,
-            secondary_color: themeDetails.secondaryColor,
-            updated_by: tdata?._id,
-            address: location.address,
-            country: location.country,
-            city: location.city,
-            state: location.state,
-            postalCode: location.postalCode,
-            business_url: location.googleBusinessUrl,
-          });
-          if (res) {
-            setResponse({
-              message: "Tenant updated successfully",
-              statusCode: res.status,
+    
+      if (
+        isEmptyFormValues(tenantDetails) ||
+        isEmptyFormValues(userDetails, "user") ||
+        isEmptyFormValues(location, "tAddress") ||
+        errors.tenantDetails.tenantName != ""  ||
+        errors.tenantDetails.email != "" ||
+        errors.userDetails.contact != ""  ||
+        errors.location.address != ""  ||
+        errors.location.country != ""  ||
+        errors.location.city != ""  ||
+        errors.location.state != ""  ||
+        errors.location.postalCode != "" 
+      ) {
+        // return;                
+        isFormFieldValid = false;
+      } else {
+        isFormFieldValid = true;
+      }
+      try {
+        if (isFormFieldValid == true) {
+          setIsLoading(true);
+          if (tenantId) {
+            const res = await ScanAppService.updateTenant({
+              _id: tenantId,
+              name: tenantDetails.tenantName,
+              contact: userDetails.contact,
+              url: fileSrc,
+              primary_color: themeDetails.primaryColor,
+              secondary_color: themeDetails.secondaryColor,
+              updated_by: tdata?._id,
+              address: location.address,
+              country: location.country,
+              city: location.city,
+              state: location.state,
+              postalCode: location.postalCode,
+              business_url: location.googleBusinessUrl,
             });
-          }
-        } else {
-          const res = await ScanAppService.onBoarding({
-            name: tenantDetails.tenantName,
-            email: tenantDetails.email,
-            contact: userDetails.contact,
-            url: fileSrc,
-            primary_color: themeDetails.primaryColor,
-            secondary_color: themeDetails.secondaryColor,
-            address: location.address,
-            country: location.country,
-            city: location.city,
-            state: location.state,
-            postalCode: location.postalCode,
-            business_url: location.googleBusinessUrl,
-          });
-
-          console.log("res from teanant creation ", res);
-          if (res?.data?.statusCode == 200) {
-            // setIsNotOnboarded(false);
-            setState({ ...state, open: true });
-            setResponse({
-              message: "On Boarderd successfully",
-              statusCode: res?.data?.statusCode,
+            if (res) {
+              setResponse({
+                message: "Tenant updated successfully",
+                statusCode: res.status,
+              });
+            }
+          } else {
+            const res = await ScanAppService.onBoarding({
+              name: tenantDetails.tenantName,
+              email: tenantDetails.email,
+              contact: userDetails.contact,
+              url: fileSrc,
+              primary_color: themeDetails.primaryColor,
+              secondary_color: themeDetails.secondaryColor,
+              address: location.address,
+              country: location.country,
+              city: location.city,
+              state: location.state,
+              postalCode: location.postalCode,
+              business_url: location.googleBusinessUrl,
             });
-            alert("On Boarded Successfully!!")
-            setTimeout(() => {
-              navigate(`../adminDashboard`, { replace: true });
-            }, 300)
-           
+
+            console.log("res from teanant creation ", res);
+            if (res?.data?.statusCode == 200) {
+              // setIsNotOnboarded(false);
+              setState({ ...state, open: true });
+              setResponse({
+                message: "On Boarderd successfully",
+                statusCode: res?.data?.statusCode,
+              });
+              alert("On Boarded Successfully!!");
+              setTimeout(() => {
+                navigate(`../adminDashboard`, { replace: true });
+              }, 300);
+            } else {
+              setResponse({
+                message: res?.data?.message,
+                statusCode: res?.data?.statusCode,
+              });
+            }
           }
         }
+      } catch (error: any) {
+        console.error("Error posting or updating data:", error);
+        console.log(error?.response?.data);
+        if (error?.response?.data?.statusCode === 501) {
+          setResponse({
+            message: error?.response?.data?.message,
+            statusCode: error?.response?.data?.statusCode,
+          });
+        }
+        // Handle errors while posting or updating data
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error: any) {
-      console.error("Error posting or updating data:", error);
-      console.log(error?.response?.data);
-      if (error?.response?.data?.statusCode === 501) {
-        setResponse({
-          message: error?.response?.data?.message,
-          statusCode: error?.response?.data?.statusCode,
-        });
-      }
-      // Handle errors while posting or updating data
-    } finally {
-      setIsLoading(false);
-    }
+    
   };
 
   const handleFileChange = (event: any) => {
@@ -296,7 +320,7 @@ export const Form = () => {
       fileReader.readAsDataURL(file);
     }
   };
-  
+
   return (
     <div className="register-form p-5 needs-validation" id="register-form">
       {response.statusCode == 200 && (
@@ -311,19 +335,18 @@ export const Form = () => {
         </div>
       )}
       {isLoading && response.statusCode == 200 ? (
-        
         <div>
           <RippleLoader />
           <Box sx={{ width: 500 }}>
-          <Snackbar
-            // anchorOrigin={{ vertical, horizontal }}
-            open={open}
-            onClose={handleClose}
-            message={response.message}
-            key={vertical + horizontal}
-          />
-        </Box>
-      </div>
+            <Snackbar
+              // anchorOrigin={{ vertical, horizontal }}
+              open={open}
+              onClose={handleClose}
+              message={response.message}
+              key={vertical + horizontal}
+            />
+          </Box>
+        </div>
       ) : (
         <div>
           <fieldset className="scheduler-border">
@@ -333,6 +356,7 @@ export const Form = () => {
                 <div className="col-md-6">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
+                      required
                       id="outlined-basic"
                       fullWidth
                       label="Tenant Name"
@@ -358,6 +382,8 @@ export const Form = () => {
                 <div className="col-md-6">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
+                      required
+                      type="email"
                       id="outlined-basic"
                       fullWidth
                       label="Email"
@@ -412,6 +438,7 @@ export const Form = () => {
                     <div className="avatar-upload">
                       <div className="avatar-edit">
                         <input
+                          required
                           type="file"
                           id="imageUpload"
                           accept=".png, .jpg, .jpeg"
@@ -508,6 +535,7 @@ export const Form = () => {
                 <div className="col-md-4">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
+                      required
                       id="outlined-basic"
                       fullWidth
                       label="Contact"
@@ -516,7 +544,9 @@ export const Form = () => {
                       value={userDetails.contact}
                       InputProps={{
                         startAdornment: (
-                          <InputAdornment position="start">+61</InputAdornment>
+                          <InputAdornment position="start">
+                            {countryCodes["Australia"].code}
+                          </InputAdornment>
                         ),
                       }}
                       // onChange={(e) => setUserDetails({ ...userDetails, contact: e.target.value })}
@@ -537,7 +567,9 @@ export const Form = () => {
                       onBlur={onBlurUserDetails("contact")}
                       error={!!errors.userDetails.contact}
                       helperText={errors.userDetails.contact}
-                      inputProps={{ maxLength: 10 }}
+                      inputProps={{
+                        maxLength: countryCodes.Australia.acceptMobileLength,
+                      }}
                     />
                   </FormControl>
                 </div>
@@ -558,6 +590,7 @@ export const Form = () => {
                 <div className="col-md-6">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
+                      required
                       id="outlined-basic"
                       fullWidth
                       label="Address"
@@ -583,6 +616,7 @@ export const Form = () => {
                 <div className="col-md-6">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
+                      required
                       id="outlined-basic"
                       fullWidth
                       label="City"
@@ -607,6 +641,7 @@ export const Form = () => {
                 <div className="col-md-4">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
+                      required
                       id="outlined-basic"
                       fullWidth
                       label="State"
@@ -631,6 +666,7 @@ export const Form = () => {
                 <div className="col-md-4">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
+                      required
                       id="outlined-basic"
                       fullWidth
                       label="Country"
@@ -655,6 +691,7 @@ export const Form = () => {
                 <div className="col-md-4">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
+                      required
                       id="outlined-basic"
                       fullWidth
                       label="Postal Code"
