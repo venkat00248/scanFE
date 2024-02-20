@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import{ useState } from "react";
 import {
-  FormHelperText, Switch,
+  FormHelperText
 } from "@mui/material";
 import "./TenantLogIn.scss";
 import { ScanAppService } from "../../services/ScanAppService";
@@ -77,22 +77,16 @@ export const TenantLogIn = () => {
     try {
       console.log(`itemDetails ::`, itemDetails);
       if (isFormFieldValid) {
-        // setIsLoading(false)
+        setIsLoading(false)
         const res = await ScanAppService.tenantLogin({
           email: itemDetails.email,
           password: itemDetails.password,
           tenant_id:  config?.data[0]?._id
         });
         console.log("tenant", tenant);
-        // setLoginResponse(res);
-        // if(res)
-        //   setIsLoading(true);
-        // // if (res?.status) {
-        // //   // Redirect to another route on successful login
-        // //   // navigate(`${tenant}/dashBoard`);
-        // //   navigate(`../${tenant}/dashBoard`, { replace: true });
-
-        // // }
+        if(res) {
+          setIsLoading(true);
+        }        
         console.log(res?.status,"res", res);
         if (res?.status == 200) {     
           sessionStorage.isLogin = true;     
@@ -109,6 +103,7 @@ export const TenantLogIn = () => {
     } catch (error) {
       setResponse("Pls. check your credentials")
       console.error("Error posting or updating data:", error);
+      setIsLoading(true);
       // Handle errors while posting or updating data
     }
   };
@@ -119,118 +114,10 @@ export const TenantLogIn = () => {
   //   }
   // };
   return (
-    // <div
-    //   className="register-form p-5 needs-validation tenantLogin"
-    //   id="register-form"
-    //   onKeyDown={(e) => handleKeyDown(e)}
-    //   // style={{ marginTop: "80px" }}
-    // >
-    //   {/* style={{ marginTop: "60px" }} */}
-    //   <fieldset>
-    //     <div className="control-group">
-    //       <div className="row">
-    //         <div className="col-md-12 tenant-login--title"> Tenant Login </div>
-    //       </div>
-    //       <div className="row g-3">
-    //         <div className="col-md-12">
-    //           <img src={url} alt="bg" className="logo-border--raidus"/>
-    //         </div>
-    //         <div className="col-md-12">
-    //           <FormControl sx={{ m: 1, width: "100%" }}>
-    //             <TextField
-    //               id="outlined-basic"
-    //               fullWidth
-    //               label="Email"
-    //               multiline
-    //               variant="outlined"
-    //               value={itemDetails.email}
-    //               // onChange={(e) => {
-    //               //   const id = e.target.value
-    //               //     .replace(/^\s+/, "")
-    //               //     .replace(/\s{2,}/g, " ")
-    //               //     .replace(/[^a-zA-Z0-9 ]/g, "");
-    //               //   // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
-    //               //   setItemDetails({ ...itemDetails, email: id });
-    //               // }}
-    //               onChange={(e) => {
-    //                 const emailValue = e.target.value
-    //                   .replace(/[^a-zA-Z0-9@.]/g, "")
-    //                   .replace(/\.com.*$/, ".com");
-    //                 setItemDetails({ ...itemDetails, email: emailValue });
-    //               }}
-    //               size="small"
-    //               onBlur={onBlurItemDetails("email")}
-    //               error={!!errors.itemDetails.email}
-    //               helperText={errors.itemDetails.email}
-    //               inputProps={{ maxLength: 50 }}
-    //             />
-    //           </FormControl>
-    //         </div>
-
-    //         <div className="col-md-12">
-    //           <FormControl
-    //             sx={{ m: 1, width: "100%" }}
-    //             variant="outlined"
-    //             size="small"
-    //           >
-    //             <InputLabel htmlFor="outlined-adornment-password">
-    //               Password
-    //             </InputLabel>
-    //             <OutlinedInput
-    //               id="outlined-adornment-password"
-    //               type={showPassword ? "text" : "password"}
-    //               onBlur={onBlurItemDetails("password")}
-    //               value={itemDetails.password}
-    //               onChange={(e) => {
-    //                 const id = e.target.value
-    //                   .replace(/^\s+/, "")
-    //                   .replace(/\s{2,}/g, " ")
-    //                   .replace(/[^a-zA-Z0-9 ]/g, "");
-    //                 // const id = e.target.value.trim().replace(/\s{2,}/g, ' ').replace(/[^a-zA-Z0-9 ]/g, '')
-    //                 setItemDetails({ ...itemDetails, password: id });
-    //               }}
-    //               endAdornment={
-    //                 <InputAdornment position="end">
-    //                   <IconButton
-    //                     aria-label="toggle password visibility"
-    //                     onClick={handleClickShowPassword}
-    //                     onMouseDown={handleMouseDownPassword}
-    //                     edge="end"
-    //                   >
-    //                     {showPassword ? <VisibilityOff /> : <Visibility />}
-    //                   </IconButton>
-    //                 </InputAdornment>
-    //               }
-    //               label="Password"
-    //             />
-    //             {errors.itemDetails.password && (
-    //               <FormHelperText error>
-    //                 {errors.itemDetails.password}
-    //               </FormHelperText>
-    //             )}
-    //           </FormControl>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </fieldset>
-    //   <div className="col-12">
-    //     <FormControl sx={{ m: 1, width: "100%" }}>
-    //       <button
-    //         type="button"
-    //         className="btn btn-primary"
-    //         onClick={handleSubmit}
-    //       >
-    //         <span>Log In</span>
-    //       </button>
-    //     </FormControl>
-    //   </div>
-    // </div>     
-
-    // <img src={url} alt="bg" className="logo-border--raidus"/>
 
    <div>
         {isLoading ?( 
-          <div className="container my-auto">
+          <div className="container my-auto" style={{paddingBottom:"20px"}}>
         <div className="row">
           <div className="col-lg-4 col-md-8 col-12 mx-auto">
             <div className="card z-index-0 fadeIn3 fadeInBottom">
@@ -304,12 +191,12 @@ export const TenantLogIn = () => {
                     </FormHelperText>
                   )}
                   </div>
-                  <div className="form-switch d-flex align-items-center mb-3" style={{padding:"0px"}}>
+                  {/* <div className="form-switch d-flex align-items-center mb-3" style={{padding:"0px"}}>
                   <Switch defaultChecked size="small"/>
                     <label className="form-check-label mb-0 ms-3" >Remember me</label>
-                  </div>
+                  </div> */}
                   <div className="text-center">
-                    <button type="button" className="btn bg-gradient-primary w-100 my-4 mb-2" onClick={handleSubmit} style={{background: `${config?.data[0]?.primary_color}`, color: `${config?.data[0]?.secondary_color}`}}>Sign in</button>
+                    <button type="button" disabled={!isLoading} className="btn bg-gradient-primary w-100 my-4 mb-2" onClick={handleSubmit} style={{background: `${config?.data[0]?.primary_color}`, color: `${config?.data[0]?.secondary_color}`}}>Sign in</button>
                   </div>
                   {/* <p className="mt-4 text-sm text-center">
                     Don't have an account?

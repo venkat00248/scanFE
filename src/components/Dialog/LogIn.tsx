@@ -22,6 +22,7 @@ export const LogIn = () => {
   const [errors, setErrors] = useState({
     itemDetails: { email: "", password: "" },
   });
+  const [isLoading, setIsLoading] = useState(false);
   const onBlurItemDetails = (fieldName: any) => () => {
     if (!itemDetails[fieldName]) {
       setErrors((prevErrors) => ({
@@ -44,7 +45,7 @@ export const LogIn = () => {
   const handleSubmit = async (event: any) => {
     // let isFormFieldValid = false;
     event.preventDefault();
-
+    setIsLoading(true);
     // Perform onBlur validation for all fields
     onBlurItemDetails("email")();
     onBlurItemDetails("password")();
@@ -65,15 +66,16 @@ export const LogIn = () => {
         tenant_id: ""
       })
 
-      console.log("res", res)
+      console.log("res", res);
+      if(res) {
+        setIsLoading(false);
+      }
       if (res?.status == 200) {     
         sessionStorage.isLogin = true;  
         sessionStorage.isAdmin = "true";  
         sessionStorage.tenantdetails = JSON.stringify(res.data);
         navigate(`/adminDashBoard`, { replace: true });
       } else {
-          
-
         setResponse("Pls. check your credentials")
         errors.itemDetails.email = "Pls. check email";
         errors.itemDetails.password = "Pls. check the password";
@@ -82,8 +84,9 @@ export const LogIn = () => {
     } catch (error) {
       setResponse("Pls. check your credentials")
       console.error("Error posting or updating data:", error);
+      setIsLoading(false);
       // Handle errors while posting or updating data
-    }
+    } 
   };
   return (
     <div style={{margin:"25px"}}>
@@ -137,7 +140,7 @@ export const LogIn = () => {
               {errors.itemDetails.password && <FormHelperText error>{errors.itemDetails.password}</FormHelperText>}
 
         </FormControl>
-        <Button  variant="contained" style={{ width: "100%" , marginTop:"20px"}}  onClick={handleSubmit}>
+        <Button disabled={isLoading} variant="contained" style={{ width: "100%" , marginTop:"20px"}}  onClick={handleSubmit}>
        Log In
       </Button>
         

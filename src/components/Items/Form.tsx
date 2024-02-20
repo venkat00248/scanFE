@@ -59,6 +59,8 @@ export const Form = () => {
       fileReader.readAsDataURL(file);
     }
   };
+  // let isFormFieldValid = false;
+  const [isFormFieldValid, setIsFormFieldValid] = useState(false);
   const [errors, setErrors] = useState({
     itemDetails: {
       itemName: "",
@@ -138,6 +140,9 @@ export const Form = () => {
           is_veg: false,
           mongoId: "",
         });
+        // const newDate = new Date();
+        // let cus_exp_date = `${(newDate.getMonth() + 1) <= 9 ? '0'+(newDate.getMonth() + 1) : (newDate.getMonth() + 1)}/${(newDate.getDate() + 1) <= 9 ? '0'+(newDate.getDate() + 1) : (newDate.getDate() + 1)}/${newDate.getFullYear()}`;
+        // setExpiredOn(cus_exp_date)
       }
     } else {
       alert("You are not authorized to access!!");
@@ -147,7 +152,7 @@ export const Form = () => {
     }
   }, [location.pathname]);
   const handleSubmit = async (event: any) => {
-    let isFormFieldValid = false;
+    
     event.preventDefault();
 
     // Perform onBlur validation for all fields
@@ -155,20 +160,22 @@ export const Form = () => {
     onBlurItemDetails("amount")();
     onBlurItemDetails("offerPrice")();
     onBlurItemDetails("description")();
-    onBlurItemDetails("spiceLevel")();
+    // onBlurItemDetails("spiceLevel")();
 
     // If there are any validation errors, prevent form submission
     if (
       itemDetails.itemName == "" ||
       itemDetails.amount == "" ||
       itemDetails.offerPrice == "" ||
-      itemDetails.description == "" ||
-      itemDetails.spiceLevel == ""
+      itemDetails.description == "" || 
+      Number(itemDetails.offerPrice) >= Number(itemDetails.amount)
+      // ||
+      // itemDetails.spiceLevel == ""
     ) {
       // return;
-      isFormFieldValid = false;
+      setIsFormFieldValid(false);
     } else {
-      isFormFieldValid = true;
+      setIsFormFieldValid(true);
     }
     // setReview(false)
     try {
@@ -176,6 +183,7 @@ export const Form = () => {
       // console.log(`errors :: `, errors)
       // return;
       // alert(isFormFieldValid)
+      // return;
       if (isFormFieldValid) {
         setIsLoading(false);
         if (itemDetails?.mongoId) {
@@ -409,12 +417,12 @@ export const Form = () => {
                         style={{
                           width: "100%",
                           padding: "8px",
-                          border: itemDetails.description == "" ? "1px solid red" : "1px solid #ccc",
+                          // border: itemDetails.description == "" && !isFormFieldValid ? "1px solid red" : "1px solid #ccc",
                           borderRadius:  "5px",
-                          borderColor: itemDetails.description == "" ? 'red' : '#ccc'
+                          borderColor: errors.itemDetails.description != ""   ? 'red' : '#ccc'
                         }}                        
                         value={itemDetails.description}
-                        onChange={(e) => {
+                        onChange={(e) => {                          
                           const description = e.target.value;
                           setItemDetails({
                             ...itemDetails,

@@ -5,11 +5,13 @@ import './Latest.scss';
 
 export const Latest = () => {
   const menuItems = sessionStorage.tenant_items ? JSON.parse(sessionStorage.tenant_items) : [];
-
+  const config = sessionStorage.appConfig ? JSON.parse(sessionStorage.appConfig) : [];
+  const tenantName = config?.data[0]?.name;
   console.log("menu Items", menuItems)
   return (
     <div className='Latest'>
       <section className="section menu" id="menu">
+        <div style={{"marginTop":"25px","textAlign":"center","fontSize":"20px"}}>{tenantName} <i>Items</i></div>
         <div className="menu-container container">
           <div className="menu-content">
             <div className="menu-items">

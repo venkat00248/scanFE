@@ -13,14 +13,10 @@ import DetailedView from "./DetailedView";
 import { useFormData } from "../Items/stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
 import Review from "./Review";
-
+import { RippleLoader } from "../Loader/RippleLoader";
 export const Home = () => {
-  const {
-    setOpen,
-    setIndexedImage,
-    isPopupOpen,
-    setIsPopupOpen,
-  } = useFormData();
+  const { setOpen, setIndexedImage, isPopupOpen, setIsPopupOpen } =
+    useFormData();
   const config: any = useConfig();
   const tdata = config?.data[0];
   const handleClickOpen = (index: number) => {
@@ -31,6 +27,7 @@ export const Home = () => {
   const [profile, setProfile] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const currentProfile: any = profile[currentImageIndex];
+  const [isLoading, setIsLoading] = useState(false);
   console.log("current", currentProfile, profile, currentImageIndex);
   const handleDashClick = (index: number) => {
     setCurrentImageIndex(index);
@@ -39,18 +36,20 @@ export const Home = () => {
   console.log("profile", profile);
   //prepare a customized date...
   const prepareCustomDate = (nDate: any) => {
-    if(!nDate) return new Date();
+    if (!nDate) return new Date();
     let custDate = new Date(nDate);
     return `${custDate.getFullYear()}-${custDate.getMonth()}-${custDate.getDate()}`;
-  }
+  };
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const res = await ScanAppService.getItems(tdata?._id);
-
+      if (res) {
+        setIsLoading(false);
+      }
       const today = prepareCustomDate(new Date());
-    
       // Filter out items with expiration date greater than today
-      const nonExpiredItems = res?.data?.data.filter((item:any) => {
+      const nonExpiredItems = res?.data?.data.filter((item: any) => {
         const expirationDate = prepareCustomDate(item.expired_on);
         return item.is_special && expirationDate >= today;
       });
@@ -60,6 +59,7 @@ export const Home = () => {
     } catch (error) {
       console.error("Error posting or updating data:", error);
       // Handle errors while posting or updating data
+      setIsLoading(false);
     }
   };
 
@@ -79,69 +79,79 @@ export const Home = () => {
   }, [profile.length, isPopupOpen]);
   return (
     <div className="Home">
-      <div className="imgWrapper">
-        <div className="imageStyles">
-          {/* <img  src='./../../../public/img/hero-bg.png'/> */}
-          <div className="slider">
-            <div
-              className="slides"
-              style={{
-                transform: `translateX(${-currentImageIndex * 100}%)`,
-                transition:
-                  currentImageIndex === 0 ? "none" : "transform 0.5s ease",
-              }}
-            >
-              {profile.map((image: any, index: any) => (
-                <div
-                  key={index}
-                  className="slide"
-                  onClick={() => handleClickOpen(index)}
-                >
-                  <img src={image.url} alt={`slider-${index}`} />
-                </div>
-              ))}
-            </div>
-            <div className="dash-container">
-              {profile.length ? (
-                profile.map((_: any, index: any) => (
+      {isLoading ? (
+        <div>
+          {" "}
+          <RippleLoader />
+        </div>
+      ) : (
+        <div className="imgWrapper">
+          <div className="imageStyles">
+            {/* <img  src='./../../../public/img/hero-bg.png'/> */}
+            <div className="slider">
+              <div
+                className="slides"
+                style={{
+                  transform: `translateX(${-currentImageIndex * 100}%)`,
+                  transition:
+                    currentImageIndex === 0 ? "none" : "transform 0.5s ease",
+                }}
+              >
+                {profile.map((image: any, index: any) => (
                   <div
                     key={index}
-                    onClick={() => handleDashClick(index)}
-                    className={`dash ${
-                      index === currentImageIndex ? "active" : ""
-                    }`}
-                  />
-                ))
-              ) : (
-                <div className="container">
-                  {" "}
-                  <img
-                    src="https://www.shutterstock.com/image-photo/restaurant-blackboard-announcing-reopening-after-600nw-1735273409.jpg"
-                    className="img"
-                  />
-                </div>
-              )}
+                    className="slide"
+                    onClick={() => handleClickOpen(index)}
+                  >
+                    <img src={image.url} alt={`slider-${index}`} />
+                  </div>
+                ))}
+              </div>
+              <div className="dash-container">
+                {profile.length ? (
+                  profile.map((_: any, index: any) => (
+                    <div
+                      key={index}
+                      onClick={() => handleDashClick(index)}
+                      className={`dash ${
+                        index === currentImageIndex ? "active" : ""
+                      }`}
+                    />
+                  ))
+                ) : (
+                  <div className="container">
+                    {" "}
+                    <img
+                      src="https://www.shutterstock.com/image-photo/restaurant-blackboard-announcing-reopening-after-600nw-1735273409.jpg"
+                      className="img"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
+            {/* <ImageSlider data={profile}/> */}
           </div>
-          {/* <ImageSlider data={profile}/> */}
+          <div className="description">
+            {profile.length ? (
+              <>
+                <h3 className="firstH3">
+                  {currentProfile && currentProfile.name}
+                </h3>
+                {/* <h3>great Sensation</h3> */}
+                <p>{currentProfile && currentProfile.item_desc} </p>
+              </>
+            ) : (
+              <>
+                <h2 className="" style={{ fontSize: "20px" }}>
+                  <i> coming soon ...</i>
+                </h2>
+              </>
+            )}
+          </div>
         </div>
-        <div className="description">
-          {profile.length ? (
-            <>
-              <h3 className="firstH3">{currentProfile && currentProfile.name}</h3>
-              {/* <h3>great Sensation</h3> */}
-              <p>{currentProfile && currentProfile.item_desc} </p>
-            </>
-          ) : (
-            <>
-              <h2 className="" style={{fontSize: "20px"}}>
-                <i> coming soon ...</i>
-              </h2>
-            </>
-          )}
-        </div>
-      </div>
-      {profile.length && (
+      )}
+
+      {!isLoading && profile.length && (
         <>
           <div className="buttonWrapper">
             <Link to={`/${tdata?.name}/latest`}>

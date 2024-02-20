@@ -17,7 +17,7 @@ export const Header = () => {
                   <h4 className="text-white text-capitalize ps-3" style={{color: `${config?.data[0]?.secondary_color}`}}>{header}</h4>
                 </div>
               </div>
-              </div>
+              </div>  
               </div>
               </div>
     </header>

@@ -7,11 +7,11 @@ export const Footer = () => {
       <footer className="footer py-4  ">
         <div className="container-fluid">
           <div className="row align-items-center justify-content-lg-between">
-            <div className="col-lg-6 mb-lg-0 mb-4">
+            <div className="col-lg-12 mb-lg-0 mb-4">
               <div className="copyright text-center text-sm text-muted text-lg-start">
                 © {new Date().getFullYear()} ,
                 <i className="fa fa-heart"></i> &nbsp; 
-                <a href="#" className="font-weight-bold" target="_blank">Steal Deals</a>                
+                <a href="https://stealdeals.com.au/" className="font-weight-bold" target="_blank">Steal Deals </a>  <span> Powered by kodeclust technologies pvt ltd.</span>               
               </div>
             </div>
             {/* <div className="col-lg-6">

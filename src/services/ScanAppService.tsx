@@ -46,6 +46,9 @@ export class ScanApp extends HttpApiService {
   deleteTenants = (data:any)=>{
     return this.post(`${scanAPPAPI}/deleteTenants`, data)
     }
+  updateASpecial = (data:any) => {
+    return this.post(`${scanAPPAPI}/updateSpecial`, data)
+  }
 }
 
 export const ScanAppService = new ScanApp();

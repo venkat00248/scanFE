@@ -82,16 +82,20 @@ export const AdminDashBoard = () => {
 
   const [indexed, setIndexed] = React.useState(1);
   const fetchTenantDetailsByPagination = async (offset: any) => {
+    
     const res = await ScanAppService.getTenants(offset + rowsPerPage, rowsPerPage);
 
       console.log("res", res);
+      if(res) {
+        setLoading(false);
+      }
       // setMenuItems(res.data.data);
-      if (res && res?.data && res?.data?.data) {
+      if (res && res?.data && res?.data?.data) {        
         const fdata = res.data.data;
         const filteredData = fdata.filter((item: any) => item.status == true);
         setRows(filteredData); 
         setOrgData(filteredData);
-        // setOffset(offset + filteredData.length);       
+        // setOffset(offset + filteredData.length);
       }
   }
   const handleGenerateQR = async (column: any, index: number) => {
@@ -208,7 +212,7 @@ export const AdminDashBoard = () => {
       console.error("Error posting or updating data:", error);
       // Handle errors while posting or updating data
     } finally {
-      setLoading(false); // Set loading to false whether the API call succeeds or fails
+      // setLoading(false); // Set loading to false whether the API call succeeds or fails
     }
   };
   const routeToTenant = () => {
