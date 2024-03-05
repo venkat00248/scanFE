@@ -17,25 +17,40 @@ export const Latest = () => {
             <div className="menu-items">
               {menuItems.length ? menuItems.map((menuItem:any, index:number) => (
                 <div className="menu-item flex" key={index}>
-                  <img src={menuItem.url} alt="" className="menu-img" />
-                  <div className="menuItem-details"> 
-                    <h6 className="menuItem-topic">{menuItem.name}</h6>
-                    <p className="menuItem-des">{menuItem.item_desc}</p>
-                    <div className='spice'>
-                      {[...Array(menuItem.spicy_level)].map((_, index) => (
-                        <img key={index} src='https://h-app-scanner.s3.ap-southeast-2.amazonaws.com/img/chilli.png' alt='hi'/>
-                      ))}
+                  <div className="menu-item-list-wrapper">
+                    <div className="list-item-img">
+                      <img src={menuItem.url} alt="" className="menu-img" />
                     </div>
-                  </div>
-                  <div className="menuItem-price flex">
-                    <span className="discount-price">  {menuItem.currency_code == "AUD" ||
-                                  menuItem.currency_code == "US"
-                                    ? "$"
-                                    : "₹"}{menuItem.promotional_price}</span>
-                    <span className="real-price">  {menuItem.currency_code == "AUD" ||
-                                  menuItem.currency_code == "US"
-                                    ? "$"
-                                    : "₹"}{menuItem.item_price}</span>
+                    <div className="list-item-description">
+                      <div className="menuItem-details"> 
+                        <h4 className="menuItem-topic">{menuItem.name}</h4>
+                        <p className="menuItem-des" style={{lineHeight:"15px", fontSize: "15px"}}>{menuItem.item_desc}</p>
+                        <div className="spices-price-wraper" style={{paddingTop:"10px"}}>
+                          {/* <div className='spice'>
+                            {[...Array(menuItem.spicy_level)].map((_, index) => (
+                              <img key={index} src='https://h-app-scanner.s3.ap-southeast-2.amazonaws.com/img/chilli.png' alt='hi'/>
+                            ))}
+                          </div> */}
+                          <div className="menuItem-price">
+                            <span className="badge badge-success" style={{fontSize: "15px", marginRight:"10px"}}>  {menuItem.currency_code == "AUD" ||
+                                          menuItem.currency_code == "US"
+                                            ? "$"
+                                            : "₹"}{menuItem.promotional_price}</span>
+                            <span className="real-price" style={{color:"#b85a5a"}}>  {menuItem.currency_code == "AUD" ||
+                                          menuItem.currency_code == "US"
+                                            ? "$"
+                                            : "₹"}{menuItem.item_price}</span>
+                          </div>
+                        </div>
+                        <div className="spices-price-wraper">
+                          <div className='spice'>
+                            {menuItem.spicy_level > 0 && [...Array(menuItem.spicy_level)].map((_, index) => (
+                              <img key={index} src='https://h-app-scanner.s3.ap-southeast-2.amazonaws.com/img/chilli.png' alt='hi'/>
+                            ))}
+                          </div>
+                          </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )): <div className="container"> <img src='https://www.shutterstock.com/image-photo/restaurant-blackboard-announcing-reopening-after-600nw-1735273409.jpg' className='img'/></div>}

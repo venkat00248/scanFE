@@ -38,7 +38,8 @@ export const Home = () => {
   const prepareCustomDate = (nDate: any) => {
     if (!nDate) return new Date();
     let custDate = new Date(nDate);
-    return `${custDate.getFullYear()}-${custDate.getMonth()}-${custDate.getDate()}`;
+    // return `${custDate.getFullYear()}-${custDate.getMonth()}-${custDate.getDate()}`;
+    return custDate.getTime();
   };
   const fetchData = async () => {
     try {
@@ -48,9 +49,11 @@ export const Home = () => {
         setIsLoading(false);
       }
       const today = prepareCustomDate(new Date());
+      // console.log("items data============================", res?.data?.data, "today ===>", today)
       // Filter out items with expiration date greater than today
       const nonExpiredItems = res?.data?.data.filter((item: any) => {
         const expirationDate = prepareCustomDate(item.expired_on);
+        // console.log("expirationDate===============", expirationDate)
         return item.is_special && expirationDate >= today;
       });
       setProfile(nonExpiredItems);

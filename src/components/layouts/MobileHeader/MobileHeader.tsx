@@ -43,10 +43,10 @@ export const MobileHeader = () => {
         {isTenant ? (
           <div className="headerWrapper">
             <div
-              className="col-11"
+              className="col-12"
               style={{
                 textAlign: "center",
-                left: "85px",
+                // left: "85px",
                 textDecoration: "none",
               }}
             >
@@ -92,7 +92,7 @@ export const MobileHeader = () => {
           <div className="headerWrapper">
             <div className="col-10">
               <Link to="#">
-                <div className="logoWrapper">
+                <div className="logoWrapper"> 
                   {/* <span className="tenant-name" style={{color: `${config?.data[0]?.secondary_color}`}}>{tenant}</span> */}
                   <img className="headerLogo" src={url} alt="" />
                 </div>{" "}
@@ -110,6 +110,29 @@ export const MobileHeader = () => {
                   </span>
                 )}
               </div>
+            </div> commented by anil
+            <div
+              className="col-12"
+              style={{
+                textAlign: "center",
+                // left: "85px",
+                textDecoration: "none",
+              }}
+            >
+              <Link to="#">
+                <div className="logoWrapper">
+                  <span
+                    className="tenant-name"
+                    style={{
+                      color: `${config?.data[0]?.secondary_color}`,
+                      textDecoration: "none",
+                    }}
+                  >
+                    {tenant}
+                  </span>
+                  <img className="headerLogo" src={url} alt="" />
+                </div>{" "}
+              </Link>
             </div>
           </div>
         )}
