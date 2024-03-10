@@ -8,3 +8,14 @@ Footer{
     font-weight: 200;
     font-size: 14px;   
 }
+p.like_review{
+    text-align: end;
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    font-size: 14px;
+    font-weight: 700;
+    span{
+        cursor: pointer;
+    }
+}

@@ -12,7 +12,7 @@ import { useConfig } from "../../config/config";
 import DetailedView from "./DetailedView";
 import { useFormData } from "../Items/stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
-import Review from "./Review";
+//import Review from "./Review";
 import { RippleLoader } from "../Loader/RippleLoader";
 export const Home = () => {
   const { setOpen, setIndexedImage, isPopupOpen, setIsPopupOpen } =
@@ -37,7 +37,7 @@ export const Home = () => {
   //prepare a customized date...
   const prepareCustomDate = (nDate: any) => {
     if (!nDate) return new Date();
-    let custDate = new Date(nDate);
+    const custDate = new Date(nDate);
     // return `${custDate.getFullYear()}-${custDate.getMonth()}-${custDate.getDate()}`;
     return custDate.getTime();
   };
@@ -166,7 +166,7 @@ export const Home = () => {
             </Link>
           </div>
           <DetailedView />
-          <Review />
+          {/* <Review /> */}
         </>
       )}
     </div>

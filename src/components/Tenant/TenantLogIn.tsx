@@ -117,7 +117,7 @@ export const TenantLogIn = () => {
 
    <div>
         {isLoading ?( 
-          <div className="container my-auto" style={{paddingBottom:"20px"}}>
+          <div className="container my-auto" style={{padding:"20px"}}>
         <div className="row">
           <div className="col-lg-4 col-md-8 col-12 mx-auto">
             <div className="card z-index-0 fadeIn3 fadeInBottom">

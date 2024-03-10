@@ -80,8 +80,8 @@ export const Form = () => {
           [fieldName]: "This field is required.",
         },
       }));
-    } else if (fieldName === "offerPrice") {      
-      if (Number(itemDetails.amount) <= Number(itemDetails.offerPrice)) {        
+    } else if (fieldName === "offerPrice") {
+      if (Number(itemDetails.amount) <= Number(itemDetails.offerPrice)) {
         setErrors((prevErrors) => ({
           ...prevErrors,
           itemDetails: {
@@ -97,7 +97,7 @@ export const Form = () => {
             [fieldName]: "",
           },
         }));
-      } 
+      }
     } else {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -152,39 +152,30 @@ export const Form = () => {
     }
   }, [location.pathname]);
   const handleSubmit = async (event: any) => {
-    
-    event.preventDefault();
-
+    let isFormValid = false;
+    // event.preventDefault();
     // Perform onBlur validation for all fields
     onBlurItemDetails("itemName")();
     onBlurItemDetails("amount")();
     onBlurItemDetails("offerPrice")();
     onBlurItemDetails("description")();
-    // onBlurItemDetails("spiceLevel")();
-
+    onBlurItemDetails("spiceLevel")();
     // If there are any validation errors, prevent form submission
     if (
       itemDetails.itemName == "" ||
       itemDetails.amount == "" ||
       itemDetails.offerPrice == "" ||
-      itemDetails.description == "" || 
+      itemDetails.description == "" ||
       Number(itemDetails.offerPrice) >= Number(itemDetails.amount)
       // ||
       // itemDetails.spiceLevel == ""
     ) {
-      // return;
-      setIsFormFieldValid(false);
+      isFormValid = false;
     } else {
-      setIsFormFieldValid(true);
+      isFormValid = true;
     }
-    // setReview(false)
     try {
-      // console.log(`fileSrc :: `, fileSrc);
-      // console.log(`errors :: `, errors)
-      // return;
-      // alert(isFormFieldValid)
-      // return;
-      if (isFormFieldValid) {
+      if (isFormValid) {
         setIsLoading(false);
         if (itemDetails?.mongoId) {
           const res = await ScanAppService.updateItem({
@@ -306,7 +297,7 @@ export const Form = () => {
                   <div className="col-md-6">
                     <FormControl sx={{ m: 1, width: "100%" }}>
                       <TextField
-                      required
+                        required
                         id="outlined-basic"
                         fullWidth
                         label="Item Name"
@@ -332,7 +323,7 @@ export const Form = () => {
                   <div className="col-md-6">
                     <FormControl sx={{ m: 1, width: "100%" }}>
                       <TextField
-                      required
+                        required
                         id="outlined-basic"
                         fullWidth
                         label="Item Price"
@@ -369,7 +360,7 @@ export const Form = () => {
                   <div className="col-md-6">
                     <FormControl sx={{ m: 1, width: "100%" }}>
                       <TextField
-                      required
+                        required
                         id="outlined-basic"
                         fullWidth
                         label="Offer Price"
@@ -410,7 +401,7 @@ export const Form = () => {
                   <div className="col-md-6">
                     <FormControl sx={{ m: 1, width: "100%" }}>
                       <TextareaAutosize
-                      required
+                        required
                         id="outlined-basic"
                         minRows={4} // Adjust the number of rows as needed
                         placeholder="Description"
@@ -418,11 +409,14 @@ export const Form = () => {
                           width: "100%",
                           padding: "8px",
                           // border: itemDetails.description == "" && !isFormFieldValid ? "1px solid red" : "1px solid #ccc",
-                          borderRadius:  "5px",
-                          borderColor: errors.itemDetails.description != ""   ? 'red' : '#ccc'
-                        }}                        
+                          borderRadius: "5px",
+                          borderColor:
+                            errors.itemDetails.description != ""
+                              ? "red"
+                              : "#ccc",
+                        }}
                         value={itemDetails.description}
-                        onChange={(e) => {                          
+                        onChange={(e) => {
                           const description = e.target.value;
                           setItemDetails({
                             ...itemDetails,

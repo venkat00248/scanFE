@@ -1,17 +1,25 @@
-import './Footer.scss'
+import { useState } from "react";
+import './Footer.scss';
+import Review from "./Review";
 export const Footer = () => {
-
+  const [isShow, setisShow] = useState(false);
+  const isLogin = sessionStorage?.isLogin;
+  // alert(isLogin)
+  const handleClickOpenReview = ()=>{
+   setisShow(true);
+  };
   return (
     <div className='Footer'>
       
-      <footer className="footer py-4  ">
-        <div className="container-fluid">
+      <footer className="footer py-4">
+      <div className="container-fluid">
           <div className="row align-items-center justify-content-lg-between">
             <div className="col-lg-12 mb-lg-0 mb-4">
               <div className="text-center text-lg-start">
+                {!isLogin && <p className='like_review'><span onClick={() => handleClickOpenReview()}>Like & Review</span></p>}
                 © {new Date().getFullYear()} ,
                 <i className="fa fa-heart"></i> &nbsp; 
-                <a href="https://stealdeals.com.au/" className="font-weight-bold" target="_blank">Steal Deals </a>  <span> Powered by kodeclust technologies pyt ltd.</span>               
+                <a href="https://stealdeals.com.au/" className="font-weight-bold" target="_blank">Steal Deals </a>  <span> Powered by kodeclust technologies pvt ltd.</span>               
               </div>
             </div>
             {/* <div className="col-lg-6">
@@ -32,6 +40,7 @@ export const Footer = () => {
             </div> */}
           </div>
         </div>
+        {isShow &&     <Review /> }
       </footer>
     </div>
   )

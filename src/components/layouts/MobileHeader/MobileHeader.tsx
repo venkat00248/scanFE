@@ -74,7 +74,7 @@ export const MobileHeader = () => {
                   <button type="button" onClick={logout}>
                     <LogoutIcon style={{ fontSize: "20px" }} />
                   </button>
-                ) : currentRoute == "latest" ? (
+                ) : currentRoute == "latest" && (
                   <span>
                     <Link to={`/${tenant}/home`}>
                       <div className="backArrow">
@@ -82,8 +82,6 @@ export const MobileHeader = () => {
                       </div>
                     </Link>
                   </span>
-                ) : (
-                  <span></span>
                 )}
               </div>
             </div>

@@ -221,21 +221,7 @@ export const DashBoard = () => {
       ) : (
         <section className="section menu" id="menu">
           <div className="buttonWrapperr">
-            {checkMenuItemsLength(15) && (
-              <Link to={`/${tenant}/addItems`}>
-                {/* style={{background: `${config?.data[0]?.primary_color} !important`, color: `${config?.data[0]?.secondary_color}  !important`}}  */}
-                <Button
-                  variant="contained"
-                  style={{
-                    background: `${config?.data[0]?.primary_color}`,
-                    color: `${config?.data[0]?.secondary_color} `,
-                  }}
-                >
-                  {/* <AddIcon/> */}
-                  Add Items
-                </Button>
-              </Link>
-            )}
+            
           </div>
 
           {/* <div className="menu-container container">
@@ -262,24 +248,41 @@ export const DashBoard = () => {
             </div>
 </div>
         </div> */}
-          <div className="" style={{ margin: "10px" }}>
+          <div className="" style={{ margin: "50px" }}>
             <div className="row">
               <div className="col-12">
                 <div className="card my-4">
-                  <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div
-                      className="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3"
-                      style={{
+                  <div className="card-header row p-0 position-relative mt-n4 mx-3 z-index-2 border-radius-lg pt-4 pb-3" style={{
                         background: `${config?.data[0]?.primary_color}`,
                         color: `${config?.data[0]?.secondary_color}  !important`,
-                      }}
+                      }}>
+                    <div
+                      className="col-6"
+                      
                     >
                       <h4
                         className="text-capitalize ps-3"
                         style={{ color: `${config?.data[0]?.secondary_color}` }}
                       >
                         All Items
-                      </h4>
+                      </h4>                     
+                    </div>
+                    <div className="col-6 text-right">
+                    {checkMenuItemsLength(15) && (
+                      <Link to={`/${tenant}/addItems`}>
+                        {/* style={{background: `${config?.data[0]?.primary_color} !important`, color: `${config?.data[0]?.secondary_color}  !important`}}  */}
+                        <Button
+                          variant="contained"
+                          // style={{
+                          //   background: `${config?.data[0]?.primary_color}`,
+                          //   color: `${config?.data[0]?.secondary_color} `,
+                          // }}
+                        >
+                          {/* <AddIcon/> */}
+                          Add Items
+                        </Button>
+                      </Link>
+                    )}
                     </div>
                   </div>
                   <div className="card-body px-0 pb-2">
