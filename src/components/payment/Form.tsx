@@ -16,6 +16,7 @@ import { ScanAppService } from "../../services/ScanAppService";
 import { useNavigate } from "react-router-dom";
 import { useConfig } from "../../config/config";
 import { RippleLoader } from "../Loader/RippleLoader";
+import './index.scss';
 export const Form = () => {
   const {
     tenantDetails,
@@ -713,7 +714,7 @@ export const Form = () => {
                     />
                   </FormControl>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-12">
                   <FormControl sx={{ m: 1, width: "100%" }}>
                     <TextField
                       id="outlined-basic"
@@ -733,7 +734,7 @@ export const Form = () => {
                       // onBlur={onBlurLocation("city")}
                       // error={!!errors.location.city}
                       // helperText={errors.location.city}
-                      inputProps={{ maxLength: 50 }}
+                      //inputProps={{ maxLength: 50 }}
                     />
                   </FormControl>
                 </div>
@@ -772,7 +773,7 @@ export const Form = () => {
             <FormControl sx={{ m: 1, float: "right" }}>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="custom-primary-btn"
                 onClick={handleSubmit}
               >
                 <span>{text}</span>
@@ -781,9 +782,16 @@ export const Form = () => {
 
             {!tenantId && (
               <FormControl sx={{ m: 1, float: "right" }}>
-                <Button variant="outlined" onClick={navigateToAdminDash}>
+                <button
+                   type="button"
+                   className="custom-secondary-btn"
+                   onClick={navigateToAdminDash}
+                >
                   Cancel
-                </Button>
+                </button>
+                {/* <Button variant="contained" onClick={navigateToAdminDash}>
+                  
+                </Button> */}
               </FormControl>
             )}
           </div>

@@ -26,10 +26,25 @@ margin-right: 16px;
 }
 .backArrow{
    padding: 10px;
+   color: #6c757d;
+     border:2px solid #6c757d;
+    background-color: transparent;
+    background-image: none;
+    border-color: #6c757d;
+    transition: box-shadow 0.2s ease-in-out; /* Add transition for smooth effect */
+
+}
+.backArrow:hover{
+    // box-shadow: 0 0 5px 2px rgba(24, 94, 205, 0.4);
+    background-color: rgba(24, 94, 205, 0.4);
+  box-shadow: 0 0 5px rgba(24, 94, 205, 0.4);  
 }
 .minHeight{
     min-height: 90vh;
 }
-.btn-contained {
-    
+.addItemBtn .btn{
+    background-color: #e5e5e5;
+   // color:#FFF;
+    border:2px solid #6c757d;
+    font-size:14px;
 }

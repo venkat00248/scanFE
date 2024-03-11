@@ -46,7 +46,7 @@ export const EditItemPopup = ({data}:any) => {
       if (!open) {
         // Reset itemDetails when the drawer is closed
         setItemDetails({ itemName: "", amount: "" , offerPrice:"", cuponCode:"", description:"", spiceLevel:""});
-        setHeader("Add Item")
+        setHeader("Item Creation")
         setShow(false)
       }
       else{

@@ -175,6 +175,22 @@ export const DashBoard = () => {
   useEffect(() => {
     console.log("menuu Items", menuItems);
   }, [menuItems]);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+
+  const hoverStyle = {
+    backgroundColor: isHovered ? config?.data[0]?.primary_color : '',
+    color: isHovered ? config?.data[0]?.secondary_color : '',
+    borderRadius: '20px',
+    padding: '10px'
+  }
+
+  const checkStatus =  {
+
+  }
+
   return (
     <div className="Latest minHeight">
       <Dialog
@@ -252,7 +268,7 @@ export const DashBoard = () => {
             <div className="row">
               <div className="col-12">
                 <div className="card my-4">
-                  <div className="card-header row p-0 position-relative mt-n4 mx-3 z-index-2 border-radius-lg pt-4 pb-3" style={{
+                  <div className="card-header row p-0 position-relative  mx-3 z-index-2 border-radius-lg pt-4 pb-3" style={{
                         background: `${config?.data[0]?.primary_color}`,
                         color: `${config?.data[0]?.secondary_color}  !important`,
                       }}>
@@ -267,11 +283,13 @@ export const DashBoard = () => {
                         All Items
                       </h4>                     
                     </div>
-                    <div className="col-6 text-right">
+                    <div className="col-6 text-right addItemBtn">
                     {checkMenuItemsLength(15) && (
                       <Link to={`/${tenant}/addItems`}>
                         {/* style={{background: `${config?.data[0]?.primary_color} !important`, color: `${config?.data[0]?.secondary_color}  !important`}}  */}
-                        <Button
+                        <Button onMouseEnter={handleMouseEnter}
+                          onMouseLeave={handleMouseLeave} 
+                          style={hoverStyle}
                           variant="contained"
                           // style={{
                           //   background: `${config?.data[0]?.primary_color}`,
@@ -290,25 +308,25 @@ export const DashBoard = () => {
                       <table className="table align-items-center justify-content-center mb-0">
                         <thead>
                           <tr>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                            <th className="text-uppercase text-secondary text-lg font-weight-bolder opacity-7">
                               Item Name
                             </th>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                            <th className="text-uppercase text-secondary text-lg font-weight-bolder opacity-7 ps-2">
                               Item Price
                             </th>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                            <th className="text-uppercase text-secondary text-lg font-weight-bolder opacity-7 ps-2">
                               Promotional Price
                             </th>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                            <th className="text-uppercase text-secondary text-lg font-weight-bolder opacity-7 ps-2">
                               Status
                             </th>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
+                            <th className="text-uppercase text-secondary text-lg font-weight-bolder text-center opacity-7 ps-2">
                               Spicy level
                             </th>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">
+                            <th className="text-uppercase text-secondary text-lg font-weight-bolder text-center opacity-7 ps-2">
                               Update To Special
                             </th>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-1">
+                            <th className="text-uppercase text-secondary text-lg font-weight-bolder text-center opacity-7 ps-1">
                               Actions
                             </th>
                           </tr>
@@ -334,14 +352,14 @@ export const DashBoard = () => {
                                         />
                                       </div>
                                       <div className="my-auto">
-                                        <h6 className="mb-0 text-sm">
+                                        <h6 className="mb-0">
                                           {menuItem.name}
                                         </h6>
                                       </div>
                                     </div>
                                   </td>
                                   <td>
-                                    <p className="text-sm font-weight-bold mb-0">
+                                    <p className="font-weight-bold mb-0">
                                       {menuItem.currency_code == "AUD" ||
                                       menuItem.currency_code == "US"
                                         ? "$"
@@ -350,7 +368,7 @@ export const DashBoard = () => {
                                     </p>
                                   </td>
                                   <td>
-                                    <p className="text-sm font-weight-bold mb-0">
+                                    <p className="font-weight-bold mb-0">
                                       {menuItem.currency_code == "AUD" ||
                                       menuItem.currency_code == "US"
                                         ? "$"
@@ -360,8 +378,8 @@ export const DashBoard = () => {
                                   </td>
                                   <td>
                                     <span className="text-xs font-weight-bold">
-                                      <span className="badge badge-sm bg-gradient-success">
-                                        {menuItem.status
+                                      <span className="badge badge-sm" style={{ color: menuItem.status && menuItem.is_special ? '#66BB6A' : '#EF5350', border: menuItem.status && menuItem.is_special ? "1px solid #66BB6A" : "1px solid #EF5350" }}>
+                                        {menuItem.status && menuItem.is_special
                                           ? "Active"
                                           : "In-Active"}
                                       </span>

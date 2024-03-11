@@ -180,7 +180,7 @@ fieldset.scheduler-border {
 }
 
     legend.scheduler-border {
-        font-size: 1.2em !important;
+        font-size: 1.6em !important;
         font-weight: bold !important;
         text-align: left !important;
         width:auto;
@@ -647,4 +647,10 @@ fieldset.scheduler-border {
             background-position: center  !important;
         }
     }
+  }
+  .control-group label{
+    font-size: 14px !important;
+  }
+  .control-group .switchWrapper span{
+    font-size: 14px !important;
   }

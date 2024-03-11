@@ -9,9 +9,9 @@ export const Onboarding = () => {
         <main>
           <div className="container px-0">
             <div className="signup-content d-flex">
-              <section className="signup-img">
-                {/* <img src="./assets/img/onboard.jpg" alt="" /> */}
-              </section>
+              {/* <section className="signup-img">
+                <img src="./assets/img/onboard.jpg" alt="" /> 
+              </section> */}
               <section className="signup-form pb-3">
                 <Header />
 

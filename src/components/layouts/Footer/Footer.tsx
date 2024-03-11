@@ -6,7 +6,7 @@ export const Footer = () => {
   const isLogin = sessionStorage?.isLogin;
   // alert(isLogin)
   const handleClickOpenReview = ()=>{
-       setisShow(true);
+   setisShow(true);
   };
   return (
     <div className='Footer'>

@@ -32,6 +32,8 @@ export const Form = () => {
   const config: any = useConfig();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+
   // let encoded = base64_encode('YOUR_DECODED_STRING');
   // let decoded = base64_decode('YOUR_ENCODED_STRING');
   const {
@@ -60,6 +62,7 @@ export const Form = () => {
     }
   };
   // let isFormFieldValid = false;
+  const [isFormFieldValid, setIsFormFieldValid] = useState(false);
   const [errors, setErrors] = useState({
     itemDetails: {
       itemName: "",
@@ -119,6 +122,15 @@ export const Form = () => {
 
     return timestampInMilliseconds + "";
   }
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+
+  const hoverStyle = {
+    backgroundColor: isHovered ? config?.data[0]?.primary_color : '',
+    color: isHovered ? config?.data[0]?.secondary_color : '',
+    // borderRadius: '15px',
+    padding: '10px'
+  }
   React.useEffect(() => {
     // console.log("path333333333", location.hash.includes('/addItems'))
     // Check if the URL contains "/addItems"
@@ -150,7 +162,7 @@ export const Form = () => {
       }
     }
   }, [location.pathname]);
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: any) => {
     let isFormValid = false;
     // event.preventDefault();
     // Perform onBlur validation for all fields
@@ -409,6 +421,7 @@ export const Form = () => {
                           padding: "8px",
                           // border: itemDetails.description == "" && !isFormFieldValid ? "1px solid red" : "1px solid #ccc",
                           borderRadius: "5px",
+                          fontSize:"14px",
                           borderColor:
                             errors.itemDetails.description != ""
                               ? "red"
@@ -564,7 +577,8 @@ export const Form = () => {
               {!itemDetails?.mongoId && (
                 <FormControl sx={{ m: 1 }}>
                   <Link to={`/${tenant}/dashBoard`}>
-                    <div className="backArrow">
+                    <div className="backArrow" onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave} style={hoverStyle}>
                       <ArrowBackIcon />
                     </div>
                   </Link>
@@ -573,7 +587,7 @@ export const Form = () => {
               <FormControl sx={{ m: 1, float: "right" }}>
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  className="btn custom-primary-btn"
                   onClick={handleSubmit}
                   style={{
                     background: `${config?.data[0]?.primary_color}`,

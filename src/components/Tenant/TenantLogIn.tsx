@@ -124,7 +124,7 @@ export const TenantLogIn = () => {
               <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 {/* backgroundImage: `linearGradient(195deg, ${config?.data[0]?.primary_color} 0%, ${config?.data[0]?.primary_color} 100%`); */}
                 {/* style={{backgroundImage: `linearGradient(195deg, ${config?.data[0]?.primary_color} 0%, ${config?.data[0]?.primary_color} 100%) !important`}} */}
-                <div className="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1" style={{background: `${config?.data[0]?.primary_color}`, color: `${config?.data[0]?.secondary_color}`}}>
+                <div className=" border-radius-lg py-3 pe-1" style={{background: `${config?.data[0]?.primary_color}`, color: `${config?.data[0]?.secondary_color}`}}>
                 <h3 className=" font-weight-bolder text-center mt-2 mb-0" >{sessionStorage.appname}</h3>
                   <h4 className=" font-weight-bolder text-center mt-2 mb-0" style={{color: `${config?.data[0]?.secondary_color}`}}>Welcome to Tenant Login</h4>
                   <div className="row mt-3">
@@ -196,7 +196,7 @@ export const TenantLogIn = () => {
                     <label className="form-check-label mb-0 ms-3" >Remember me</label>
                   </div> */}
                   <div className="text-center">
-                    <button type="button" disabled={!isLoading} className="btn bg-gradient-primary w-100 my-4 mb-2" onClick={handleSubmit} style={{background: `${config?.data[0]?.primary_color}`, color: `${config?.data[0]?.secondary_color}`}}>Sign in</button>
+                    <button type="button" disabled={!isLoading} className="btn  w-100 my-4 mb-2" onClick={handleSubmit} style={{borderRadius: '20px',padding:"10px",background: `${config?.data[0]?.primary_color}`, color: `${config?.data[0]?.secondary_color}`}}>Sign in</button>
                   </div>
                   {/* <p className="mt-4 text-sm text-center">
                     Don't have an account?
