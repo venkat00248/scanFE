@@ -43,7 +43,7 @@ export const MobileHeader = () => {
         {isTenant ? (
           <div className="headerWrapper">
             <div
-              className="col-12"
+              className="col-11"
               style={{
                 textAlign: "center",
                 // left: "85px",

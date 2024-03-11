@@ -60,7 +60,6 @@ export const Form = () => {
     }
   };
   // let isFormFieldValid = false;
-  const [isFormFieldValid, setIsFormFieldValid] = useState(false);
   const [errors, setErrors] = useState({
     itemDetails: {
       itemName: "",
@@ -151,7 +150,7 @@ export const Form = () => {
       }
     }
   }, [location.pathname]);
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = async () => {
     let isFormValid = false;
     // event.preventDefault();
     // Perform onBlur validation for all fields
