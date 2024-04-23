@@ -187,9 +187,6 @@ export const DashBoard = () => {
     padding: '10px'
   }
 
-  const checkStatus =  {
-
-  }
 
   return (
     <div className="Latest minHeight">

@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import { DrawerLayout } from "../Footer/DrawerLayout";
-import LogoutIcon from "@mui/icons-material/Logout";
+// import LogoutIcon from "@mui/icons-material/Logout";
 import "./MobileHeader.scss";
 import { useConfig } from "../../../config/config";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export const MobileHeader = () => {
   const config: any = useConfig();
@@ -14,11 +14,12 @@ export const MobileHeader = () => {
   const navigate = useNavigate();
   const url = config ? config?.data[0]?.url : "https://i.imgur.com/QQ8FTjR.png";
   const tenant = config?.data[0].name;
-  const currentRoute = window.location.hash.split("/")?.[2];
+  // const currentRoute = window.location.hash.split("/")?.[2];
 
   console.log("config from header", config?.data[0].url);
 
   const logout = () => {
+    console.log(isLogin);
     alert("Are you sure you want to log out?");
     setIsLogin(false);
     sessionStorage.clear();
@@ -28,8 +29,13 @@ export const MobileHeader = () => {
     sessionStorage.isLogin ? sessionStorage.isLogin : false
   );
   const [isTenant, setTenant] = useState(false);
+  const [isShow, setisShow] = useState(false);
+  const showMenu = ()=>{
+    setisShow(!isShow);
+  };
 
   useEffect(() => {
+    console.log(isTenant);
     if (location.href.includes("dashBoard") || location.href.includes("home")) {
       setTenant(true);
     } else {
@@ -37,103 +43,47 @@ export const MobileHeader = () => {
     }
   }, [location.href]);
   // console.log("ee", setIsLogin(true))
+  const navigateToPage = (pageName: String) => {
+      navigate(`../${tenant}/${pageName}`, { replace: true });
+  }
   return (
     <header>
-      <div>
-        {isTenant ? (
-          <div className="headerWrapper">
-            <div
-              className="col-11"
-              style={{
-                textAlign: "center",
-                // left: "85px",
-                textDecoration: "none",
-              }}
-            >
-              <Link to="#">
-                <div className="logoWrapper">
-                  <span
-                    className="tenant-name"
-                    style={{
-                      color: `${config?.data[0]?.secondary_color}`,
-                      textDecoration: "none",
-                    }}
-                  >
-                    {tenant}
-                  </span>
-                  <img className="headerLogo" src={url} alt="" />
-                </div>{" "}
-              </Link>
-            </div>
-            <div className="col-1" style={{ textAlign: "center" }}>
-              <div className="drawerWrapper">
-                {/* <DrawerLayout/> */}
-                {/* <i className="fa fa-right-from-bracke"></i> */}
-
-                {isLogin ? (
-                  <button type="button" onClick={logout}>
-                    <LogoutIcon style={{ fontSize: "20px" }} />
-                  </button>
-                ) : currentRoute == "latest" && (
-                  <span>
-                    <Link to={`/${tenant}/home`}>
-                      <div className="backArrow">
-                        <ArrowBackIcon />
-                      </div>
-                    </Link>
-                  </span>
-                )}
+      <div className= {`headerWrapper ${isShow}?animateMenu:''}`}>
+        <div className="logoWrapperContainer">
+          <Link to="#">
+              <div className="logoWrapper"> 
+              {/* <span className="tenant-name" style={{color: `${config?.data[0]?.secondary_color}`}}>{tenant}</span> */}
+              <img className="headerLogo" src={url} alt="" />
+              <span className="mobileView">Company Name</span>
               </div>
-            </div>
-          </div>
-        ) : (
-          <div className="headerWrapper">
-            <div className="col-10">
-              <Link to="#">
-                <div className="logoWrapper"> 
-                  {/* <span className="tenant-name" style={{color: `${config?.data[0]?.secondary_color}`}}>{tenant}</span> */}
-                  <img className="headerLogo" src={url} alt="" />
-                </div>{" "}
-              </Link>
-            </div>
-            <div className="col-2" style={{ textAlign: "right" }}>
-              <div className="drawerWrapper">
-                {currentRoute == "latest" && (
-                  <span>
-                    <Link to={`/${tenant}/home`}>
-                      <div className="backArrow">
-                        <ArrowBackIcon />
-                      </div>
-                    </Link>
-                  </span>
-                )}
-              </div>
-            </div> commented by anil
-            <div
-              className="col-12"
-              style={{
-                textAlign: "center",
-                // left: "85px",
-                textDecoration: "none",
-              }}
-            >
-              <Link to="#">
-                <div className="logoWrapper">
-                  <span
-                    className="tenant-name"
-                    style={{
-                      color: `${config?.data[0]?.secondary_color}`,
-                      textDecoration: "none",
-                    }}
-                  >
-                    {tenant}
-                  </span>
-                  <img className="headerLogo" src={url} alt="" />
-                </div>{" "}
-              </Link>
-            </div>
-          </div>
-        )}
+            </Link>
+        </div>
+        <div className="desktopview"><h2>Company Name</h2></div>
+        <div className="desktopview">
+          <nav>
+            <ul>
+              <li><a href="javascript:void(0)" className="active" onClick={() => navigateToPage("home")}>Home</a></li>
+              <li><a href="javascript:void(0)" className="">Top 5 Items</a></li>
+              <li><a href="javascript:void(0)" className="">About</a></li>
+              <li className="lastLi"><a href="javascript:void(0)">Contact</a></li>
+              {isLogin && (<li><a href="javascript:void(0)" className="" onClick={logout}>Logout</a></li>)}
+            </ul>
+          </nav>
+        </div>
+        <div className="mobileView">
+          <a onClick={showMenu} className="icon">
+            <i className="fa fa-bars"></i>
+          </a>
+          { isShow && <div className="mobIleNav">
+                <ul>
+                    <li><a href="#home" className="active">Home</a></li>
+                    <li><a href="#top5" className="">Top 5 Items</a></li>
+                    <li><a href="#About" className="">About</a></li>
+                    <li className="lastLi"><a href="#contact">Contact</a></li>
+                    
+                </ul>
+              </div>}
+        </div>
       </div>
     </header>
   );

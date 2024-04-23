@@ -140,7 +140,7 @@ export const LogIn = () => {
               {errors.itemDetails.password && <FormHelperText error>{errors.itemDetails.password}</FormHelperText>}
 
         </FormControl>
-        <Button disabled={isLoading} variant="contained" style={{ width: "100%" , marginTop:"20px"}}  onClick={handleSubmit}>
+        <Button disabled={isLoading} variant="contained" style={{ width: "100%" , marginTop:"20px", borderRadius: "15px"}}  onClick={handleSubmit}>
        Log In
       </Button>
         

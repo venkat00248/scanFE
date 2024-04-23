@@ -187,6 +187,7 @@ a{
 .menu-img{
   width: 100%;
   border-radius: 10px;
+  max-height: 205px;
   // margin-right: 1.5rem;
 }
 
@@ -305,7 +306,7 @@ a{
 
 }
 .Latest{
-  background-color: #f9f9f9 !important;
+  background-color: #9e9e9e !important;
 }
 .spice{
   img{
@@ -320,6 +321,7 @@ a{
     // width: 80px;
     // border-radius: 10px 0px 0px 10px;
     // margin-right: 4px !important;
+    max-height: 100px;
   }
 //   .menuItem-details {
 //     width: 168px !important;

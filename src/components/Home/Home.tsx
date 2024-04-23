@@ -12,7 +12,7 @@ import { useConfig } from "../../config/config";
 import DetailedView from "./DetailedView";
 import { useFormData } from "../Items/stateManagement/FormDataContext";
 import { ScanAppService } from "../../services/ScanAppService";
-//import Review from "./Review";
+import Review from "./Review";
 import { RippleLoader } from "../Loader/RippleLoader";
 export const Home = () => {
   const { setOpen, setIndexedImage, isPopupOpen, setIsPopupOpen } =
@@ -34,6 +34,12 @@ export const Home = () => {
   };
   console.log("tdata", tdata);
   console.log("profile", profile);
+
+  const [isShow, setisShow] = useState(false);
+  // alert(isLogin)
+  const handleClickOpenReview = ()=>{
+   setisShow(true);
+  };
   //prepare a customized date...
   const prepareCustomDate = (nDate: any) => {
     if (!nDate) return new Date();
@@ -53,7 +59,8 @@ export const Home = () => {
       // Filter out items with expiration date greater than today
       const nonExpiredItems = res?.data?.data.filter((item: any) => {
         const expirationDate = prepareCustomDate(item.expired_on);
-        // console.log("expirationDate===============", expirationDate)
+        console.log("expirationDate===============", expirationDate,"today=======", today);
+        console.log(`expirationDate >= today =========>>> ${expirationDate >= today}`);
         return item.is_special && expirationDate >= today;
       });
       setProfile(nonExpiredItems);
@@ -164,9 +171,11 @@ export const Home = () => {
                 <MenuIcon /> Items{" "}
               </Button>
             </Link>
+            {<p className='like_review'><span onClick={() => handleClickOpenReview()}><i className="fa fa-thumbs-up" aria-hidden="true"></i>
+ &nbsp; Like & Review</span></p>}
           </div>
           <DetailedView />
-          {/* <Review /> */}
+          {isShow &&     <Review /> }
         </>
       )}
     </div>

@@ -11,7 +11,7 @@ export const Latest = () => {
   return (
     <div className='Latest'>
       <section className="section menu" id="menu">
-        <div style={{"marginTop":"25px","textAlign":"center","fontSize":"20px"}}>{tenantName} <i>Items</i></div>
+        <div style={{"marginTop":"75px","textAlign":"center","fontSize":"20px"}}>{tenantName} <i>Items</i></div>
         <div className="menu-container container">
           <div className="menu-content">
             <div className="menu-items">

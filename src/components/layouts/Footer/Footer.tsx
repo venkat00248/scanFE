@@ -1,13 +1,13 @@
-import { useState } from "react";
+// import { useState } from "react";
 import './Footer.scss';
-import Review from "./Review";
+// import Review from "./Review";
 export const Footer = () => {
-  const [isShow, setisShow] = useState(false);
-  const isLogin = sessionStorage?.isLogin;
+  // const [isShow, setisShow] = useState(false);
+  // const isLogin = sessionStorage?.isLogin;
   // alert(isLogin)
-  const handleClickOpenReview = ()=>{
-   setisShow(true);
-  };
+  // const handleClickOpenReview = ()=>{
+  //  setisShow(true);
+  // };
   return (
     <div className='Footer'>
       
@@ -16,7 +16,7 @@ export const Footer = () => {
           <div className="row align-items-center justify-content-lg-between">
             <div className="col-lg-12 mb-lg-0 mb-4">
               <div className="text-center text-lg-start">
-                {!isLogin && <p className='like_review'><span onClick={() => handleClickOpenReview()}>Like & Review</span></p>}
+                {/* {!isLogin && <p className='like_review'><span onClick={() => handleClickOpenReview()}>Like & Review</span></p>} */}
                 © {new Date().getFullYear()} ,
                 <i className="fa fa-heart"></i> &nbsp; 
                 <a href="https://stealdeals.com.au/" className="font-weight-bold" target="_blank">Steal Deals </a>  <span> Powered by kodeclust technologies pvt ltd.</span>               
@@ -40,7 +40,7 @@ export const Footer = () => {
             </div> */}
           </div>
         </div>
-        {isShow &&     <Review /> }
+        {/* {isShow &&     <Review /> } */}
       </footer>
     </div>
   )

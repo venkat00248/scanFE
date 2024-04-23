@@ -12,6 +12,22 @@
   --border-color:#ccc;
   --dark-theme: rgb(21,32,43)
 }
+body{
+ // background-color: #000 !important;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .3)), url('./../assets/img/stealbg.jpg');
+  background-position: 0 0, 50%;
+  background-position-y:-60px;
+  background-repeat: repeat, no-repeat;
+  background-size: auto, cover;
+  background-attachment: scroll, fixed;
+  align-items: center;
+  margin-left: 0;
+  padding-bottom: 6%;
+  position: relative;
+}
+
 // body {
 //      margin: 0;
 //     -webkit-font-smoothing: antialiased;
