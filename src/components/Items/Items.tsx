@@ -1,6 +1,6 @@
 import "./Items.scss";
 import { Form } from "./Form";
-import { Header } from "./Header";
+// import { Header } from "./Header";
 
 export const Items = () => {
 
@@ -13,7 +13,7 @@ export const Items = () => {
                  <img src="./assets/img/onboard.jpg" alt="" /> 
               </section>*/}
               <section className="signup-form pb-3">
-                <Header />
+                {/* <Header /> */}
 
                 <Form />
               </section>

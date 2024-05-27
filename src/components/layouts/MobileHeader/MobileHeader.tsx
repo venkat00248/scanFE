@@ -48,7 +48,7 @@ export const MobileHeader = () => {
   }
   return (
     <header>
-      <div className= {`headerWrapper ${isShow}?animateMenu:''}`}>
+      <div className= {`headerWrapper ${isShow ? 'animateMenu': ''}`}>
         <div className="logoWrapperContainer">
           <Link to="#">
               <div className="logoWrapper"> 
@@ -62,8 +62,12 @@ export const MobileHeader = () => {
         <div className="desktopview">
           <nav>
             <ul>
+            {!isLogin && (
               <li><a href="javascript:void(0)" className="active" onClick={() => navigateToPage("home")}>Home</a></li>
+             )}
+            {/* {!isLogin && (
               <li><a href="javascript:void(0)" className="">Top 5 Items</a></li>
+            )} */}
               <li><a href="javascript:void(0)" className="">About</a></li>
               <li className="lastLi"><a href="javascript:void(0)">Contact</a></li>
               {isLogin && (<li><a href="javascript:void(0)" className="" onClick={logout}>Logout</a></li>)}

@@ -57,6 +57,7 @@ export const DashBoard = () => {
     try{      
       // alert(isSpecialNew)
       const menuItemsLength = menuItems.filter((item: any) => item.is_special && item.status == true).length;
+      sessionStorage.totalActiveItems = menuItemsLength;
       return (isSpecialNew && menuItemsLength < 5) || (!isSpecialNew && menuItemsLength <= 5);
     } catch(err){
 
@@ -86,6 +87,7 @@ export const DashBoard = () => {
           menuItems[currentMenuItemFromSession?.currentIndex]["is_special"] =
             currentMenuItemFromSession?.isSpecialNew;
           setMenuItems(menuItems);
+          sessionStorage.totalActiveItems = menuItems.filter((item: any) => item.is_special && item.status == true).length;
           // }
           setResponse({
             message: "Item updated successfully",
@@ -144,6 +146,8 @@ export const DashBoard = () => {
             data
             // .filter((item: any) => item.is_special && item.status == true)
           );
+          sessionStorage.totalActiveItems = data.filter((item: any) => item.is_special && item.status == true).length;
+          console.log(`-----------------------sessionStorage.totalActiveItems==============${sessionStorage.totalActiveItems}`)
           setLoading(false);
           // setMenuItems(data);
         }
@@ -169,6 +173,7 @@ export const DashBoard = () => {
   const checkMenuItemsLength = (allowedLength: Number) => {
     return menuItems.length < allowedLength;
   }
+
   useEffect(() => {
     fetchData();
   }, []);

@@ -70,7 +70,7 @@ export const Form = () => {
       offerPrice: "",
       description: "",
       spiceLevel: "",
-      isSpecial: true,
+      isSpecial: false,
     },
   });
   const onBlurItemDetails = (fieldName: any) => () => {
@@ -289,8 +289,14 @@ export const Form = () => {
     // Perform any additional actions based on the status here
   };
   const handlerForSpecial = (event: any) => {
-    setItemDetails({ ...itemDetails, isSpecial: event.target.checked });
-
+    // alert(sessionStorage?.totalActiveItems)
+    if(sessionStorage?.totalActiveItems < 5 ) {
+      errors.itemDetails.isSpecial = false;
+      setItemDetails({ ...itemDetails, isSpecial: event.target.checked });
+    } else {
+      errors.itemDetails.isSpecial = true;
+    }
+    // alert(`errors.itemDetails.isSpecial :: ${errors.itemDetails.isSpecial}`)
     // Perform any additional actions based on the status here
   };
   return (
@@ -526,6 +532,10 @@ export const Form = () => {
                         }
                         label="Is Special"
                       />
+                      {sessionStorage.totalActiveItems == 5 && (
+                        <Alert severity="info">Maximum 5 special items are allowed.</Alert>
+                      )}
+                      
                     </div>
                     <div className="col-md-6">
                       <FormControlLabel
