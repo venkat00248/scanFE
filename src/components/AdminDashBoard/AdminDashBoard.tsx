@@ -274,7 +274,7 @@ export const AdminDashBoard = () => {
       {loading ? ( // Show loading message or spinner when loading is true
         <RippleLoader />
       ) : (
-        <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <Paper sx={{ width: "100%", overflow: "hidden", height: "calc(100vh - 150px)", overflowY: "scroll"  }}>
           {response.statusCode == 200 && (
             <Alert>QR code is sent to your Registerd Email ID</Alert>
           )}

@@ -628,3 +628,13 @@ fieldset.scheduler-border {
           }
       }
   }
+  .signup-content {
+    margin: 26px 0 0;
+    background: #fff;
+    height: calc(100vh - 150px);
+    overflow: hidden;
+    overflow-y: scroll;
+}
+html{
+  overflow-y: hidden;
+}  
