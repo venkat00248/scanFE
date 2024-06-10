@@ -59,8 +59,8 @@ export const Home = () => {
       // Filter out items with expiration date greater than today
       const nonExpiredItems = res?.data?.data.filter((item: any) => {
         const expirationDate = prepareCustomDate(item.expired_on);
-        console.log("expirationDate===============", expirationDate,"today=======", today);
-        console.log(`expirationDate >= today =========>>> ${expirationDate >= today}`);
+        // console.log("expirationDate===============", expirationDate,"today=======", today);
+        // console.log(`expirationDate >= today =========>>> ${expirationDate >= today}`);
         return item.is_special && expirationDate >= today;
       });
       setProfile(nonExpiredItems);

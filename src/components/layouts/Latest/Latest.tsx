@@ -13,7 +13,7 @@ export const Latest = () => {
       <section className="section menu" id="menu">
         <div style={{"marginTop":"75px","textAlign":"center","fontSize":"20px"}}>{tenantName} <i>Items</i></div>
         <div className="menu-container container">
-          <div className="menu-content">
+          <div className="menu-content" style={{"overflowY":"auto","height":"calc(100vh - 150px)"}}>
             <div className="menu-items">
               {menuItems.length ? menuItems.map((menuItem:any, index:number) => (
                 <div className="menu-item flex" key={index}>

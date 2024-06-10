@@ -136,7 +136,7 @@ export const AdminDashBoard = () => {
     {
       id: "url",
       label: "Logo",
-      // minWidth: 170,
+      minWidth: 80,
       // align: "right",
       format: (value: string | number) => (
         <img src={String(value)} alt="Logo" />
@@ -149,26 +149,26 @@ export const AdminDashBoard = () => {
       align: "right",
       // format: (value: number | string) => value.toLocaleString('en-US'),
     },*/
-    {
-      id: "primary_color",
-      label: "Primary Color",
-      minWidth: 170,
-      align: "right",
-      // format: (value: number | string) => value.toFixed(2),
-    },
-    {
-      id: "secondary_color",
-      label: "Secondary color",
-      minWidth: 170,
-      align: "right",
-      // format: (value: number) => value.toFixed(2),
-    },
+    // {
+    //   id: "primary_color",
+    //   label: "Primary Color",
+    //   minWidth: 170,
+    //   // align: "right",
+    //   // format: (value: number | string) => value.toFixed(2),
+    // },
+    // {
+    //   id: "secondary_color",
+    //   label: "Secondary color",
+    //   minWidth: 170,
+    //   // align: "right",
+    //   // format: (value: number) => value.toFixed(2),
+    // },
 
     {
       id: "action",
       label: "Action",
       minWidth: 100,
-      align: "right",
+      // align: "right",
       format: (item: any, column: any) => (
         <div style={{ display: "flex" }}>
           <EditTenantPopup item={item} data={column} />
@@ -187,8 +187,8 @@ export const AdminDashBoard = () => {
     {
       id: "generateQR",
       label: "Generate QR",
-      minWidth: 170,
-      align: "right",
+      minWidth: 100,
+      // align: "right",
     },
   ];
   const [response, setResponse] = React.useState({
@@ -320,18 +320,18 @@ export const AdminDashBoard = () => {
                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="right">
+                      <TableCell >
                         <img src={row.url} alt="Logo" />
                       </TableCell>
-                      <TableCell align="right">{row.primary_color}</TableCell>
-                      <TableCell align="right">{row.secondary_color}</TableCell>
+                      {/* <TableCell align="right">{row.primary_color}</TableCell>
+                      <TableCell align="right">{row.secondary_color}</TableCell> */}
                       <TableCell align="right">
-                        <div style={{ display: "flex" }}>
+                        <div style={{ display: "flex"}}>
                           <EditTenantPopup item={row} data={row} />
                           <DeleteTenant data={row} />
                         </div>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell >
                         <button
                           className="btn btn-primary"
                           onClick={() => handleGenerateQR(row, index)}

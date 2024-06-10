@@ -33,8 +33,33 @@ export const DashBoard = () => {
   const tdata = config?.data[0];
   const [response, setResponse] = useState({ message: "", statusCode: 0 });
   const [open, setOpen] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("Are you sure want to update?"); 
-  const [isButtonDisabled , setIsButtonDisabled] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("Are you sure want to update?");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  // const [isExpirationStatus, setIsExpirationStatus] = useState(false);
+  let isExpirationStatus: boolean = false;
+  const checkExpiration = (expiration: any) => {
+    try {
+      // console.log(`<<<<<<<<<<checkExpiration :: ${expiration}`);
+      if (!isNaN(expiration)) return true;
+      console.log(`<<<<<<<<<<checkExpiration :: ${expiration}`);
+      const currentTime: any = (new Date()).getTime();
+      const expStatus = currentTime < prepareCustomDate(expiration);
+      console.log(`<<<<<<<<<<prepareCustomDate :: ${prepareCustomDate(expiration)}======currentTime >= prepareCustomDate(expiration) ${expStatus}`);
+      isExpirationStatus = expStatus
+      return expStatus;
+    } catch (err: any) {
+      console.error(err);
+      return false;
+    }
+
+  }
+  const prepareCustomDate = (nDate: any) => {
+    if (!nDate) return new Date();
+    const custDate = new Date(nDate);
+    // return `${custDate.getFullYear()}-${custDate.getMonth()}-${custDate.getDate()}`;
+    return custDate.getTime();
+  };
+
   const handleClose = () => {
     updateMenuItems("handleClose");
     setIsButtonDisabled(false);
@@ -54,12 +79,12 @@ export const DashBoard = () => {
     }
   };
   const checkAllowedSpecials = (isSpecialNew: boolean) => {
-    try{      
+    try {
       // alert(isSpecialNew)
       const menuItemsLength = menuItems.filter((item: any) => item.is_special && item.status == true).length;
       sessionStorage.totalActiveItems = menuItemsLength;
       return (isSpecialNew && menuItemsLength < 5) || (!isSpecialNew && menuItemsLength <= 5);
-    } catch(err){
+    } catch (err) {
 
     }
   }
@@ -94,7 +119,7 @@ export const DashBoard = () => {
             statusCode: res?.data?.statusCode,
           });
           setTimeout(() => {
-            
+
             setOpen(false);
             setResponse({ message: "", statusCode: 0 });
           }, 1000);
@@ -102,7 +127,7 @@ export const DashBoard = () => {
       } else {
         setDialogTitle("Sorry, Max 5 special items are allowed.");
         setIsButtonDisabled(true);
-        setTimeout( () => {
+        setTimeout(() => {
           setOpen(false);
         }, 1500)
       }
@@ -124,7 +149,7 @@ export const DashBoard = () => {
     if (menuItems[index]["is_special"])
       menuItems[index]["is_special"] = event.target.checked;
     setMenuItems(menuItems);
-    
+
     setOpen(true);
 
     // console.log(`menuItems handle change:::========================>>>>>>>`, menuItems[index])
@@ -219,7 +244,7 @@ export const DashBoard = () => {
               Yes
             </Button>
           )}
-          
+
           <Button onClick={handleClose} autoFocus>
             {isButtonDisabled ? "Ok" : "No"}
           </Button>
@@ -239,7 +264,7 @@ export const DashBoard = () => {
       ) : (
         <section className="section menu" id="menu">
           <div className="buttonWrapperr">
-            
+
           </div>
 
           {/* <div className="menu-container container">
@@ -271,38 +296,38 @@ export const DashBoard = () => {
               <div className="col-12">
                 <div className="card my-4">
                   <div className="card-header row p-0 position-relative  mx-3 z-index-2 border-radius-lg pt-4 pb-3" style={{
-                        background: `${config?.data[0]?.primary_color}`,
-                        color: `${config?.data[0]?.secondary_color}  !important`,
-                      }}>
+                    background: `${config?.data[0]?.primary_color}`,
+                    color: `${config?.data[0]?.secondary_color}  !important`,
+                  }}>
                     <div
                       className="col-6"
-                      
+
                     >
                       <h4
                         className="text-capitalize ps-3"
                         style={{ color: `${config?.data[0]?.secondary_color}` }}
                       >
                         All Items
-                      </h4>                     
+                      </h4>
                     </div>
                     <div className="col-6 text-right addItemBtn">
-                    {checkMenuItemsLength(15) && (
-                      <Link to={`/${tenant}/addItems`}>
-                        {/* style={{background: `${config?.data[0]?.primary_color} !important`, color: `${config?.data[0]?.secondary_color}  !important`}}  */}
-                        <Button onMouseEnter={handleMouseEnter}
-                          onMouseLeave={handleMouseLeave} 
-                          style={hoverStyle}
-                          variant="contained"
+                      {checkMenuItemsLength(15) && (
+                        <Link to={`/${tenant}/addItems`}>
+                          {/* style={{background: `${config?.data[0]?.primary_color} !important`, color: `${config?.data[0]?.secondary_color}  !important`}}  */}
+                          <Button onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            style={hoverStyle}
+                            variant="contained"
                           // style={{
                           //   background: `${config?.data[0]?.primary_color}`,
                           //   color: `${config?.data[0]?.secondary_color} `,
                           // }}
-                        >
-                          {/* <AddIcon/> */}
-                          Add Items
-                        </Button>
-                      </Link>
-                    )}
+                          >
+                            {/* <AddIcon/> */}
+                            Add Items
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   </div>
                   <div className="card-body px-0 pb-2">
@@ -334,8 +359,7 @@ export const DashBoard = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {console.log("length menu item,s", menuItems)}
-                          {menuItems.length &&
+                          {menuItems.length > 0 &&
                             menuItems
                               // .filter(
                               //   (item: any) =>
@@ -363,7 +387,7 @@ export const DashBoard = () => {
                                   <td>
                                     <p className="font-weight-bold mb-0">
                                       {menuItem.currency_code == "AUD" ||
-                                      menuItem.currency_code == "US"
+                                        menuItem.currency_code == "US"
                                         ? "$"
                                         : "₹"}
                                       {menuItem.item_price}
@@ -372,7 +396,7 @@ export const DashBoard = () => {
                                   <td>
                                     <p className="font-weight-bold mb-0">
                                       {menuItem.currency_code == "AUD" ||
-                                      menuItem.currency_code == "US"
+                                        menuItem.currency_code == "US"
                                         ? "$"
                                         : "₹"}
                                       {menuItem.promotional_price}
@@ -380,8 +404,8 @@ export const DashBoard = () => {
                                   </td>
                                   <td>
                                     <span className="text-xs font-weight-bold">
-                                      <span className="badge badge-sm" style={{ color: menuItem.status && menuItem.is_special ? '#66BB6A' : '#EF5350', border: menuItem.status && menuItem.is_special ? "1px solid #66BB6A" : "1px solid #EF5350" }}>
-                                        {menuItem.status && menuItem.is_special
+                                      <span className="badge badge-sm" style={{ color: menuItem.status && menuItem.is_special && checkExpiration(menuItem.expired_on) ? '#66BB6A' : '#EF5350', border: menuItem.status && menuItem.is_special  && isExpirationStatus? "1px solid #66BB6A" : "1px solid #EF5350" }}>
+                                        {menuItem.status && menuItem.is_special && isExpirationStatus
                                           ? "Active"
                                           : "In-Active"}
                                       </span>
@@ -410,11 +434,11 @@ export const DashBoard = () => {
                                         )}
                                     </div>
                                   </td>
-                                  <td style={{textAlign:"center"}}> 
+                                  <td style={{ textAlign: "center" }}>
                                     <FormControlLabel
                                       control={
                                         <Switch
-                                          checked={menuItem["is_special"]}
+                                          checked={menuItem["is_special"] && isExpirationStatus}
                                           onChange={(e) =>
                                             handleChange(e, menuItems, index)
                                           }
@@ -453,9 +477,7 @@ export const DashBoard = () => {
                           {menuItems.length <= 0 && (
                             <tr>
                               <td>
-                                {" "}
                                 <div className="d-flex px-2">
-                                  {" "}
                                   You don't have items. Pls. add new item
                                 </div>
                               </td>
