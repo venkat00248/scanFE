@@ -13,6 +13,7 @@ import DeleteItem from "./DeleteItem";
 import { useFormData } from "../Items/stateManagement/FormDataContext";
 import { RippleLoader } from "../Loader/RippleLoader";
 import Switch from "@mui/material/Switch";
+import RefreshTwoToneIcon from '@mui/icons-material/RefreshTwoTone';
 import {
   Alert,
   AlertTitle,
@@ -37,6 +38,7 @@ export const DashBoard = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   // const [isExpirationStatus, setIsExpirationStatus] = useState(false);
   let isExpirationStatus: boolean = false;
+  
   const checkExpiration = (expiration: any) => {
     try {
       // console.log(`<<<<<<<<<<checkExpiration :: ${expiration}`);
@@ -46,6 +48,7 @@ export const DashBoard = () => {
       const expStatus = currentTime < prepareCustomDate(expiration);
       console.log(`<<<<<<<<<<prepareCustomDate :: ${prepareCustomDate(expiration)}======currentTime >= prepareCustomDate(expiration) ${expStatus}`);
       isExpirationStatus = expStatus
+      
       return expStatus;
     } catch (err: any) {
       console.error(err);
@@ -54,12 +57,18 @@ export const DashBoard = () => {
 
   }
   const prepareCustomDate = (nDate: any) => {
-    if (!nDate) return new Date();
+    if (!nDate) return (new Date()).getTime();
     const custDate = new Date(nDate);
     // return `${custDate.getFullYear()}-${custDate.getMonth()}-${custDate.getDate()}`;
     return custDate.getTime();
   };
-
+  const findMenuItemsLength = (menuItems: any) => {
+    return menuItems.filter((item: any) => {
+      // console.log(`item 22222222222 ====> `, item, "(new Date()).getTime() >= prepareCustomDate(item.expired_on)==", (new Date()).getTime() >= prepareCustomDate(item.expired_on))
+       return item.is_special && item.status && prepareCustomDate(item.expired_on) >= (new Date()).getTime() 
+      }
+    ).length;
+  }
   const handleClose = () => {
     updateMenuItems("handleClose");
     setIsButtonDisabled(false);
@@ -81,9 +90,11 @@ export const DashBoard = () => {
   const checkAllowedSpecials = (isSpecialNew: boolean) => {
     try {
       // alert(isSpecialNew)
-      const menuItemsLength = menuItems.filter((item: any) => item.is_special && item.status == true).length;
+      
+      const menuItemsLength = findMenuItemsLength(menuItems);
       sessionStorage.totalActiveItems = menuItemsLength;
-      return (isSpecialNew && menuItemsLength < 5) || (!isSpecialNew && menuItemsLength <= 5);
+      // alert(`In checkAllowedSpecials---> ${sessionStorage.totalActiveItems}`);
+      return (isSpecialNew && menuItemsLength < 5 && isExpirationStatus) || (!isSpecialNew && menuItemsLength <= 5 && isExpirationStatus);
     } catch (err) {
 
     }
@@ -112,8 +123,9 @@ export const DashBoard = () => {
           menuItems[currentMenuItemFromSession?.currentIndex]["is_special"] =
             currentMenuItemFromSession?.isSpecialNew;
           setMenuItems(menuItems);
-          sessionStorage.totalActiveItems = menuItems.filter((item: any) => item.is_special && item.status == true).length;
+          sessionStorage.totalActiveItems = findMenuItemsLength(menuItems);    
           // }
+          // alert(`In ConfirmUpdate---> ${sessionStorage.totalActiveItems}`);
           setResponse({
             message: "Item updated successfully",
             statusCode: res?.data?.statusCode,
@@ -137,18 +149,24 @@ export const DashBoard = () => {
       setLoading(false);
     }
   };
-  const handleChange = (event: any, menuItems: any, index: any) => {
+  const handleChange = (event: any, menuItems: any, index: any, isExpirationStatus: boolean) => {
     console.log("handleChange -------------> ", event.target.checked);
-    setDialogTitle("Are you sure want to update?");
-    setIsButtonDisabled(false);
-    sessionStorage.currentMenuItem = JSON.stringify({
-      currentIndex: index,
-      isSpecial: menuItems[index]["is_special"],
-      isSpecialNew: event.target.checked,
-    });
-    if (menuItems[index]["is_special"])
-      menuItems[index]["is_special"] = event.target.checked;
-    setMenuItems(menuItems);
+    if (isExpirationStatus) {
+      setDialogTitle("You are not allowed to update as a 'special' for expired items");
+      setIsButtonDisabled(true);
+    } else {
+      setDialogTitle("Are you sure want to update?");
+      setIsButtonDisabled(false);
+      sessionStorage.currentMenuItem = JSON.stringify({
+        currentIndex: index,
+        isSpecial: menuItems[index]["is_special"],
+        isSpecialNew: event.target.checked,
+      });
+      if (menuItems[index]["is_special"])
+        menuItems[index]["is_special"] = event.target.checked;
+      setMenuItems(menuItems);
+    }
+
 
     setOpen(true);
 
@@ -171,7 +189,8 @@ export const DashBoard = () => {
             data
             // .filter((item: any) => item.is_special && item.status == true)
           );
-          sessionStorage.totalActiveItems = data.filter((item: any) => item.is_special && item.status == true).length;
+          sessionStorage.totalActiveItems = findMenuItemsLength(data);
+          // alert(`In fetchData---> ${sessionStorage.totalActiveItems}`);
           console.log(`-----------------------sessionStorage.totalActiveItems==============${sessionStorage.totalActiveItems}`)
           setLoading(false);
           // setMenuItems(data);
@@ -198,7 +217,9 @@ export const DashBoard = () => {
   const checkMenuItemsLength = (allowedLength: Number) => {
     return menuItems.length < allowedLength;
   }
-
+  const refreshItems = () => {
+    fetchData();
+  }
   useEffect(() => {
     fetchData();
   }, []);
@@ -300,7 +321,7 @@ export const DashBoard = () => {
                     color: `${config?.data[0]?.secondary_color}  !important`,
                   }}>
                     <div
-                      className="col-6"
+                      className="col-5"
 
                     >
                       <h4
@@ -310,24 +331,36 @@ export const DashBoard = () => {
                         All Items
                       </h4>
                     </div>
+
                     <div className="col-6 text-right addItemBtn">
-                      {checkMenuItemsLength(15) && (
-                        <Link to={`/${tenant}/addItems`}>
-                          {/* style={{background: `${config?.data[0]?.primary_color} !important`, color: `${config?.data[0]?.secondary_color}  !important`}}  */}
-                          <Button onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            style={hoverStyle}
-                            variant="contained"
-                          // style={{
-                          //   background: `${config?.data[0]?.primary_color}`,
-                          //   color: `${config?.data[0]?.secondary_color} `,
-                          // }}
-                          >
-                            {/* <AddIcon/> */}
-                            Add Items
-                          </Button>
-                        </Link>
-                      )}
+                      <div className="row">
+                        <div className="col-9">
+                          {checkMenuItemsLength(15) && (
+                            <Link to={`/${tenant}/addItems`}>
+                              {/* style={{background: `${config?.data[0]?.primary_color} !important`, color: `${config?.data[0]?.secondary_color}  !important`}}  */}
+                              <Button onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
+                                style={hoverStyle}
+                                variant="contained"
+                              // style={{
+                              //   background: `${config?.data[0]?.primary_color}`,
+                              //   color: `${config?.data[0]?.secondary_color} `,
+                              // }}
+                              >
+                                {/* <AddIcon/> */}
+                                Add Item
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
+                        <div className="col-3 text-right visible" style={{ "textDecoration": "pointer" }} onClick={refreshItems} title="Refresh to Load new Items" >
+                          {/* <RefreshTwoToneIcon className="decor"></RefreshTwoToneIcon> */}
+                          <Button className="decor"
+                            variant="contained"><RefreshTwoToneIcon ></RefreshTwoToneIcon></Button>
+                        </div>
+
+                      </div>
+
                     </div>
                   </div>
                   <div className="card-body px-0 pb-2">
@@ -404,7 +437,7 @@ export const DashBoard = () => {
                                   </td>
                                   <td>
                                     <span className="text-xs font-weight-bold">
-                                      <span className="badge badge-sm" style={{ color: menuItem.status && menuItem.is_special && checkExpiration(menuItem.expired_on) ? '#66BB6A' : '#EF5350', border: menuItem.status && menuItem.is_special  && isExpirationStatus? "1px solid #66BB6A" : "1px solid #EF5350" }}>
+                                      <span className="badge badge-sm" style={{ color: menuItem.status && menuItem.is_special && checkExpiration(menuItem.expired_on) ? '#66BB6A' : '#EF5350', border: menuItem.status && menuItem.is_special && isExpirationStatus ? "1px solid #66BB6A" : "1px solid #EF5350" }}>
                                         {menuItem.status && menuItem.is_special && isExpirationStatus
                                           ? "Active"
                                           : "In-Active"}
@@ -440,7 +473,7 @@ export const DashBoard = () => {
                                         <Switch
                                           checked={menuItem["is_special"] && isExpirationStatus}
                                           onChange={(e) =>
-                                            handleChange(e, menuItems, index)
+                                            handleChange(e, menuItems, index, isExpirationStatus)
                                           }
                                           name={index}
                                         />

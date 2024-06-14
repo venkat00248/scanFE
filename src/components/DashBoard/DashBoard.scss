@@ -44,3 +44,17 @@ margin-right: 16px;
     border:2px solid #6c757d;
     font-size:14px;
 }
+.visible {
+    height: 3em;
+    width: 10em;
+    // background: yellow;
+    cursor: pointer;
+  }
+  .decor {
+    // font-size: 20px !important;
+    float: right;
+    border-radius: 20px !important;
+    background: gray;
+    // color: #fff !important;
+    padding-top: 10px
+  }
